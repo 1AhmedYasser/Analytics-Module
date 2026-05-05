@@ -5,6 +5,13 @@ WITH rating_config AS (
       AND "domain" IS NULL
       AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' AND "domain" IS NULL)
       AND NOT deleted
+),
+latest_chats AS (
+    SELECT DISTINCT ON (base_id)
+        base_id,
+        test
+    FROM chat
+    ORDER BY base_id, updated DESC
 )
 SELECT date_trunc(:metric, ended) AS date_time,
        CASE 
@@ -18,14 +25,24 @@ WHERE (
    OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
   AND (
-    :showTest = TRUE
-   OR chat.test = FALSE
+    COALESCE(:showTest, FALSE) = TRUE
+   OR EXISTS (
+       SELECT 1
+       FROM latest_chats
+       WHERE latest_chats.base_id = chat.base_id
+       AND COALESCE(latest_chats.test, FALSE) = FALSE
+   )
     )
   AND EXISTS
     (SELECT 1
      FROM message
      WHERE message.chat_base_id = chat.base_id
        AND (message.author_role = 'buerokratt' OR message.author_role = 'Bürokratt'))
+  AND NOT EXISTS
+    (SELECT 1
+     FROM message
+     WHERE message.chat_base_id = chat.base_id
+       AND message.author_role = 'backoffice-user')
 AND status = 'ENDED'
 AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
 GROUP BY date_time
