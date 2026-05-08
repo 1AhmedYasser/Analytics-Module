@@ -84,7 +84,8 @@
   "toast": {
     "success": {
       "updateSuccess": "Updated Successfully",
-      "chatCommentChanged": "Chat comment changed"
+      "chatCommentChanged": "Chat comment changed",
+      "userUpdated": "User updated"
     }
   },
   "burokratt": {
