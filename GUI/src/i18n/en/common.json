@@ -49,7 +49,8 @@
     "statusClarification": "Status clarification",
     "selectAll": "Select all",
     "test": "Test",
-    "preserve": "Preserve"
+    "preserve": "Preserve",
+    "clearFilters": "Clear filters"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
@@ -390,7 +391,8 @@
       "commentAuthor": "Commenter",
       "commentAddedDate": "Comment added date",
       "statusAdder": "Status adder",
-      "statusAddedDate": "Status added date"
+      "statusAddedDate": "Status added date",
+      "chooseAll": "Choose all"
     },
     "plainEvents": {
       "answered": "Answered",
