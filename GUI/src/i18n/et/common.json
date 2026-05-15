@@ -85,7 +85,8 @@
   "toast": {
     "success": {
       "updateSuccess": "Värskendamine õnnestus",
-      "chatCommentChanged": "Vestluse kommentaar muudetud"
+      "chatCommentChanged": "Vestluse kommentaar muudetud",
+      "userUpdated": "Kasutaja uuendatud"
     }
   },
   "burokratt": {
