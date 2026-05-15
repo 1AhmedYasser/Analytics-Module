@@ -85,7 +85,8 @@
   "toast": {
     "success": {
       "updateSuccess": "Updated Successfully",
-      "chatCommentChanged": "Chat comment changed"
+      "chatCommentChanged": "Chat comment changed",
+      "userUpdated": "User updated"
     }
   },
   "burokratt": {
@@ -435,7 +436,9 @@
       "user-not-reached": "User could not be reached",
       "ask_to_forward_to_csa": "Asked to forward the conversation to a customer service agent",
       "forwarded_to_backoffice": "Conversation forwarded to back office",
-      "continue_chatting_with_bot": "Continue conversation with bürokratt"
+      "continue_chatting_with_bot": "Continue conversation with bürokratt",
+      "waiting_validation": "Waiting for validation",
+      "approved_validation": "Approved Validation"
     },
     "events": {
       "answered": "Answered {{date}}",
