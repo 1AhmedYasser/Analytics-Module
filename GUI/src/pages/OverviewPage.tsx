@@ -172,7 +172,7 @@ const OverviewPage: React.FC = () => {
       <Drawer
         onClose={() => setDrawerIsHidden(true)}
         title={t('overview.editView')}
-        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '450px' }}
+        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '450px', marginTop: '60px' }}
       >
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
