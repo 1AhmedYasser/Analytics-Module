@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { MdOutlineDownload } from 'react-icons/md';
+import { MdOutlineDownload, MdOutlineInfo } from 'react-icons/md';
+import Tooltip from '../Tooltip';
 import { Button, Card, FormSelect, Icon } from '../../components';
 import BarGraph from '../BarGraph';
 import './MetricsCharts.scss';
@@ -28,11 +29,42 @@ const formatPeriodScore = (value: number | undefined | null): string => {
   return Number.isFinite(n) ? n.toFixed(2) : '—';
 };
 
+const getCountForRatings = (chartData: { rating: number; count: number }[], ratings: number[]): number =>
+  chartData.filter(({ rating }) => ratings.includes(rating)).reduce((s, { count }) => s + count, 0);
+
+const calcPct = (numerator: number, denominator: number): string => {
+  if (!denominator) return '—';
+  return `${((numerator / denominator) * 100).toFixed(1)}%`;
+};
+
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
   const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
-  const feedbackScoreLabel = data.distributionData?.isFiveScale ? t('feedback.positiveFeedbackScore') : t('feedback.averageNps');
+  const isFiveScale = data.distributionData?.isFiveScale ?? false;
+  const feedbackScoreLabel = isFiveScale ? t('feedback.positiveFeedbackScore') : t('feedback.averageNps');
+
+  const distributionChartData = (data.distributionData?.chartData ?? []) as { rating: number; count: number }[];
+  const totalFeedback = data.distributionData?.totalFeedback ?? 0;
+
+  const averageFeedbackRating =
+    totalFeedback > 0
+      ? (distributionChartData.reduce((sum, { rating, count }) => sum + rating * count, 0) / totalFeedback).toFixed(2)
+      : '—';
+
+  const satisfiedCount = isFiveScale
+    ? getCountForRatings(distributionChartData, [4, 5])
+    : getCountForRatings(distributionChartData, [9, 10]);
+  const passiveCount = isFiveScale
+    ? getCountForRatings(distributionChartData, [3])
+    : getCountForRatings(distributionChartData, [7, 8]);
+  const dissatisfiedCount = isFiveScale
+    ? getCountForRatings(distributionChartData, [1, 2])
+    : getCountForRatings(distributionChartData, [0, 1, 2, 3, 4, 5, 6]);
+
+  const satisfiedPct = calcPct(satisfiedCount, totalFeedback);
+  const passivePct = calcPct(passiveCount, totalFeedback);
+  const dissatisfiedPct = calcPct(dissatisfiedCount, totalFeedback);
 
   const charts: ChartType[] = [
     {
@@ -178,6 +210,38 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
             {data.distributionData?.totalChats != null && data.distributionData.totalChats > 0
               ? `${((data.distributionData.totalFeedback ?? 0) / data.distributionData.totalChats * 100).toFixed(1)}%`
               : '0%'}
+          </div>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('feedback.tooltip_averageFeedbackRating')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('feedback.averageFeedbackRating')} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+            : {averageFeedbackRating}
+          </div>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('feedback.tooltip_satisfied')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('feedback.satisfied')} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+            : {satisfiedPct}
+          </div>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('feedback.tooltip_passive')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('feedback.passive')} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+            : {passivePct}
+          </div>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('feedback.tooltip_dissatisfied')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('feedback.dissatisfied')} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+            : {dissatisfiedPct}
           </div>
           <div>
             {t('feedback.chatsWithNoFeedback')}: {data.distributionData?.noFeedbackCount ?? (data.distributionData?.totalChats != null && data.distributionData?.totalFeedback != null ? data.distributionData.totalChats - data.distributionData.totalFeedback : '—')}

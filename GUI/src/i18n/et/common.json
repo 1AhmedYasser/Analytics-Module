@@ -165,8 +165,16 @@
     "comment": "Kommentaar",
     "positiveFeedbackScore": "Positiivne tagasiside (%)",
     "averageNps": "Keskmine (NPS)",
+    "averageFeedbackRating": "Keskmine tagasiside hinne",
+    "satisfied": "Rahulolevad vastajaid (%)",
+    "passive": "Passiivseid vastajaid (%)",
+    "dissatisfied": "Rahulolematuid vastajaid (%)",
     "percentOfChatsWithFeedback": "% vestlustest, millele anti tagasiside",
-    "chatsWithNoFeedback": "Tagasisidet pole"
+    "chatsWithNoFeedback": "Tagasisidet pole",
+    "tooltip_averageFeedbackRating": "Keskmine hinne arvutatakse järgnevalt: liidetakse kokku kõik tagasiside väärtused ja jagatakse vestluste arvuga, millel on tagasiside antud.",
+    "tooltip_satisfied": "Rahulolevate skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolevate koguarv (4-5p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolevate koguarv (9-10p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_passive": "Passiivsete skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: passiivsete koguarv (3p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: passiivsete koguarv (7-8p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_dissatisfied": "Rahulolematute skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolematute koguarv (1-2p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolematute koguarv (0-6p) / vastajate koguarv (0-10p) * 100."
   },
   "chats": {
     "total": "Vestluste koguarv",
