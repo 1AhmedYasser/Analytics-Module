@@ -182,7 +182,17 @@
     "longWaitingTime": "Pikk ooteaeg",
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
     "medianWaitingTime": "Mediaan (min)",
-    "averageWaitingTime": "Aritmeetiline keskmine (min)"
+    "averageWaitingTime": "Aritmeetiline keskmine (min)",
+    "chat_forwards": "Suunamised",
+    "forwards": {
+      "from_csa": "Nõustajalt suunatud vestluste arv",
+      "to_csa": "Nõustajale suunatud vestluste arv",
+      "to_other": "Suunamised asutusest välja"
+    },
+    "avg_pick_time": "Keskmine vastamise kiirus asutuses",
+    "avg_present_csa": "Keskmine nõustajate kohalolu",
+    "num_chats_csa": "Vestluste arv nõustaja lõikes",
+    "avg_chat_time_csa": "Vestluste aeg (min) nõustaja lõikes"
   },
   "chart": {
     "csa": "Csa",

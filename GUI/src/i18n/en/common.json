@@ -182,7 +182,17 @@
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
     "medianWaitingTime": "Median (min)",
-    "averageWaitingTime": "Arithmetic (min)"
+    "averageWaitingTime": "Arithmetic (min)",
+    "chat_forwards": "Forwarding",
+    "forwards": {
+      "from_csa": "Number of conversations directed from the advisor",
+      "to_csa": "Counselor directed conversations",
+      "to_other": "Out-of-facility forwards"
+    },
+    "avg_pick_time": "Average response speed in the institution",
+    "avg_present_csa": "Average presence of counselors",
+    "num_chats_csa": "Number of conversations by adviser",
+    "avg_chat_time_csa": "Conversation time by advisor"
   },
   "chart": {
     "csa": "Csa",
