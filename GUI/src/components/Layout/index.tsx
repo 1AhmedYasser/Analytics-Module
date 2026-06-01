@@ -17,7 +17,8 @@ const Layout: FC = () => {
         <Header
           toastContext={useToast()}
           user={useStore.getState().userInfo}
-          setUserDomains={useStore((state) => state.setUserDomains)}
+          setUserDomains={useStore((state) => state.setUserDomains)} 
+          isDomainSelectorVisible={domainBarShowing}        
         />
         <main className="layout__main">
           <Outlet />
