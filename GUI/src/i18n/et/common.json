@@ -181,8 +181,6 @@
     "cip": "Kontakti jätmised",
     "avgConversationTime": "Vestluste keskmine aeg (min)",
     "avgWaitingTime": "Keskmine ooteaja pikkus (min)",
-    "avgNumOfMessages": "Keskmine sõnumite arv vestluses",
-    "idle": "Bürokrati lõpetatud vestluste arv",
     "onlyBYK": "Bürokrati vastatud",
     "csaInvolved": "Nõustaja kaasatud",
     "outsideWorkingHours": "Tööpäeva väline aeg",

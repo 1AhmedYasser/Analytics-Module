@@ -181,8 +181,6 @@
     "cip": "Contact information provided",
     "avgConversationTime": "Average conversation time (min)",
     "avgWaitingTime": "Average waiting time (min)",
-    "avgNumOfMessages": "Average number of messages in a chat",
-    "idle": "Count of idle chats ended by Bürokratt",
     "onlyBYK": "Only Bürokratt involved",
     "csaInvolved": "CSA involved",
     "outsideWorkingHours": "Outside working hours",

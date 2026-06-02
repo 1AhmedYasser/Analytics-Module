@@ -1,9 +1,7 @@
 import {
   getAvgChatWaitingTime,
-  getAvgMessagesInChats,
   getCipChats,
   getDurationChats,
-  getBykEndedChats,
   getTotalChats,
 } from '../../resources/api-constants';
 import { fetchChartData, fetchChartDataWithSubOptions } from '../../util/api-response-handler';
@@ -24,10 +22,6 @@ export const fetchData = (config: any) => {
       return fetchChartData(getDurationChats(), config, chatOptions[2].labelKey);
     case 'avgWaitingTime':
       return fetchChartDataWithSubOptions(getAvgChatWaitingTime(), config, chatOptions[3].subOptions!);
-    case 'avgNumOfMessages':
-      return fetchChartData(getAvgMessagesInChats(), config, chatOptions[4].labelKey);
-    case 'idle':
-      return fetchChartData(getBykEndedChats(), config, chatOptions[5].labelKey);
     default:
       return [];
   }

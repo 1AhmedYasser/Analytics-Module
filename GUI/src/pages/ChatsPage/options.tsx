@@ -37,14 +37,4 @@ export const chatOptions: Option[] = [
     ],
     unit: t('units.minutes') ?? 'minutes',
   },
-  {
-    id: 'avgNumOfMessages',
-    labelKey: 'chats.avgNumOfMessages',
-    unit: t('units.messages') ?? 'messages',
-  },
-  {
-    id: 'idle',
-    labelKey: 'chats.idle',
-    unit: t('units.chats') ?? 'chats',
-  },
 ];
