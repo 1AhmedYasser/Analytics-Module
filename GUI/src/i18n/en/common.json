@@ -49,7 +49,8 @@
     "statusClarification": "Status clarification",
     "selectAll": "Select all",
     "test": "Test",
-    "preserve": "Preserve"
+    "preserve": "Preserve",
+    "clearFilters": "Clear filters"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
@@ -84,7 +85,8 @@
   "toast": {
     "success": {
       "updateSuccess": "Updated Successfully",
-      "chatCommentChanged": "Chat comment changed"
+      "chatCommentChanged": "Chat comment changed",
+      "userUpdated": "User updated"
     }
   },
   "burokratt": {
@@ -104,8 +106,7 @@
     "editView": "Edit view",
     "totalChatsChart": "Total number of chats",
     "edit": "Edit",
-    "openSearch": "Open OpenSearch",
-    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
       "avg_chats_by_week": "Average chats per day: week / previous",
@@ -163,8 +164,16 @@
     "comment": "Comment",
     "positiveFeedbackScore": "Positive feedback (%)",
     "averageNps": "Average (NPS)",
+    "averageFeedbackRating": "Average feedback rating",
+    "satisfied": "Satisfied (%)",
+    "passive": "Passive (%)",
+    "dissatisfied": "Dissatisfied (%)",
     "percentOfChatsWithFeedback": "% of chats that received feedback",
-    "chatsWithNoFeedback": "No Feedback"
+    "chatsWithNoFeedback": "No Feedback",
+    "tooltip_averageFeedbackRating": "The average score is calculated as follows: all feedback values are added together and divided by the total number of conversations where feedback was given.",
+    "tooltip_satisfied": "The formula for promoters scores depends on the feedback scale. In a 5-point system: satisfied count (4-5p) / all respondents (1-5p) * 100. On a 10-point scale: total number of satisfied (9-10p) / total number of respondents (0-10p) * 100.",
+    "tooltip_passive": "The passive score formula is dependent on the feedback scale. On a 5-point scale: total number of passives (3p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of passives (7-8p) / total number of respondents (0-10p) * 100.",
+    "tooltip_dissatisfied": "The formula for the dissatisfied score depends on the feedback scale. On a 5-point scale: total number of dissatisfied (1-2p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of dissatisfied (0-6p) / total number of respondents (0-10p) * 100."
   },
   "chats": {
     "total": "Total number of chats",
@@ -172,8 +181,6 @@
     "cip": "Contact information provided",
     "avgConversationTime": "Average conversation time (min)",
     "avgWaitingTime": "Average waiting time (min)",
-    "avgNumOfMessages": "Average number of messages in a chat",
-    "idle": "Count of idle chats ended by Bürokratt",
     "onlyBYK": "Only Bürokratt involved",
     "csaInvolved": "CSA involved",
     "outsideWorkingHours": "Outside working hours",
@@ -390,7 +397,8 @@
       "commentAuthor": "Commenter",
       "commentAddedDate": "Comment added date",
       "statusAdder": "Status adder",
-      "statusAddedDate": "Status added date"
+      "statusAddedDate": "Status added date",
+      "chooseAll": "Choose all"
     },
     "plainEvents": {
       "answered": "Answered",
@@ -433,7 +441,9 @@
       "user-not-reached": "User could not be reached",
       "ask_to_forward_to_csa": "Asked to forward the conversation to a customer service agent",
       "forwarded_to_backoffice": "Conversation forwarded to back office",
-      "continue_chatting_with_bot": "Continue conversation with bürokratt"
+      "continue_chatting_with_bot": "Continue conversation with bürokratt",
+      "waiting_validation": "Waiting for validation",
+      "approved_validation": "Approved Validation"
     },
     "events": {
       "answered": "Answered {{date}}",
