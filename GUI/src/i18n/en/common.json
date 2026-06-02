@@ -164,8 +164,16 @@
     "comment": "Comment",
     "positiveFeedbackScore": "Positive feedback (%)",
     "averageNps": "Average (NPS)",
+    "averageFeedbackRating": "Average feedback rating",
+    "satisfied": "Satisfied (%)",
+    "passive": "Passive (%)",
+    "dissatisfied": "Dissatisfied (%)",
     "percentOfChatsWithFeedback": "% of chats that received feedback",
-    "chatsWithNoFeedback": "No Feedback"
+    "chatsWithNoFeedback": "No Feedback",
+    "tooltip_averageFeedbackRating": "The average score is calculated as follows: all feedback values are added together and divided by the total number of conversations where feedback was given.",
+    "tooltip_satisfied": "The formula for promoters scores depends on the feedback scale. In a 5-point system: satisfied count (4-5p) / all respondents (1-5p) * 100. On a 10-point scale: total number of satisfied (9-10p) / total number of respondents (0-10p) * 100.",
+    "tooltip_passive": "The passive score formula is dependent on the feedback scale. On a 5-point scale: total number of passives (3p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of passives (7-8p) / total number of respondents (0-10p) * 100.",
+    "tooltip_dissatisfied": "The formula for the dissatisfied score depends on the feedback scale. On a 5-point scale: total number of dissatisfied (1-2p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of dissatisfied (0-6p) / total number of respondents (0-10p) * 100."
   },
   "chats": {
     "total": "Total number of chats",
