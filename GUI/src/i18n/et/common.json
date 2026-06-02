@@ -106,8 +106,7 @@
     "editView": "Muuda vaadet",
     "totalChatsChart": "Vestluste koguarv",
     "edit": "Muuda",
-    "openSearch": "Ava OpenSearch",
-    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+
     "metric": {
       "avg_chats_by_month": "Keskmine vestluste arv päevas: kuu / eelmine",
       "avg_chats_by_week": "Keskmine vestluste arv päevas: nädal / eelmine",

@@ -106,8 +106,7 @@
     "editView": "Edit view",
     "totalChatsChart": "Total number of chats",
     "edit": "Edit",
-    "openSearch": "Open OpenSearch",
-    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
       "avg_chats_by_week": "Average chats per day: week / previous",

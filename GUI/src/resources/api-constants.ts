@@ -1,7 +1,6 @@
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL;
 const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
 
-export const openSearchDashboard = 'https://opensearch.org/';
 
 export const getLinkToChat = (chatId: string, startDate?: string, endDate?: string) =>
   `/chat/history?chat=${chatId}&start=${startDate}&end=${endDate}`;
