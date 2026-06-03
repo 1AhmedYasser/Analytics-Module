@@ -7,7 +7,7 @@ import { Button, Card, Drawer, Icon, Track } from '../components';
 import DraggableListItem from '../components/overview/DraggableListItem';
 import MainMetricsArea from '../components/overview/MainMetricsArea';
 import LineGraph from '../components/LineGraph';
-import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
+import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
 import { OverviewMetricPreference } from '../types/overview-metrics';
 import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
@@ -198,9 +198,6 @@ const OverviewPage: React.FC = () => {
         />
       </Card>
 
-      <Card header={<h3>{t('overview.openSearchDashboard')}</h3>}>
-        <Button onClick={() => window.open(openSearchDashboard)}>{t('overview.openSearch')}</Button>
-      </Card>
     </DndProvider>
   );
 };
