@@ -67,8 +67,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
 
     const minPointSize =
       config.metric === 'avgConversationTime' ||
-      config.metric === 'avgWaitingTime' ||
-      config.metric === 'avgNumOfMessages'
+      config.metric === 'avgWaitingTime'
         ? 3
         : 0;
 
