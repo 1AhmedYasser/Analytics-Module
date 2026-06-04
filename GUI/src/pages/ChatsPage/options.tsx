@@ -37,4 +37,10 @@ export const chatOptions: Option[] = [
     ],
     unit: t('units.minutes') ?? 'minutes',
   },
+  {
+    id: 'theme_overview',
+    labelKey: 'chats.theme_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
 ];

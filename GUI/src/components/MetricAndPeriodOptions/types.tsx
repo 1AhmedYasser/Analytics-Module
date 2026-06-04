@@ -5,6 +5,7 @@ export interface Option {
   subOptions?: SubOption[];
   subRadioOptions?: { id: string; labelKey: string; color?: string }[];
   unit?: string;
+  defaultChartType?: string;
 }
 
 export interface SubOption {

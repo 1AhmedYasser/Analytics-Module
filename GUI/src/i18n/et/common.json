@@ -187,7 +187,8 @@
     "longWaitingTime": "Pikk ooteaeg",
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
     "medianWaitingTime": "Mediaan (min)",
-    "averageWaitingTime": "Aritmeetiline keskmine (min)"
+    "averageWaitingTime": "Aritmeetiline keskmine (min)",
+    "theme_overview": "Valdkonna ülevaade"
   },
   "chart": {
     "csa": "Csa",

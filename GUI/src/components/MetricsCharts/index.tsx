@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineDownload, MdOutlineInfo } from 'react-icons/md';
 import Tooltip from '../Tooltip';
 import { Button, Card, FormSelect, Icon } from '../../components';
@@ -21,6 +21,7 @@ type Props = {
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  defaultChartType?: string;
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {
@@ -37,7 +38,7 @@ const calcPct = (numerator: number, denominator: number): string => {
   return `${((numerator / denominator) * 100).toFixed(1)}%`;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
   const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
@@ -80,8 +81,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       value: 'lineChart',
     },
   ];
-  const [selectedChart, setSelectedChart] = useState<string>('barChart');
+  const [selectedChart, setSelectedChart] = useState<string>(defaultChartType ?? 'barChart');
   const isRatingDistribution = data.distributionData?.isRatingDistribution === true;
+
+  useEffect(() => {
+    setSelectedChart(defaultChartType ?? 'barChart');
+  }, [defaultChartType]);
   const distributionOrFeedBack = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
   const selectedData = isRatingDistribution ? (data.distributionData ?? data) : distributionOrFeedBack;
 

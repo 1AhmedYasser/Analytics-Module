@@ -1,18 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import OptionsPanel from '../../components/MetricAndPeriodOptions';
+import OptionsPanel, {Option} from '../../components/MetricAndPeriodOptions';
 import {MetricOptionsState} from '../../components/MetricAndPeriodOptions/types';
 import MetricsCharts from '../../components/MetricsCharts';
 import {chartDateFormat} from '../../util/charts-utils';
+import {randomColor} from '../../util/generateRandomColor';
 import {fetchData} from './data';
 import {chatOptions} from './options';
 import withAuthorization, {ROLES} from '../../hoc/with-authorization';
 import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
-import useStore from "../../store/user/store";
-import { endOfDay, formatISO, startOfDay } from 'date-fns';
+import useStore from '../../store/user/store';
+import {endOfDay, formatISO, startOfDay} from 'date-fns';
+import {getThemeOverview} from '../../resources/api-constants';
+import {Methods, request} from '../../util/axios-client';
+import {getDomainsArray} from '../../util/multiDomain-utils';
+import {getShowTestData} from '../../util/testChat-utils';
 
 const ChatsPage: React.FC = () => {
     const {t} = useTranslation();
@@ -24,9 +29,13 @@ const ChatsPage: React.FC = () => {
         colors: [],
     });
     const {setPeriodStatistics} = usePeriodStatisticsContext();
-    const [updateKey, setUpdateKey] = useState<number>(0)
+    const [updateKey, setUpdateKey] = useState<number>(0);
     const userDomains = useStore.getState().userDomains;
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
+
+    const themes = useRef<any[]>([]);
+    const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
+    const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
 
     if (multiDomainEnabled) {
         useStore.subscribe((state, prevState) => {
@@ -55,11 +64,63 @@ const ChatsPage: React.FC = () => {
 
     const [configsSubject] = useState(() => new Subject());
 
+    const fetchHandlerRef = useRef<(config: any) => any>(() => []);
+
+    const fetchThemeOverview = async (config: any) => {
+        setShowSelectAll(true);
+        let result: ChartData = {chartData: [], colors: []};
+        try {
+            const excluded_themes = themes.current.map((th) => th.id).filter((id) => !config?.options.includes(id));
+            const response: any = await request({
+                url: getThemeOverview(),
+                method: Methods.post,
+                withCredentials: true,
+                data: {
+                    start_date: config?.start,
+                    end_date: config?.end,
+                    excluded_themes: excluded_themes.length > 0 ? excluded_themes : [''],
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData(),
+                },
+            });
+            const res: {theme: string; count: number}[] = response.response;
+            const fetchedThemes = res.map((item) => ({
+                id: item.theme,
+                labelKey: item.theme,
+                color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
+                isSelected: true,
+            }));
+            if (themes.current.length === 0) {
+                themes.current = fetchedThemes;
+            }
+            const updatedMetrics = [...allMetrics];
+            updatedMetrics[4].subOptions = themes.current;
+            setAllMetrics(updatedMetrics);
+            const themeData: Record<string, number> = {};
+            res.forEach((item) => {
+                themeData[item.theme] = item.count;
+            });
+            result = {
+                chartData: [themeData],
+                colors: themes.current.map(({id, color}) => ({id, color})),
+            };
+        } catch (e) {
+            console.error(e);
+        }
+        return result;
+    };
+
+    fetchHandlerRef.current = (config: any) => {
+        if (config.metric === 'theme_overview') {
+            return fetchThemeOverview(config);
+        }
+        return fetchData(config);
+    };
+
     useEffect(() => {
         const subscription = configsSubject
-            .pipe(distinctUntilChanged(), debounceTime(500), switchMap(fetchData))
+            .pipe(distinctUntilChanged(), debounceTime(500), switchMap((config: any) => fetchHandlerRef.current(config)))
             .subscribe((data: any) => data && setChartData(data));
-
         return () => {
             subscription.unsubscribe();
         };
@@ -69,13 +130,18 @@ const ChatsPage: React.FC = () => {
         <>
             <h1>{t('menu.chats')}</h1>
             <OptionsPanel
-                metricOptions={chatOptions}
+                metricOptions={allMetrics}
+                enableSelectAll={showSelectAll}
                 dateFormat={chartDateFormat}
                 onChange={(config) => {
                     config.urls = userDomains ?? [];
+                    if (config.metric !== 'theme_overview') {
+                        themes.current = [];
+                        setShowSelectAll(false);
+                    }
                     setConfigs(config);
                     configsSubject.next(config);
-                    const selectedOption = chatOptions.find((x) => x.id === config.metric);
+                    const selectedOption = allMetrics.find((x) => x.id === config.metric);
                     if (!selectedOption) return;
                     setTableTitleKey(selectedOption.labelKey);
                     setUnit(selectedOption.unit);
@@ -88,6 +154,7 @@ const ChatsPage: React.FC = () => {
                 endDate={configs?.end ?? formatISO(endOfDay(new Date()))}
                 unit={unit}
                 groupByPeriod={configs?.groupByPeriod ?? 'day'}
+                defaultChartType={allMetrics.find((x) => x.id === configs?.metric)?.defaultChartType}
             />
         </>
     );
