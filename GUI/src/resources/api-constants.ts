@@ -150,3 +150,7 @@ export const getFollowUpActionOverview = (): string => {
   return baseUrl + '/chats/follow-up-action-overview';
 };
 
+export const getQualityOverview = (): string => {
+  return baseUrl + '/chats/quality-overview';
+};
+

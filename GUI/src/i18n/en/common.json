@@ -189,7 +189,17 @@
     "medianWaitingTime": "Median (min)",
     "averageWaitingTime": "Arithmetic (min)",
     "theme_overview": "Theme overview",
-    "follow_up_action_overview": "Follow-up Action overview"
+    "follow_up_action_overview": "Follow-up Action overview",
+    "quality_overview": "Quality overview",
+    "themes": "Themes",
+    "responseQuality": "Bürokratt Response Quality",
+    "followUp": "Follow-up statuses",
+    "qualityThemesSentence": "Themes assigned to {{value}}% of total chats.",
+    "qualityResponseQualitySentence": "Bürokratt Response Quality has been rated for {{value}}% of Bürokratt chats.",
+    "qualityFollowUpSentence": "Follow-up actions are assigned for {{value}} number of chats.",
+    "qualityThemesTooltip": "The sentence contains a formula that reflects how many conversations have a field selection assigned to them. The goal is to reflect how many conversations have a field assigned to them and how much of the total number of conversations it represents. The formula is: number of conversations with fields / total number of conversations * 100.",
+    "qualityResponseQualityTooltip": "The sentence contains a formula that reflects how many conversations have been assigned the Bürokratt response quality option. The purpose is to reflect how many Bürokratt conversations have been given a response rating and how much of the total Bürokratt conversation count this represents. The formula is: number of conversations with areas / total number of conversations with Bürokratt * 100.",
+    "qualityFollowUpTooltip": "The number in the sentence indicates how many conversations have received the follow-up status. The details or meaning of the status are not taken into account, instead it shows a counter of how many chats have a follow-up status field filled."
   },
   "chart": {
     "csa": "Csa",

@@ -1,0 +1,71 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Quality overview metric for chat analytics"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: end_date
+        type: string
+        description: "Body field 'end_date'"
+      - field: period
+        type: string
+        description: "Body field 'period'"
+      - field: start_date
+        type: string
+        description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
+
+check_for_required_parameters:
+  switch:
+    - condition: ${incoming.body.start_date == null || incoming.body.end_date == null || incoming.body.period == null}
+      next: return_incorrect_request
+  next: post_chart_data
+
+post_chart_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-quality-overview"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      period: ${incoming.body.period}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: chart_result
+
+assign_chart_data:
+  assign:
+    chart_data: ${chart_result.response.body}
+
+post_summary_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-quality-overview-summary"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: summary_result
+
+assign_summary_data:
+  assign:
+    summary_data: ${summary_result.response.body}
+
+return_value:
+  return: ${[chart_data, summary_data]}
+  next: end
+
+return_incorrect_request:
+  status: 400
+  return: 'missing parameters'
+  next: end
