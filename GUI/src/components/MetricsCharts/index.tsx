@@ -190,9 +190,10 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
               {t('feedback.xlsx')}
             </Button>
             <FormSelect
+              key={defaultChartType ?? 'barChart'}
               name={''}
               label={''}
-              defaultValue={'barChart'}
+              defaultValue={defaultChartType ?? 'barChart'}
               options={charts}
               onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
             />
