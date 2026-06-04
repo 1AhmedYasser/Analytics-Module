@@ -188,7 +188,8 @@
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
     "medianWaitingTime": "Mediaan (min)",
     "averageWaitingTime": "Aritmeetiline keskmine (min)",
-    "theme_overview": "Valdkonna ülevaade"
+    "theme_overview": "Valdkonna ülevaade",
+    "follow_up_action_overview": "Järeltegevuste staatuste ülevaade"
   },
   "chart": {
     "csa": "Csa",

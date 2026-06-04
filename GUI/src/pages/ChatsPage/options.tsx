@@ -43,4 +43,10 @@ export const chatOptions: Option[] = [
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'pieChart',
   },
+  {
+    id: 'follow_up_action_overview',
+    labelKey: 'chats.follow_up_action_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
 ];

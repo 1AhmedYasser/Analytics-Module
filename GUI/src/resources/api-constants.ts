@@ -146,3 +146,7 @@ export const getThemeOverview = (): string => {
   return baseUrl + '/chats/theme-overview';
 };
 
+export const getFollowUpActionOverview = (): string => {
+  return baseUrl + '/chats/follow-up-action-overview';
+};
+
