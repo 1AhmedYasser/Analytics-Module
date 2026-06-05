@@ -8,11 +8,11 @@ export type ChartType = {
 };
 
 export type QualityData = {
-  totalChats: number;
-  chatsWithThemes: number;
-  totalBuerokrattChats: number;
-  buerokrattChatsWithQuality: number;
-  chatsWithFollowUp: number;
+  readonly totalChats: number;
+  readonly chatsWithThemes: number;
+  readonly totalBuerokrattChats: number;
+  readonly buerokrattChatsWithQuality: number;
+  readonly chatsWithFollowUp: number;
 };
 
 export type ChartData = {
