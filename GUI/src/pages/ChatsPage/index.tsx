@@ -19,7 +19,7 @@ import {Methods, request} from '../../util/axios-client';
 import {getDomainsArray} from '../../util/multiDomain-utils';
 import {getShowTestData} from '../../util/testChat-utils';
 
-type ThemeOption = {
+type QualityMetricOption = {
     readonly id: string;
     readonly labelKey: string;
     readonly color: string;
@@ -40,8 +40,8 @@ const ChatsPage: React.FC = () => {
     const userDomains = useStore.getState().userDomains;
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
-    const themes = useRef<ThemeOption[]>([]);
-    const followUpStatuses = useRef<any[]>([]);
+    const themes = useRef<QualityMetricOption[]>([]);
+    const followUpStatuses = useRef<QualityMetricOption[]>([]);
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
 
@@ -95,7 +95,7 @@ const ChatsPage: React.FC = () => {
                 },
             });
             const res = response.response;
-            const fetchedThemes: ThemeOption[] = res.map((item) => ({
+            const fetchedThemes: QualityMetricOption[] = res.map((item) => ({
                 id: item.theme,
                 labelKey: item.theme,
                 color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
@@ -121,24 +121,27 @@ const ChatsPage: React.FC = () => {
         return result;
     };
 
-    const fetchFollowUpActionOverview = async (config: any) => {
+    const fetchFollowUpActionOverview = async (config: MetricOptionsState): Promise<ChartData> => {
         setShowSelectAll(true);
         let result: ChartData = {chartData: [], colors: []};
         try {
-            const excluded_actions = followUpStatuses.current.map((s) => s.id).filter((id) => !config?.options.includes(id));
-            const response: any = await request({
+            const excluded_actions = followUpStatuses.current.map((s) => s.id).filter((id) => !config.options.includes(id));
+            const response = await request<
+                Readonly<{ start_date: string; end_date: string; excluded_actions: string[]; urls: (string | null)[]; showTest: boolean }>,
+                { response: { followUpAction: string; count: number }[] }
+            >({
                 url: getFollowUpActionOverview(),
                 method: Methods.post,
                 withCredentials: true,
                 data: {
-                    start_date: config?.start,
-                    end_date: config?.end,
+                    start_date: config.start,
+                    end_date: config.end,
                     excluded_actions: excluded_actions.length > 0 ? excluded_actions : [''],
                     urls: getDomainsArray(),
                     showTest: getShowTestData(),
                 },
             });
-            const res: {followUpAction: string; count: number}[] = response.response;
+            const res = response.response;
             const fetchedStatuses = res.map((item) => ({
                 id: item.followUpAction,
                 labelKey: item.followUpAction,
