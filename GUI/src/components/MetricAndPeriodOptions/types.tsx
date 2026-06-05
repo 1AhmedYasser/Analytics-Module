@@ -1,3 +1,5 @@
+import { ChartViewType } from '../../types/chart';
+
 export interface Option {
   id: string;
   labelKey: string;
@@ -5,7 +7,7 @@ export interface Option {
   subOptions?: SubOption[];
   subRadioOptions?: { id: string; labelKey: string; color?: string }[];
   unit?: string;
-  defaultChartType?: 'barChart' | 'pieChart' | 'lineChart';
+  defaultChartType?: ChartViewType;
 }
 
 export interface SubOption {

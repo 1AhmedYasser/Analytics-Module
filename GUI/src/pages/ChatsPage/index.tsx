@@ -79,7 +79,7 @@ const ChatsPage: React.FC = () => {
         try {
             const excluded_themes = themes.current.map((th) => th.id).filter((id) => !config.options.includes(id));
             const response = await request<
-                { start_date: string; end_date: string; excluded_themes: string[]; urls: (string | null)[]; showTest: boolean },
+                Readonly<{ start_date: string; end_date: string; excluded_themes: string[]; urls: (string | null)[]; showTest: boolean }>,
                 { response: { theme: string; count: number }[] }
             >({
                 url: getThemeOverview(),
