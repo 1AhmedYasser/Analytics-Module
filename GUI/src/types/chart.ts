@@ -1,5 +1,7 @@
 import { MinPointSize } from 'recharts/types/util/BarUtils';
 
+export type ChartViewType = 'barChart' | 'pieChart' | 'lineChart';
+
 export type ChartType = {
   label: string;
   value: string;

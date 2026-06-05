@@ -8,20 +8,20 @@ import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
-import { ChartData, ChartType } from '../../types/chart';
+import { ChartData, ChartType, ChartViewType } from '../../types/chart';
 import { chartDataKey, formatDate, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
 
 type Props = {
-  title: any;
+  title: string;
   data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
-  defaultChartType?: string;
+  readonly defaultChartType?: ChartViewType;
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {
