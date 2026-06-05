@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Subject} from 'rxjs';
+import {type ObservableInput, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 import OptionsPanel, {Option} from '../../components/MetricAndPeriodOptions';
 import {MetricOptionsState} from '../../components/MetricAndPeriodOptions/types';
@@ -19,6 +19,13 @@ import {Methods, request} from '../../util/axios-client';
 import {getDomainsArray} from '../../util/multiDomain-utils';
 import {getShowTestData} from '../../util/testChat-utils';
 
+type ThemeOption = {
+    readonly id: string;
+    readonly labelKey: string;
+    readonly color: string;
+    readonly isSelected: boolean;
+};
+
 const ChatsPage: React.FC = () => {
     const {t} = useTranslation();
     const [tableTitleKey, setTableTitleKey] = useState(chatOptions[0].labelKey);
@@ -33,7 +40,7 @@ const ChatsPage: React.FC = () => {
     const userDomains = useStore.getState().userDomains;
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
-    const themes = useRef<any[]>([]);
+    const themes = useRef<ThemeOption[]>([]);
     const followUpStatuses = useRef<any[]>([]);
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
@@ -63,29 +70,32 @@ const ChatsPage: React.FC = () => {
         }
     }, [configs]);
 
-    const [configsSubject] = useState(() => new Subject());
+    const [configsSubject] = useState(() => new Subject<MetricOptionsState>());
 
-    const fetchHandlerRef = useRef<(config: any) => any>(() => []);
+    const fetchHandlerRef = useRef<(config: MetricOptionsState) => ObservableInput<ChartData>>(() => []);
 
-    const fetchThemeOverview = async (config: any) => {
+    const fetchThemeOverview = async (config: MetricOptionsState): Promise<ChartData> => {
         setShowSelectAll(true);
         let result: ChartData = {chartData: [], colors: []};
         try {
-            const excluded_themes = themes.current.map((th) => th.id).filter((id) => !config?.options.includes(id));
-            const response: any = await request({
+            const excluded_themes = themes.current.map((th) => th.id).filter((id) => !config.options.includes(id));
+            const response = await request<
+                Readonly<{ start_date: string; end_date: string; excluded_themes: string[]; urls: (string | null)[]; showTest: boolean }>,
+                { response: { theme: string; count: number }[] }
+            >({
                 url: getThemeOverview(),
                 method: Methods.post,
                 withCredentials: true,
                 data: {
-                    start_date: config?.start,
-                    end_date: config?.end,
+                    start_date: config.start,
+                    end_date: config.end,
                     excluded_themes: excluded_themes.length > 0 ? excluded_themes : [''],
                     urls: getDomainsArray(),
                     showTest: getShowTestData(),
                 },
             });
-            const res: {theme: string; count: number}[] = response.response;
-            const fetchedThemes = res.map((item) => ({
+            const res = response.response;
+            const fetchedThemes: ThemeOption[] = res.map((item) => ({
                 id: item.theme,
                 labelKey: item.theme,
                 color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
@@ -155,7 +165,7 @@ const ChatsPage: React.FC = () => {
         return result;
     };
 
-    fetchHandlerRef.current = (config: any) => {
+    fetchHandlerRef.current = (config: MetricOptionsState) => {
         if (config.metric === 'theme_overview') {
             return fetchThemeOverview(config);
         }
@@ -167,8 +177,8 @@ const ChatsPage: React.FC = () => {
 
     useEffect(() => {
         const subscription = configsSubject
-            .pipe(distinctUntilChanged(), debounceTime(500), switchMap((config: any) => fetchHandlerRef.current(config)))
-            .subscribe((data: any) => data && setChartData(data));
+            .pipe(distinctUntilChanged(), debounceTime(500), switchMap((config) => fetchHandlerRef.current(config)))
+            .subscribe((data: ChartData) => data && setChartData(data));
         return () => {
             subscription.unsubscribe();
         };
