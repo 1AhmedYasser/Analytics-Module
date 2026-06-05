@@ -21,7 +21,7 @@ type Props = {
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
-  defaultChartType?: ChartViewType;
+  readonly defaultChartType?: ChartViewType;
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {

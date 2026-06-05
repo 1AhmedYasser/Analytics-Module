@@ -20,10 +20,10 @@ import {getDomainsArray} from '../../util/multiDomain-utils';
 import {getShowTestData} from '../../util/testChat-utils';
 
 type ThemeOption = {
-    id: string;
-    labelKey: string;
-    color: string;
-    isSelected: boolean;
+    readonly id: string;
+    readonly labelKey: string;
+    readonly color: string;
+    readonly isSelected: boolean;
 };
 
 const ChatsPage: React.FC = () => {
