@@ -142,3 +142,7 @@ export const getIdleChats = (): string => {
   return baseUrl + '/chats/idle-count';
 };
 
+export const getThemeOverview = (): string => {
+  return baseUrl + '/chats/theme-overview';
+};
+

@@ -190,7 +190,8 @@
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
     "medianWaitingTime": "Median (min)",
-    "averageWaitingTime": "Arithmetic (min)"
+    "averageWaitingTime": "Arithmetic (min)",
+    "theme_overview": "Theme overview"
   },
   "chart": {
     "csa": "Csa",

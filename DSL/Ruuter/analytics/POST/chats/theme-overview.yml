@@ -1,0 +1,52 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Theme overview metric for chat analytics"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: end_date
+        type: string
+        description: "Body field 'end_date'"
+      - field: excluded_themes
+        type: object
+        description: "Body field 'excluded_themes'"
+      - field: start_date
+        type: string
+        description: "Body field 'start_date'"
+      - field: urls
+        type: array
+        description: "Body field 'urls'"
+      - field: showTest
+        type: boolean
+        description: "Body field 'showTest'"
+
+check_for_required_parameters:
+  switch:
+    - condition: ${incoming.body.start_date == null || incoming.body.end_date == null}
+      next: return_incorrect_request
+  next: post_step
+
+post_step:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-theme-overview"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      excluded_themes: ${incoming.body.excluded_themes}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: result
+
+return_value:
+  return: ${result.response.body}
+  next: end
+
+return_incorrect_request:
+  status: 400
+  return: 'missing parameters'
+  next: end
