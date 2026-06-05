@@ -14,12 +14,12 @@ import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import useStore from '../../store/user/store';
 import {endOfDay, formatISO, startOfDay} from 'date-fns';
-import {getThemeOverview} from '../../resources/api-constants';
+import {getFollowUpActionOverview, getThemeOverview} from '../../resources/api-constants';
 import {Methods, request} from '../../util/axios-client';
 import {getDomainsArray} from '../../util/multiDomain-utils';
 import {getShowTestData} from '../../util/testChat-utils';
 
-type ThemeOption = {
+type QualityMetricOption = {
     readonly id: string;
     readonly labelKey: string;
     readonly color: string;
@@ -40,7 +40,8 @@ const ChatsPage: React.FC = () => {
     const userDomains = useStore.getState().userDomains;
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
-    const themes = useRef<ThemeOption[]>([]);
+    const themes = useRef<QualityMetricOption[]>([]);
+    const followUpStatuses = useRef<QualityMetricOption[]>([]);
     const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
     const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
 
@@ -94,7 +95,7 @@ const ChatsPage: React.FC = () => {
                 },
             });
             const res = response.response;
-            const fetchedThemes: ThemeOption[] = res.map((item) => ({
+            const fetchedThemes: QualityMetricOption[] = res.map((item) => ({
                 id: item.theme,
                 labelKey: item.theme,
                 color: themes.current.find((th) => th.id === item.theme)?.color ?? randomColor(),
@@ -120,9 +121,59 @@ const ChatsPage: React.FC = () => {
         return result;
     };
 
+    const fetchFollowUpActionOverview = async (config: MetricOptionsState): Promise<ChartData> => {
+        setShowSelectAll(true);
+        let result: ChartData = {chartData: [], colors: []};
+        try {
+            const excluded_actions = followUpStatuses.current.map((s) => s.id).filter((id) => !config.options.includes(id));
+            const response = await request<
+                Readonly<{ start_date: string; end_date: string; excluded_actions: string[]; urls: (string | null)[]; showTest: boolean }>,
+                { response: { followUpAction: string; count: number }[] }
+            >({
+                url: getFollowUpActionOverview(),
+                method: Methods.post,
+                withCredentials: true,
+                data: {
+                    start_date: config.start,
+                    end_date: config.end,
+                    excluded_actions: excluded_actions.length > 0 ? excluded_actions : [''],
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData(),
+                },
+            });
+            const res = response.response;
+            const fetchedStatuses = res.map((item) => ({
+                id: item.followUpAction,
+                labelKey: item.followUpAction,
+                color: followUpStatuses.current.find((s) => s.id === item.followUpAction)?.color ?? randomColor(),
+                isSelected: true,
+            }));
+            if (followUpStatuses.current.length === 0) {
+                followUpStatuses.current = fetchedStatuses;
+            }
+            const updatedMetrics = [...allMetrics];
+            updatedMetrics[5].subOptions = followUpStatuses.current;
+            setAllMetrics(updatedMetrics);
+            const actionData: Record<string, number> = {};
+            res.forEach((item) => {
+                actionData[item.followUpAction] = item.count;
+            });
+            result = {
+                chartData: [actionData],
+                colors: followUpStatuses.current.map(({id, color}) => ({id, color})),
+            };
+        } catch (e) {
+            console.error(e);
+        }
+        return result;
+    };
+
     fetchHandlerRef.current = (config: MetricOptionsState) => {
         if (config.metric === 'theme_overview') {
             return fetchThemeOverview(config);
+        }
+        if (config.metric === 'follow_up_action_overview') {
+            return fetchFollowUpActionOverview(config);
         }
         return fetchData(config);
     };
@@ -145,9 +196,14 @@ const ChatsPage: React.FC = () => {
                 dateFormat={chartDateFormat}
                 onChange={(config) => {
                     config.urls = userDomains ?? [];
-                    if (config.metric !== 'theme_overview') {
+                    if (config.metric !== 'theme_overview' && config.metric !== 'follow_up_action_overview') {
                         themes.current = [];
+                        followUpStatuses.current = [];
                         setShowSelectAll(false);
+                    } else if (config.metric === 'theme_overview') {
+                        followUpStatuses.current = [];
+                    } else if (config.metric === 'follow_up_action_overview') {
+                        themes.current = [];
                     }
                     setConfigs(config);
                     configsSubject.next(config);

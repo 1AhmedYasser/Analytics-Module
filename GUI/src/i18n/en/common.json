@@ -191,7 +191,8 @@
     "allCsvAway": "All CSAs away with red status",
     "medianWaitingTime": "Median (min)",
     "averageWaitingTime": "Arithmetic (min)",
-    "theme_overview": "Theme overview"
+    "theme_overview": "Theme overview",
+    "follow_up_action_overview": "Follow-up Action overview"
   },
   "chart": {
     "csa": "Csa",
