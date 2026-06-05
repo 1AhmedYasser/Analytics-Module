@@ -15,13 +15,13 @@ import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
 
 type Props = {
-  title: any;
+  title: string;
   data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
-  defaultChartType?: string;
+  defaultChartType?: 'barChart' | 'pieChart' | 'lineChart';
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {
