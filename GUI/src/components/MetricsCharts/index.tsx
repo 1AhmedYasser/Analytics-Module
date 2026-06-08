@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineDownload, MdOutlineInfo } from 'react-icons/md';
 import Tooltip from '../Tooltip';
 import { Button, Card, FormSelect, Icon } from '../../components';
@@ -8,19 +8,20 @@ import './MetricsCharts.scss';
 import LineGraph from '../LineGraph';
 import PieGraph from '../PieGraph';
 import { getXlsx } from '../../resources/api-constants';
-import { ChartData, ChartType } from '../../types/chart';
+import { ChartData, ChartType, ChartViewType } from '../../types/chart';
 import { chartDataKey, formatDate, formatTimestamp, getKeys } from '../../util/charts-utils';
 import { GroupByPeriod } from '../MetricAndPeriodOptions/types';
 import { request, Methods } from '../../util/axios-client';
 import { saveFile } from 'util/file';
 
 type Props = {
-  title: any;
+  title: string;
   data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
   groupByPeriod: GroupByPeriod;
+  readonly defaultChartType?: ChartViewType;
 };
 
 const formatPeriodScore = (value: number | undefined | null): string => {
@@ -37,7 +38,7 @@ const calcPct = (numerator: number, denominator: number): string => {
   return `${((numerator / denominator) * 100).toFixed(1)}%`;
 };
 
-const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }: Props) => {
+const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
   const formattedEndDate = formatDate(new Date(endDate), 'yyyy-MM-dd');
@@ -80,8 +81,12 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       value: 'lineChart',
     },
   ];
-  const [selectedChart, setSelectedChart] = useState<string>('barChart');
+  const [selectedChart, setSelectedChart] = useState<string>(defaultChartType ?? 'barChart');
   const isRatingDistribution = data.distributionData?.isRatingDistribution === true;
+
+  useEffect(() => {
+    setSelectedChart(defaultChartType ?? 'barChart');
+  }, [defaultChartType]);
   const distributionOrFeedBack = selectedChart === 'pieChart' ? (data.distributionData ?? data) : (data.feedBackData ?? data);
   const selectedData = isRatingDistribution ? (data.distributionData ?? data) : distributionOrFeedBack;
 
@@ -185,9 +190,10 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
               {t('feedback.xlsx')}
             </Button>
             <FormSelect
+              key={defaultChartType ?? 'barChart'}
               name={''}
               label={''}
-              defaultValue={'barChart'}
+              defaultValue={defaultChartType ?? 'barChart'}
               options={charts}
               onSelectionChange={(value) => setSelectedChart(value?.value ?? 'barChart')}
             />
@@ -198,6 +204,39 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod }:
       <div className="charts_wrapper">
         {buildChart()}
       </div>
+      {data.qualityData != null && (
+        <div style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('chats.qualityThemesSentence', {
+                  value: data.qualityData.totalChats > 0
+                    ? ((data.qualityData.chatsWithThemes / data.qualityData.totalChats) * 100).toFixed(1)
+                    : '0',
+                })} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+          </div>
+          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityResponseQualityTooltip')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('chats.qualityResponseQualitySentence', {
+                  value: data.qualityData.totalBuerokrattChats > 0
+                    ? ((data.qualityData.buerokrattChatsWithQuality / data.qualityData.totalBuerokrattChats) * 100).toFixed(1)
+                    : '0',
+                })} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityFollowUpTooltip')}</span>}>
+              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                {t('chats.qualityFollowUpSentence', { value: data.qualityData.chatsWithFollowUp })} <MdOutlineInfo />
+              </span>
+            </Tooltip>
+          </div>
+        </div>
+      )}
       {isRatingDistribution && (data.distributionData?.totalChats != null || data.distributionData?.totalFeedback != null) && (
         <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
           <div style={{ marginBottom: 4 }}>

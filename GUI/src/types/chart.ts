@@ -1,13 +1,23 @@
 import { MinPointSize } from 'recharts/types/util/BarUtils';
 
+export type ChartViewType = 'barChart' | 'pieChart' | 'lineChart';
+
 export type ChartType = {
   label: string;
   value: string;
 };
 
+export type QualityData = {
+  readonly totalChats: number;
+  readonly chatsWithThemes: number;
+  readonly totalBuerokrattChats: number;
+  readonly buerokrattChatsWithQuality: number;
+  readonly chatsWithFollowUp: number;
+};
+
 export type ChartData = {
   chartData: Record<string, number | string>[];
-  colors: { id: string; color: string }[];
+  colors: { id: string; color: string | undefined }[];
   minPointSize?: MinPointSize;
   periodNps?: number;
   periodNpsByCsa?: Record<string, number>;
@@ -19,4 +29,5 @@ export type ChartData = {
   totalFeedback?: number;
   isFiveScale?: boolean;
   yAxisMax?: number;
+  qualityData?: QualityData;
 };

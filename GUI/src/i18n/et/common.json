@@ -86,7 +86,10 @@
     "success": {
       "updateSuccess": "Värskendamine õnnestus",
       "chatCommentChanged": "Vestluse kommentaar muudetud",
-      "userUpdated": "Kasutaja uuendatud"
+      "userUpdated": "Kasutaja uuendatud",
+      "conversationThemeSaved": "Valdkonna valik on salvestatud.",
+      "conversationQualitySaved": "Vastuse kvaliteedi valik on salvestatud.",
+      "conversationFollowUpActionSaved": "Järeltegevuse valik on salvestatud."
     }
   },
   "burokratt": {
@@ -197,7 +200,19 @@
     "avg_pick_time": "Keskmine vastamise kiirus asutuses",
     "avg_present_csa": "Keskmine nõustajate kohalolu",
     "num_chats_csa": "Vestluste arv nõustaja lõikes",
-    "avg_chat_time_csa": "Vestluste aeg (min) nõustaja lõikes"
+    "avg_chat_time_csa": "Vestluste aeg (min) nõustaja lõikes",
+    "theme_overview": "Valdkonna ülevaade",
+    "follow_up_action_overview": "Järeltegevuste staatuste ülevaade",
+    "quality_overview": "Kvaliteedi ülevaade",
+    "themes": "Valdkonnad",
+    "responseQuality": "Bürokrati vastuse kvaliteet",
+    "followUp": "Järeltegevuste staatused",
+    "qualityThemesSentence": "Vestluste koguarvust on {{value}}% vestlustele määratud valdkond.",
+    "qualityResponseQualitySentence": "Bürokrati vestluste koguarvust on {{value}}% määratud vastuse kvaliteet.",
+    "qualityFollowUpSentence": "Järeltegevuse staatusega on {{value}} vestlust.",
+    "qualityThemesTooltip": "Lauses on valem, mis peegeldab kui paljudele vestlustele on määratud valdkonna valik. Eesmärk on peegeldada kui paljudele vestlustele on määratud valdkond ja kui suure osa see kogu vestluste arvu vaatest moodustab. Valemi kuju on: valdkondadega vestluste arv / vestluste koguarv * 100.",
+    "qualityResponseQualityTooltip": "Lauses on valem, mis peegeldab kui paljudele vestlustele on määratud Bürokrati vastuse kvaliteedi valik. Eesmärk on peegeldada kui paljudele Bürokrati vestlustele on antud vastuse hinnang ja kui suure osa see kogu Bürokrati vestluste arvu vaatest moodustab. Valemi kuju on: valdkondadega vestluste arv / vestluste koguarv Bürokratiga * 100.",
+    "qualityFollowUpTooltip": "Lauses olev number näitab mitu vestlust on saanud endale järeltegevuse staatuse. Staatuse detaile või tähendust ei ole lauses arvesse võetud, sest loendatakse järeltegevuste staatuse välja täitmist koguvestluste vaatest."
   },
   "chart": {
     "csa": "Csa",
@@ -432,6 +447,7 @@
       "endTime": "Lõppaeg",
       "csaName": "Nõustaja nimi",
       "contact": "Kontaktandmed",
+      "www": "Veebileht",
       "authenticatedPerson": "Autenditud isik",
       "comment": "Kommentaar",
       "label": "Märksõna",
@@ -446,7 +462,17 @@
       "commentAddedDate": "Kommentaari lisamise kuupäev",
       "statusAdder": "Staatuse lisaja",
       "statusAddedDate": "Staatuse lisamise kuupäev",
-      "chooseAll": "Vali kõik"
+      "chooseAll": "Vali kõik",
+      "conversationResponseQuality": "Vastuse kvaliteet",
+      "followUpAction": "Järeltegevus",
+      "chooseFollowUpAction": "- Vali järeltegevus -",
+      "chooseConversationResponseQuality": "- Vali vastuse kvaliteet -",
+      "chooseConversationTheme": "- Vali vestluse valdkond -",
+      "conversationTheme": "Vestluse valdkond",
+      "theme": "Valdkond",
+      "responseQuality": "Bürokrati vastuse kvaliteet",
+      "followUpStatus": "Järeltegevuste staatus",
+      "analysis": "Analüüs"
     },
     "plainEvents": {
       "answered": "Vastatud",
@@ -554,6 +580,12 @@
         "requestedAt": "Taotletud Kell",
         "approve": "Kinnita"
       }
+    },
+    "quality": {
+      "theme": "Vestluse valdkond",
+      "responseQuality": "Vastuse kvaliteet",
+      "followUpAction": "Järeltegevus",
+      "selectionEmptied": "Valik tühjendatud"
     }
   },
   "units": {
