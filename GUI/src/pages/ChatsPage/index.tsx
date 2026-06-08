@@ -14,7 +14,8 @@ import {ChartData} from 'types/chart';
 import {usePeriodStatisticsContext} from 'hooks/usePeriodStatisticsContext';
 import useStore from '../../store/user/store';
 import {endOfDay, formatISO, startOfDay} from 'date-fns';
-import {getFollowUpActionOverview, getThemeOverview} from '../../resources/api-constants';
+import {getFollowUpActionOverview, getQualityOverview, getThemeOverview} from '../../resources/api-constants';
+import {chartDataKey} from '../../util/charts-utils';
 import {Methods, request} from '../../util/axios-client';
 import {getDomainsArray} from '../../util/multiDomain-utils';
 import {getShowTestData} from '../../util/testChat-utils';
@@ -121,6 +122,67 @@ const ChatsPage: React.FC = () => {
         return result;
     };
 
+    const fetchQualityOverview = async (config: MetricOptionsState): Promise<ChartData> => {
+        setShowSelectAll(true);
+        let result: ChartData = {chartData: [], colors: []};
+        try {
+            const response = await request<
+                Readonly<{ start_date: string; end_date: string; period: string; urls: (string | null)[]; showTest: boolean }>,
+                { response: [
+                    { time: string; total: number; themes: number; responseQuality: number; followUp: number }[],
+                    { totalChats: string; chatsWithThemes: string; totalBuerokrattChats: string; buerokrattChatsWithQuality: string; chatsWithFollowUp: string }[]
+                ] }
+            >({
+                url: getQualityOverview(),
+                method: Methods.post,
+                withCredentials: true,
+                data: {
+                    start_date: config.start,
+                    end_date: config.end,
+                    period: config.groupByPeriod || 'day',
+                    urls: getDomainsArray(),
+                    showTest: getShowTestData(),
+                },
+            });
+            const chartRows = response.response[0] ?? [];
+            const summary = response.response[1]?.[0];
+            const activeOptions: string[] = config.options ?? [];
+
+            const chartData = chartRows.map((row) => {
+                const obj: Record<string, number | string> = {
+                    [chartDataKey]: new Date(row.time).getTime(),
+                    [t('chats.totalCount')]: row.total,
+                };
+                if (activeOptions.includes('themes')) obj[t('chats.themes')] = row.themes;
+                if (activeOptions.includes('response_quality')) obj[t('chats.responseQuality')] = row.responseQuality;
+                if (activeOptions.includes('follow_up')) obj[t('chats.followUp')] = row.followUp;
+                return obj;
+            });
+
+            const colors: {id: string; color: string}[] = [{id: t('chats.totalCount'), color: '#008000'}];
+            if (activeOptions.includes('themes')) colors.push({id: t('chats.themes'), color: '#fdbf47'});
+            if (activeOptions.includes('response_quality')) colors.push({id: t('chats.responseQuality'), color: '#ed7d32'});
+            if (activeOptions.includes('follow_up')) colors.push({id: t('chats.followUp'), color: '#8ab4d5'});
+
+            result = {
+                chartData,
+                colors,
+                qualityData: summary
+                    ? {
+                          totalChats: parseInt(summary.totalChats) || 0,
+                          chatsWithThemes: parseInt(summary.chatsWithThemes) || 0,
+                          totalBuerokrattChats: parseInt(summary.totalBuerokrattChats) || 0,
+                          buerokrattChatsWithQuality: parseInt(summary.buerokrattChatsWithQuality) || 0,
+                          chatsWithFollowUp: parseInt(summary.chatsWithFollowUp) || 0,
+                      }
+                    : undefined,
+            };
+        } catch (e) {
+            console.error(e);
+        }
+        return result;
+    };
+
     const fetchFollowUpActionOverview = async (config: MetricOptionsState): Promise<ChartData> => {
         setShowSelectAll(true);
         let result: ChartData = {chartData: [], colors: []};
@@ -175,6 +237,9 @@ const ChatsPage: React.FC = () => {
         if (config.metric === 'follow_up_action_overview') {
             return fetchFollowUpActionOverview(config);
         }
+        if (config.metric === 'quality_overview') {
+            return fetchQualityOverview(config);
+        }
         return fetchData(config);
     };
 
@@ -196,7 +261,7 @@ const ChatsPage: React.FC = () => {
                 dateFormat={chartDateFormat}
                 onChange={(config) => {
                     config.urls = userDomains ?? [];
-                    if (config.metric !== 'theme_overview' && config.metric !== 'follow_up_action_overview') {
+                    if (config.metric !== 'theme_overview' && config.metric !== 'follow_up_action_overview' && config.metric !== 'quality_overview') {
                         themes.current = [];
                         followUpStatuses.current = [];
                         setShowSelectAll(false);
@@ -204,6 +269,10 @@ const ChatsPage: React.FC = () => {
                         followUpStatuses.current = [];
                     } else if (config.metric === 'follow_up_action_overview') {
                         themes.current = [];
+                    } else if (config.metric === 'quality_overview') {
+                        themes.current = [];
+                        followUpStatuses.current = [];
+                        setShowSelectAll(true);
                     }
                     setConfigs(config);
                     configsSubject.next(config);

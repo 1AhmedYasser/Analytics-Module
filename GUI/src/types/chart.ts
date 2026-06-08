@@ -7,6 +7,14 @@ export type ChartType = {
   value: string;
 };
 
+export type QualityData = {
+  readonly totalChats: number;
+  readonly chatsWithThemes: number;
+  readonly totalBuerokrattChats: number;
+  readonly buerokrattChatsWithQuality: number;
+  readonly chatsWithFollowUp: number;
+};
+
 export type ChartData = {
   chartData: Record<string, number | string>[];
   colors: { id: string; color: string }[];
@@ -21,4 +29,5 @@ export type ChartData = {
   totalFeedback?: number;
   isFiveScale?: boolean;
   yAxisMax?: number;
+  qualityData?: QualityData;
 };

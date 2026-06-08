@@ -49,4 +49,15 @@ export const chatOptions: Option[] = [
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'pieChart',
   },
+  {
+    id: 'quality_overview',
+    labelKey: 'chats.quality_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'barChart',
+    subOptions: [
+      { id: 'themes', labelKey: 'chats.themes', color: '#fdbf47', isSelected: true },
+      { id: 'response_quality', labelKey: 'chats.responseQuality', color: '#ed7d32', isSelected: true },
+      { id: 'follow_up', labelKey: 'chats.followUp', color: '#8ab4d5', isSelected: true },
+    ],
+  },
 ];
