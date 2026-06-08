@@ -511,7 +511,9 @@ const ChatsPage: React.FC = () => {
           ) {
             themes.current = [];
             followUpStatuses.current = [];
-            setShowSelectAll(false);
+            if (!CSA_METRIC_IDS.has(config.metric)) {
+              setShowSelectAll(false);
+            }
           } else if (config.metric === 'theme_overview') {
             followUpStatuses.current = [];
           } else if (config.metric === 'follow_up_action_overview') {
