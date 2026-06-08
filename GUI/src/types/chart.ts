@@ -17,7 +17,7 @@ export type QualityData = {
 
 export type ChartData = {
   chartData: Record<string, number | string>[];
-  colors: { id: string; color: string }[];
+  colors: { id: string; color: string | undefined }[];
   minPointSize?: MinPointSize;
   periodNps?: number;
   periodNpsByCsa?: Record<string, number>;
