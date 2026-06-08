@@ -128,7 +128,7 @@ const ChatsPage: React.FC = () => {
       });
       result = {
         chartData: mapped,
-        colors: chatOptions[6].subOptions!.map(({ id, color }) => ({
+        colors: chatOptions[4].subOptions!.map(({ id, color }) => ({
           id: t(`chart.${id}`),
           color,
         })),
@@ -218,14 +218,20 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      const fetchedAdvisors = getAdvisorsList(res);
-      const updatedMetrics = [...allMetrics];
-      updatedMetrics[9].subOptions = fetchedAdvisors;
-      advisors.current = fetchedAdvisors;
-      setAllMetrics(updatedMetrics);
+      if (advisors.current.length === 0) {
+        const fetchedAdvisors = getAdvisorsList(res);
+        advisors.current = fetchedAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[7].subOptions = fetchedAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
+      const responseAdvisors = getAdvisorsList(res).map((a) => ({
+        ...a,
+        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+      }));
       result = {
-        chartData: getAdvisorChartData(res, fetchedAdvisors, 'chart.count'),
-        colors: allMetrics[9].subOptions!.map(({ labelKey, color }) => ({ id: labelKey, color })),
+        chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
+        colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
       };
     } catch (e) {
       console.error(e);
@@ -252,37 +258,26 @@ const ChatsPage: React.FC = () => {
         },
       });
       const res = response.response;
-      const fetchedAdvisors = getAdvisorsList(res);
-      const updatedMetrics = [...allMetrics];
-      updatedMetrics[10].subOptions = fetchedAdvisors;
-      advisors.current = fetchedAdvisors;
-      setAllMetrics(updatedMetrics);
+      if (advisors.current.length === 0) {
+        const fetchedAdvisors = getAdvisorsList(res);
+        advisors.current = fetchedAdvisors;
+        const updatedMetrics = [...allMetrics];
+        updatedMetrics[8].subOptions = fetchedAdvisors;
+        setAllMetrics(updatedMetrics);
+      }
+      const responseAdvisors = getAdvisorsList(res).map((a) => ({
+        ...a,
+        color: advisors.current.find((s) => s.id === a.id)?.color ?? a.color,
+      }));
       result = {
-        chartData: getAdvisorChartData(res, fetchedAdvisors, 'chart.count'),
-        colors: allMetrics[10].subOptions!.map(({ labelKey, color }) => ({ id: labelKey, color })),
+        chartData: getAdvisorChartData(res, responseAdvisors, 'chart.count'),
+        colors: responseAdvisors.map(({ labelKey, color }) => ({ id: labelKey, color })),
         minPointSize: 3,
       };
     } catch (e) {
       console.error(e);
     }
     return result;
-  };
-
-  fetchHandlerRef.current = (config: any) => {
-    switch (config.metric) {
-      case 'chat_forwards':
-        return fetchChatsForwards(config);
-      case 'avg_pick_time':
-        return fetchAverageChatPickUpTime(config);
-      case 'avg_present_csa':
-        return fetchAveragePresentCsas(config);
-      case 'num_chats_csa':
-        return fetchTotalCsaChats(config);
-      case 'avg_chat_time_csa':
-        return fetchAverageCsaChatTime(config);
-      default:
-        return fetchData(config);
-    }
   };
 
   const fetchThemeOverview = async (config: MetricOptionsState): Promise<ChartData> => {
@@ -322,7 +317,7 @@ const ChatsPage: React.FC = () => {
         themes.current = fetchedThemes;
       }
       const updatedMetrics = [...allMetrics];
-      updatedMetrics[4].subOptions = themes.current;
+      updatedMetrics[9].subOptions = themes.current;
       setAllMetrics(updatedMetrics);
       const themeData: Record<string, number> = {};
       res.forEach((item) => {
@@ -444,7 +439,7 @@ const ChatsPage: React.FC = () => {
         followUpStatuses.current = fetchedStatuses;
       }
       const updatedMetrics = [...allMetrics];
-      updatedMetrics[5].subOptions = followUpStatuses.current;
+      updatedMetrics[10].subOptions = followUpStatuses.current;
       setAllMetrics(updatedMetrics);
       const actionData: Record<string, number> = {};
       res.forEach((item) => {
@@ -461,16 +456,26 @@ const ChatsPage: React.FC = () => {
   };
 
   fetchHandlerRef.current = (config: MetricOptionsState) => {
-    if (config.metric === 'theme_overview') {
-      return fetchThemeOverview(config);
+    switch (config.metric) {
+      case 'chat_forwards':
+        return fetchChatsForwards(config);
+      case 'avg_pick_time':
+        return fetchAverageChatPickUpTime(config);
+      case 'avg_present_csa':
+        return fetchAveragePresentCsas(config);
+      case 'num_chats_csa':
+        return fetchTotalCsaChats(config);
+      case 'avg_chat_time_csa':
+        return fetchAverageCsaChatTime(config);
+      case 'theme_overview':
+        return fetchThemeOverview(config);
+      case 'follow_up_action_overview':
+        return fetchFollowUpActionOverview(config);
+      case 'quality_overview':
+        return fetchQualityOverview(config);
+      default:
+        return fetchData(config);
     }
-    if (config.metric === 'follow_up_action_overview') {
-      return fetchFollowUpActionOverview(config);
-    }
-    if (config.metric === 'quality_overview') {
-      return fetchQualityOverview(config);
-    }
-    return fetchData(config);
   };
 
   useEffect(() => {
