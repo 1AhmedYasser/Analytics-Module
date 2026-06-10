@@ -26,6 +26,9 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: timezone
+        type: string
+        description: "Body field 'timezone'"
 
 check_for_body:
   switch:
@@ -40,6 +43,7 @@ extract_request_data:
     period: ${incoming.body.period}
     urls: ${incoming.body.urls}
     showTest: ${incoming.body.showTest}
+    timezone: ${incoming.body.timezone}
 
 check_for_required_parameters:
   switch:
@@ -72,6 +76,7 @@ byk:
       end: ${end}
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: results
 
 assign_byk:
@@ -98,6 +103,7 @@ csa:
       end: ${end}
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: results
 
 assign_csa:
@@ -124,6 +130,7 @@ total:
       end: ${end}
       urls: ${urls}
       showTest: ${showTest}
+      timezone: ${timezone}
   result: results
 
 assign_total:
