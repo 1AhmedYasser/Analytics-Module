@@ -1,6 +1,6 @@
 WITH latest_per_base AS (
     SELECT DISTINCT ON (c.base_id)
-    DATE_TRUNC(:period, c.ended) AS time,
+    DATE_TRUNC(:period, c.ended AT TIME ZONE :timezone) AT TIME ZONE :timezone AS time,
     c.base_id,
     c.test,
     c.end_user_url,

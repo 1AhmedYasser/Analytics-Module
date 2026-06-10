@@ -6,7 +6,7 @@ WHERE c.status = 'ENDED'
     ORDER BY c.base_id, c.updated DESC
 )
 SELECT
-    DATE_TRUNC(:period, lp.ended) AS time,
+    DATE_TRUNC(:period, lp.ended AT TIME ZONE :timezone) AT TIME ZONE :timezone AS time,
     COUNT(*) AS count
 FROM latest_per_base lp
 WHERE (:showTest = TRUE OR lp.test = FALSE)
