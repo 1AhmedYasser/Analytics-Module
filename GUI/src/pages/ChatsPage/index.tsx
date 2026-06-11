@@ -338,7 +338,7 @@ const ChatsPage: React.FC = () => {
     let result: ChartData = { chartData: [], colors: [] };
     try {
       const response = await request<
-        Readonly<{ start_date: string; end_date: string; period: string; urls: (string | null)[]; showTest: boolean }>,
+        Readonly<{ start_date: string; end_date: string; period: string; urls: (string | null)[]; showTest: boolean; timezone: string }>,
         {
           response: [
             { time: string; total: number; themes: number; responseQuality: number; followUp: number }[],
@@ -361,6 +361,7 @@ const ChatsPage: React.FC = () => {
           period: config.groupByPeriod || 'day',
           urls: getDomainsArray(),
           showTest: getShowTestData(),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       });
       const chartRows = response.response[0] ?? [];
