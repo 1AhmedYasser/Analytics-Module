@@ -23,6 +23,9 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: timezone
+        type: string
+        description: "Body field 'timezone'"
 
 check_for_required_parameters:
   switch:
@@ -40,6 +43,7 @@ post_chart_data:
       period: ${incoming.body.period}
       urls: ${incoming.body.urls}
       showTest: ${incoming.body.showTest}
+      timezone: ${incoming.body.timezone}
   result: chart_result
 
 assign_chart_data:
