@@ -2,6 +2,7 @@
   "global": {
     "save": "Salvesta",
     "add": "Lisa",
+    "apply": "Rakenda",
     "edit": "Muuda",
     "delete": "Kustuta",
     "cancel": "Tühista",
