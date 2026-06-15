@@ -26,6 +26,9 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: timezone
+        type: string
+        description: "Body field 'timezone'"
 
 check_for_required_parameters:
   switch:
@@ -44,6 +47,7 @@ post_step:
       excluded_csas: ${incoming.body.excluded_csas}
       urls: ${incoming.body.urls}
       showTest: ${incoming.body.showTest}
+      timezone: ${incoming.body.timezone}
   result: result
 
 return_value:
