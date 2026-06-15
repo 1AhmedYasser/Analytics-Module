@@ -215,6 +215,7 @@ const ChatsPage: React.FC = () => {
           excluded_csas: excluded_csas.length > 0 ? excluded_csas : [''],
           urls: getDomainsArray(),
           showTest: getShowTestData(),
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       });
       const res = response.response;
