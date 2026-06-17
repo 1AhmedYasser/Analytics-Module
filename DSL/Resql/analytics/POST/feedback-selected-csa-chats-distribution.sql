@@ -92,8 +92,13 @@ scale_ratings AS (
         )
     ) s
 ),
+valid_feedback_count AS (
+    SELECT COALESCE(SUM(rc.cnt), 0) AS cnt
+    FROM scale_ratings sr
+    JOIN rating_counts rc ON sr.rating = rc.rating
+),
 no_feedback_count AS (
-    SELECT (SELECT total_chats FROM all_ended_chats) - (SELECT COUNT(*) FROM chats_filtered) AS cnt
+    SELECT (SELECT total_chats FROM all_ended_chats) - (SELECT cnt FROM valid_feedback_count) AS cnt
 ),
 distribution_with_no_feedback AS (
     SELECT json_agg(elem ORDER BY ord, rating_nullable NULLS LAST) AS distribution
@@ -107,7 +112,7 @@ distribution_with_no_feedback AS (
 )
 SELECT json_build_object(
     'distribution', (SELECT distribution FROM distribution_with_no_feedback),
-    'total_feedback', (SELECT COUNT(*) FROM chats_filtered),
+    'total_feedback', (SELECT cnt FROM valid_feedback_count),
     'total_chats', (SELECT total_chats FROM all_ended_chats),
     'is_five_scale', (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
 ) AS result;
