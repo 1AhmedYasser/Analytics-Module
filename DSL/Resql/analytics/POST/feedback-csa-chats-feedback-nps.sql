@@ -55,14 +55,14 @@ point_nps AS (
                WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
                    ROUND(
                        100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
-                           / NULLIF(COUNT(base_id), 0),
+                           / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 1 AND 5 THEN 1 ELSE 0 END), 0),
                        2
                    )
                ELSE
                    COALESCE(ROUND(
                        (
-                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
-                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
                        ) * 100,
                        2
                    ), 0)
@@ -76,14 +76,14 @@ period_nps AS (
                WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
                    ROUND(
                        100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
-                           / NULLIF(COUNT(base_id), 0),
+                           / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 1 AND 5 THEN 1 ELSE 0 END), 0),
                        2
                    )
                ELSE
                    COALESCE(ROUND(
                        (
-                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
-                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
                        ) * 100,
                        2
                    ), 0)
