@@ -17,6 +17,10 @@ LEFT JOIN LATERAL (
     FROM chat_measurements
     WHERE chat_base_id = lp.base_id::uuid
       AND type = 'THEME'
+      AND created_at = (
+          SELECT MAX(created_at) FROM chat_measurements
+          WHERE chat_base_id = lp.base_id::uuid AND type = 'THEME'
+      )
       AND value IS NOT NULL
       AND value <> ''
     LIMIT 1
@@ -26,6 +30,10 @@ LEFT JOIN LATERAL (
     FROM chat_measurements
     WHERE chat_base_id = lp.base_id::uuid
       AND type = 'QUALITY'
+      AND created_at = (
+          SELECT MAX(created_at) FROM chat_measurements
+          WHERE chat_base_id = lp.base_id::uuid AND type = 'QUALITY'
+      )
       AND value IS NOT NULL
       AND value <> ''
     LIMIT 1
@@ -35,6 +43,10 @@ LEFT JOIN LATERAL (
     FROM chat_measurements
     WHERE chat_base_id = lp.base_id::uuid
       AND type = 'FOLLOW_UP_ACTION'
+      AND created_at = (
+          SELECT MAX(created_at) FROM chat_measurements
+          WHERE chat_base_id = lp.base_id::uuid AND type = 'FOLLOW_UP_ACTION'
+      )
       AND value IS NOT NULL
       AND value <> ''
     LIMIT 1
