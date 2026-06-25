@@ -1,9 +1,13 @@
+import { ChartViewType } from '../../types/chart';
+
 export interface Option {
   id: string;
   labelKey: string;
   additionalKey?: string;
   subOptions?: SubOption[];
+  subRadioOptions?: { id: string; labelKey: string; color?: string }[];
   unit?: string;
+  readonly defaultChartType?: ChartViewType;
 }
 
 export interface SubOption {

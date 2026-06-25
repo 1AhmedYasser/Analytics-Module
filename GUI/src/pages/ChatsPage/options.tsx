@@ -38,13 +38,56 @@ export const chatOptions: Option[] = [
     unit: t('units.minutes') ?? 'minutes',
   },
   {
-    id: 'avgNumOfMessages',
-    labelKey: 'chats.avgNumOfMessages',
-    unit: t('units.messages') ?? 'messages',
+    id: 'chat_forwards',
+    labelKey: 'chats.chat_forwards',
+    subOptions: [
+      { id: 'receivedChats', labelKey: 'chats.forwards.from_csa', color: '#FFB511' },
+      { id: 'forwardedChats', labelKey: 'chats.forwards.to_csa', color: '#ED7D31' },
+      { id: 'forwardedExternally', labelKey: 'chats.forwards.to_other', color: '#8BB4D5' },
+    ],
+    unit: t('units.chats') ?? 'chats',
   },
   {
-    id: 'idle',
-    labelKey: 'chats.idle',
+    id: 'avg_pick_time',
+    labelKey: 'chats.avg_pick_time',
+    unit: t('units.minutes') ?? 'minutes',
+  },
+  {
+    id: 'avg_present_csa',
+    labelKey: 'chats.avg_present_csa',
+    unit: t('units.counselors') ?? 'counselors',
+  },
+  {
+    id: 'num_chats_csa',
+    labelKey: 'chats.num_chats_csa',
     unit: t('units.chats') ?? 'chats',
+  },
+  {
+    id: 'avg_chat_time_csa',
+    labelKey: 'chats.avg_chat_time_csa',
+    unit: t('units.minutes') ?? 'minutes',
+  },
+  {
+    id: 'theme_overview',
+    labelKey: 'chats.theme_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
+  {
+    id: 'follow_up_action_overview',
+    labelKey: 'chats.follow_up_action_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
+  {
+    id: 'quality_overview',
+    labelKey: 'chats.quality_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'barChart',
+    subOptions: [
+      { id: 'themes', labelKey: 'chats.themes', color: '#fdbf47', isSelected: true },
+      { id: 'response_quality', labelKey: 'chats.responseQuality', color: '#ed7d32', isSelected: true },
+      { id: 'follow_up', labelKey: 'chats.followUp', color: '#8ab4d5', isSelected: true },
+    ],
   },
 ];

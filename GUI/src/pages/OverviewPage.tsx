@@ -7,7 +7,7 @@ import { Button, Card, Drawer, Icon, Track } from '../components';
 import DraggableListItem from '../components/overview/DraggableListItem';
 import MainMetricsArea from '../components/overview/MainMetricsArea';
 import LineGraph from '../components/LineGraph';
-import { openSearchDashboard, overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
+import { overviewMetricPreferences, overviewMetrics } from '../resources/api-constants';
 import { OverviewMetricPreference } from '../types/overview-metrics';
 import { reorderItem } from '../util/reorder-array';
 import { formatDate } from '../util/charts-utils';
@@ -31,13 +31,20 @@ const OverviewPage: React.FC = () => {
   const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
 
-  if(multiDomainEnabled) {
-    useStore.subscribe((state, prevState) => {
-      if(JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
-        setUpdateKey(prevState => prevState + 1);
+  useEffect(() => {
+    if (!multiDomainEnabled) return;
+
+    const unsubscribe = useStore.subscribe((state, prevState) => {
+      if (
+          JSON.stringify(state.userDomains) !==
+          JSON.stringify(prevState.userDomains)
+      ) {
+        setUpdateKey((v) => v + 1);
       }
     });
-  }
+
+    return () => unsubscribe();
+  }, [multiDomainEnabled, useStore]);
 
   const { t } = useTranslation();
 
@@ -165,7 +172,7 @@ const OverviewPage: React.FC = () => {
       <Drawer
         onClose={() => setDrawerIsHidden(true)}
         title={t('overview.editView')}
-        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '450px' }}
+        style={{ transform: drawerIsHidden ? 'translate(100%)' : 'none', width: '450px', marginTop: '60px' }}
       >
         {metricPreferences.map((m, i) => renderList(m, i))}
       </Drawer>
@@ -191,9 +198,6 @@ const OverviewPage: React.FC = () => {
         />
       </Card>
 
-      <Card header={<h3>{t('overview.openSearchDashboard')}</h3>}>
-        <Button onClick={() => window.open(openSearchDashboard)}>{t('overview.openSearch')}</Button>
-      </Card>
     </DndProvider>
   );
 };

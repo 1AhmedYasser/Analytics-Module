@@ -34,8 +34,10 @@ chat_csas AS (
         :showTest = TRUE
             OR chat.test = FALSE
         )
-        AND customer_support_id NOT IN ('', 'chatbot')
-        AND EXISTS (
+      AND customer_support_id NOT IN (:excluded_csas)
+      AND customer_support_id <> ''
+      AND customer_support_id <> 'chatbot'
+      AND EXISTS (
             SELECT 1
             FROM message
             WHERE message.chat_base_id = chat.base_id
@@ -55,14 +57,14 @@ point_nps AS (
                WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
                    ROUND(
                        100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
-                           / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 1 AND 5 THEN 1 ELSE 0 END), 0),
+                           / NULLIF(COUNT(base_id), 0),
                        2
                    )
                ELSE
                    COALESCE(ROUND(
                        (
-                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
-                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
                        ) * 100,
                        2
                    ), 0)
@@ -76,14 +78,14 @@ period_nps AS (
                WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) THEN
                    ROUND(
                        100.0 * SUM(CASE WHEN feedback_rating_dynamic IN (4, 5) THEN 1 ELSE 0 END)
-                           / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 1 AND 5 THEN 1 ELSE 0 END), 0),
+                           / NULLIF(COUNT(base_id), 0),
                        2
                    )
                ELSE
                    COALESCE(ROUND(
                        (
-                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
-                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 10 THEN 1 ELSE 0 END), 0))
+                           (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 9 AND 10 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
+                           - (SUM(CASE WHEN feedback_rating_dynamic BETWEEN 0 AND 6 THEN 1 ELSE 0 END) * 1.0 / NULLIF(COUNT(base_id), 0))
                        ) * 100,
                        2
                    ), 0)
@@ -97,4 +99,4 @@ SELECT json_build_object(
     'pointNps', (SELECT json_agg(json_build_object('dateTime', date_time, 'nps', nps)) FROM point_nps),
     'periodNps', (SELECT nps FROM period_nps),
     'isFiveScale', (SELECT is_five_scale FROM is_five)
-) AS result
+) AS result;

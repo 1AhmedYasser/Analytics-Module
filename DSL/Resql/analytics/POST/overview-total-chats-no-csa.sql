@@ -17,12 +17,6 @@ WHERE EXISTS (
     WHERE message.chat_base_id = c.base_id
   AND message.author_role = 'backoffice-user'
     )
-  AND EXISTS (
-    SELECT 1
-    FROM message
-    WHERE message.chat_base_id = c.base_id
-  AND message.author_role = 'buerokratt'
-    )
   AND (c.ended AT TIME ZONE :timezone) >= date_trunc(
     :group_period,
     (current_date AT TIME ZONE :timezone - concat('1 ', :group_period)::INTERVAL)

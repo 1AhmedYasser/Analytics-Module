@@ -12,14 +12,32 @@ import { ChartData } from 'types/chart';
 
 type Props = {
   data: ChartData;
+  isRatingDistribution?: boolean;
 };
 
-const PieGraph = ({ data }: Props) => {
+const PieGraph = ({ data, isRatingDistribution }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
-  const percentages = useMemo(() => calculatePercentagesFromResponse(data?.chartData ?? []), [data?.chartData]);
+  const percentages = useMemo(() => {
+    const chartData = data?.chartData ?? [];
+    if (isRatingDistribution && chartData.length > 0 && ('rating' in chartData[0] || 'count' in chartData[0])) {
+      const typed = chartData as { rating: number | string; count: number }[];
+      const total = typed.reduce((s, d) => s + d.count, 0);
+      return typed.map((d) => ({
+        name: String(d.rating),
+        value: total === 0 ? 0 : Math.round((d.count / total) * 1000) / 10,
+      }));
+    }
+    return calculatePercentagesFromResponse(
+      chartData.map(obj =>
+        Object.fromEntries(
+          Object.entries(obj).map(([k, v]) => [k, typeof v === 'number' ? v : Number(v)])
+        )
+      ) as Record<string, number>[]
+    );
+  }, [data?.chartData, isRatingDistribution]);
 
   useEffect(() => {
     const handleResize = () => {

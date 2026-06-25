@@ -18,10 +18,6 @@ declaration:
         type: string
         description: "Body field 'selectedDomains'"
 
-
-checkV:
-  log: ${incoming.body}
-
 extractRequestData:
   assign:
     userId: ${incoming.body.userId}

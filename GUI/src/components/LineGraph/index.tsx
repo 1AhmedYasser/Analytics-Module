@@ -6,24 +6,28 @@ import {
   formatDate,
   formatTotalPeriodCount,
   getColor,
+  getDistributionYAxisTicks,
   getKeys,
   getTicks,
 } from '../../util/charts-utils';
+import { useTranslation } from 'react-i18next';
 import { ChartData } from 'types/chart';
 import { usePeriodStatisticsContext } from 'hooks/usePeriodStatisticsContext';
-import { CustomChartTooltip } from 'components';
+import { CustomChartTooltip, RatingDistributionTooltip } from 'components';
 
 type Props = {
   data: ChartData;
   startDate: string;
   endDate: string;
   unit?: string;
+  isRatingDistribution?: boolean;
 };
 
-const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
+const LineGraph = ({ data, startDate, endDate, unit, isRatingDistribution }: Props) => {
   const [width, setWidth] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { periodStatistics } = usePeriodStatisticsContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,6 +40,33 @@ const LineGraph = ({ data, startDate, endDate, unit }: Props) => {
 
   const domain = [new Date(startDate).getTime(), new Date(endDate).getTime()];
   const ticks = getTicks(startDate, endDate, new Date(startDate), new Date(endDate), 5);
+  const ratingDistributionTicks = getDistributionYAxisTicks(data.yAxisMax ?? 10);
+
+  if (isRatingDistribution && (data?.chartData?.length ?? 0) > 0 && data.chartData?.[0] && 'rating' in data.chartData[0]) {
+    return (
+      <div ref={ref}>
+        <LineChart
+          width={width ?? 0}
+          height={(width ?? 0) / 3.76}
+          data={data.chartData}
+          margin={{ top: 20, right: 65, left: 10, bottom: 70 }}
+        >
+          <Tooltip content={<RatingDistributionTooltip />} />
+          <XAxis dataKey="rating" type="category" />
+          <YAxis domain={[0, data.yAxisMax ?? 10]} ticks={ratingDistributionTicks} allowDataOverflow allowDecimals={false}>
+            <Label dx={-25} angle={270} value={unit ?? String(t('chart.count'))} />
+          </YAxis>
+          <CartesianGrid stroke="#f5f5f5" />
+          <Line
+            dataKey="count"
+            type="monotone"
+            stroke={getColor(data, 'count') || '#8884d8'}
+            fill={getColor(data, 'count') || '#8884d8'}
+          />
+        </LineChart>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref}>

@@ -1,7 +1,6 @@
 const baseUrl = import.meta.env.REACT_APP_RUUTER_V2_ANALYTICS_API_URL;
 const ruuterUrl = import.meta.env.REACT_APP_DOCKER_RUUTER;
 
-export const openSearchDashboard = 'https://opensearch.org/';
 
 export const getLinkToChat = (chatId: string, startDate?: string, endDate?: string) =>
   `/chat/history?chat=${chatId}&start=${startDate}&end=${endDate}`;
@@ -87,6 +86,14 @@ export const getNpsOnSelectedCSAChatsFeedback = (): string => {
   return baseUrl + '/feedbacks/agents/nps';
 };
 
+export const getDistributionOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/agents/distribution';
+};
+
+export const getNpsAggregateOnSelectedCSAChatsFeedback = (): string => {
+  return baseUrl + '/feedbacks/agents/nps-aggregate';
+};
+
 export const getNegativeFeedbackChats = (): string => {
   return baseUrl + '/feedbacks/negative';
 };
@@ -127,10 +134,6 @@ export const getAvgChatWaitingTime = (): string => {
   return baseUrl + '/chats/avg-median-waiting-time';
 };
 
-export const getAvgMessagesInChats = (): string => {
-  return baseUrl + '/chats/avg-num-of-messages';
-};
-
 export const getDurationChats = (): string => {
   return baseUrl + '/chats/avg-duration';
 };
@@ -139,6 +142,15 @@ export const getIdleChats = (): string => {
   return baseUrl + '/chats/idle-count';
 };
 
-export const getBykEndedChats = (): string => {
-  return baseUrl + '/chats/byk-ended-count';
+export const getThemeOverview = (): string => {
+  return baseUrl + '/chats/theme-overview';
 };
+
+export const getFollowUpActionOverview = (): string => {
+  return baseUrl + '/chats/follow-up-action-overview';
+};
+
+export const getQualityOverview = (): string => {
+  return baseUrl + '/chats/quality-overview';
+};
+

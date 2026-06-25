@@ -2,6 +2,7 @@
   "global": {
     "save": "Save",
     "add": "Add",
+    "apply": "Apply",
     "edit": "Edit",
     "delete": "Delete",
     "cancel": "Cancel",
@@ -48,7 +49,9 @@
     "dateTime": "Date",
     "statusClarification": "Status clarification",
     "selectAll": "Select all",
-    "test": "Test"
+    "test": "Test",
+    "preserve": "Preserve",
+    "clearFilters": "Clear filters"
   },
   "mainMenu": {
     "closeMenu": "Close menu",
@@ -56,6 +59,8 @@
   },
   "multiDomains": {
     "selectDomains": "Select Domains",
+    "chooseDomain": "Select domain:",
+    "allDomains": "All",
     "noDomains": "No domains available. Please contact your system administrator."
   },
   "general": {
@@ -81,7 +86,11 @@
   "toast": {
     "success": {
       "updateSuccess": "Updated Successfully",
-      "chatCommentChanged": "Chat comment changed"
+      "chatCommentChanged": "Chat comment changed",
+      "userUpdated": "User updated",
+      "conversationThemeSaved": "Theme selection has been saved.",
+      "conversationQualitySaved": "Response quality selection has been saved.",
+      "conversationFollowUpActionSaved": "Follow-up action selection has been saved."
     }
   },
   "burokratt": {
@@ -101,8 +110,7 @@
     "editView": "Edit view",
     "totalChatsChart": "Total number of chats",
     "edit": "Edit",
-    "openSearch": "Open OpenSearch",
-    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
       "avg_chats_by_week": "Average chats per day: week / previous",
@@ -158,7 +166,18 @@
     "ended": "Ended",
     "view": "View",
     "comment": "Comment",
-    "feedback": "Feedback"
+    "positiveFeedbackScore": "Positive feedback (%)",
+    "averageNps": "Average (NPS)",
+    "averageFeedbackRating": "Average feedback rating",
+    "satisfied": "Satisfied (%)",
+    "passive": "Passive (%)",
+    "dissatisfied": "Dissatisfied (%)",
+    "percentOfChatsWithFeedback": "% of chats that received feedback",
+    "chatsWithNoFeedback": "No Feedback",
+    "tooltip_averageFeedbackRating": "The average score is calculated as follows: all feedback values are added together and divided by the total number of conversations where feedback was given.",
+    "tooltip_satisfied": "The formula for promoters scores depends on the feedback scale. In a 5-point system: satisfied count (4-5p) / all respondents (1-5p) * 100. On a 10-point scale: total number of satisfied (9-10p) / total number of respondents (0-10p) * 100.",
+    "tooltip_passive": "The passive score formula is dependent on the feedback scale. On a 5-point scale: total number of passives (3p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of passives (7-8p) / total number of respondents (0-10p) * 100.",
+    "tooltip_dissatisfied": "The formula for the dissatisfied score depends on the feedback scale. On a 5-point scale: total number of dissatisfied (1-2p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of dissatisfied (0-6p) / total number of respondents (0-10p) * 100."
   },
   "chats": {
     "total": "Total number of chats",
@@ -166,15 +185,35 @@
     "cip": "Contact information provided",
     "avgConversationTime": "Average conversation time (min)",
     "avgWaitingTime": "Average waiting time (min)",
-    "avgNumOfMessages": "Average number of messages in a chat",
-    "idle": "Count of idle chats ended by Bürokratt",
     "onlyBYK": "Only Bürokratt involved",
     "csaInvolved": "CSA involved",
     "outsideWorkingHours": "Outside working hours",
     "longWaitingTime": "Long waiting time",
     "allCsvAway": "All CSAs away with red status",
     "medianWaitingTime": "Median (min)",
-    "averageWaitingTime": "Arithmetic (min)"
+    "averageWaitingTime": "Arithmetic (min)",
+    "chat_forwards": "Forwarding",
+    "forwards": {
+      "from_csa": "Number of conversations directed from the advisor",
+      "to_csa": "Counselor directed conversations",
+      "to_other": "Out-of-facility forwards"
+    },
+    "avg_pick_time": "Average response speed in the institution",
+    "avg_present_csa": "Average presence of counselors",
+    "num_chats_csa": "Number of conversations by adviser",
+    "avg_chat_time_csa": "Conversation time by advisor",
+    "theme_overview": "Theme overview",
+    "follow_up_action_overview": "Follow-up Action overview",
+    "quality_overview": "Quality overview",
+    "themes": "Themes",
+    "responseQuality": "Bürokratt Response Quality",
+    "followUp": "Follow-up statuses",
+    "qualityThemesSentence": "Themes assigned to {{value}}% of total chats.",
+    "qualityResponseQualitySentence": "Bürokratt Response Quality has been rated for {{value}}% of Bürokratt chats.",
+    "qualityFollowUpSentence": "Follow-up actions are assigned for {{value}} number of chats.",
+    "qualityThemesTooltip": "The sentence contains a formula that reflects how many conversations have a field selection assigned to them. The goal is to reflect how many conversations have a field assigned to them and how much of the total number of conversations it represents. The formula is: number of conversations with fields / total number of conversations * 100.",
+    "qualityResponseQualityTooltip": "The sentence contains a formula that reflects how many conversations have been assigned the Bürokratt response quality option. The purpose is to reflect how many Bürokratt conversations have been given a response rating and how much of the total Bürokratt conversation count this represents. The formula is: number of conversations with areas / total number of conversations with Bürokratt * 100.",
+    "qualityFollowUpTooltip": "The number in the sentence indicates how many conversations have received the follow-up status. The details or meaning of the status are not taken into account, instead it shows a counter of how many chats have a follow-up status field filled."
   },
   "chart": {
     "csa": "Csa",
@@ -194,7 +233,6 @@
     "event": "Event",
     "avg": "Average",
     "nps": "NPS",
-    "customerSupportFullName": "CSA Nimi",
     "id": "Id",
     "baseId": "Id",
     "rating": "Rating",
@@ -372,6 +410,8 @@
       "endTime": "End time",
       "csaName": "Customer support name",
       "contact": "Contact",
+      "www": "Webpage",
+      "authenticatedPerson": "Authenticated person",
       "comment": "Comment",
       "label": "Label",
       "nps": "NPS",
@@ -380,7 +420,22 @@
       "rating": "Rating",
       "feedback": "Feedback",
       "chosenCsa": "Chosen csa(s)",
-      "chosenColumn": "Chosen column(s)"
+      "chosenColumn": "Chosen column(s)",
+      "commentAuthor": "Commenter",
+      "commentAddedDate": "Comment added date",
+      "statusAdder": "Status adder",
+      "statusAddedDate": "Status added date",
+      "chooseAll": "Choose all",
+      "conversationResponseQuality": "Response quality",
+      "followUpAction": "Follow-up action",
+      "chooseFollowUpAction": "- Select follow-up action -",
+      "chooseConversationResponseQuality": "- Select response quality -",
+      "chooseConversationTheme": "- Select chat theme -",
+      "conversationTheme": "Chat theme",
+      "theme": "Theme",
+      "responseQuality": "Bürokratt Response Quality",
+      "followUpStatus": "Follow-up Status",
+      "analysis": "Analysis"
     },
     "plainEvents": {
       "answered": "Answered",
@@ -423,7 +478,9 @@
       "user-not-reached": "User could not be reached",
       "ask_to_forward_to_csa": "Asked to forward the conversation to a customer service agent",
       "forwarded_to_backoffice": "Conversation forwarded to back office",
-      "continue_chatting_with_bot": "Continue conversation with bürokratt"
+      "continue_chatting_with_bot": "Continue conversation with bürokratt",
+      "waiting_validation": "Waiting for validation",
+      "approved_validation": "Approved Validation"
     },
     "events": {
       "answered": "Answered {{date}}",
@@ -453,6 +510,7 @@
       "requested-chat-forward-accepted": "Requested chat forward accepted {{date}}",
       "requested-chat-forward-rejected": "Requested chat forward rejected {{date}}",
       "message-read": "Read",
+      "read": "Read {{ date }}",
       "contact-information-skipped": "Contact Information Skipped",
       "unavailable-contact-information-fulfilled": "Contact information provided",
       "unavailable_organization": "Organization is unavailable",
@@ -468,7 +526,9 @@
       "taken-over": "A human took the conversation over",
       "ask_to_forward_to_csa": "Asked to forward the conversation to a customer service agent",
       "forwarded_to_backoffice": "Conversation forwarded to back office",
-      "continue_chatting_with_bot": "Continue conversation with bürokratt"
+      "continue_chatting_with_bot": "Continue conversation with bürokratt",
+      "waiting_validation": "Waiting for validation",
+      "approved_validation": "Approved Validation"
     },
     "validations": {
       "title": "Validations",
@@ -483,6 +543,12 @@
         "requestedAt": "Requested At",
         "approve": "Approve"
       }
+    },
+     "quality": {
+      "theme": "Chat theme",
+      "responseQuality": "Chat response quality",
+      "followUpAction": "Follow-up action",
+      "selectionEmptied": "Selection emptied"
     }
   },
   "settings": {

@@ -15,7 +15,8 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
         period: config?.groupByPeriod ?? 'day',
         options: config?.options.join(',') ?? '',
         urls: config?.urls,
-        showTest: config?.showTest ?? true
+        showTest: config?.showTest ?? true,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
     });
 
@@ -33,11 +34,12 @@ export const fetchChartDataWithSubOptions = async (url: string, config: any, sub
       return acc;
     }, []);
 
-    const colors = subOptions.map((x) => ({ id: t(x.labelKey), color: x.color }));
+    const colors = subOptions.map((x) => ({ id: t(x.labelKey), color: x.color ?? '' }));
 
     return { chartData, colors };
   } catch (error) {
     console.error('Failed to fetch chart data with options')
+    return { chartData: [], colors: [] };
   }
 };
 
@@ -67,8 +69,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
 
     const minPointSize =
       config.metric === 'avgConversationTime' ||
-      config.metric === 'avgWaitingTime' ||
-      config.metric === 'avgNumOfMessages'
+      config.metric === 'avgWaitingTime'
         ? 3
         : 0;
 
@@ -78,6 +79,7 @@ export const fetchChartData = async (url: string, config: any, resultId: string,
       minPointSize: minPointSize,
     };
   } catch (error) {
-      console.error('Failed to fetch chart data')
+    console.error('Failed to fetch chart data')
+    return { chartData: [], colors: [] };
   }
 };

@@ -1,7 +1,7 @@
 declaration:
   call: declare
   version: 0.1
-  description: "Decription placeholder for 'TOTAL'"
+  description: "Quality overview metric for chat analytics"
   method: post
   accepts: json
   returns: json
@@ -11,12 +11,9 @@ declaration:
       - field: end_date
         type: string
         description: "Body field 'end_date'"
-      - field: excluded_csas
-        type: object
-        description: "Body field 'excluded_csas'"
-      - field: metric
+      - field: period
         type: string
-        description: "Body field 'metric'"
+        description: "Body field 'period'"
       - field: start_date
         type: string
         description: "Body field 'start_date'"
@@ -32,26 +29,44 @@ declaration:
 
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null || incoming.body.excluded_csas == null}
+    - condition: ${incoming.body.start_date == null || incoming.body.end_date == null || incoming.body.period == null}
       next: return_incorrect_request
-  next: post_step
+  next: post_chart_data
 
-post_step:
+post_chart_data:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/csa-chats-count"
+    url: "[#ANALYTICS_RESQL]/chat-quality-overview"
     body:
-      metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
-      excluded_csas: ${incoming.body.excluded_csas}
+      period: ${incoming.body.period}
       urls: ${incoming.body.urls}
       showTest: ${incoming.body.showTest}
       timezone: ${incoming.body.timezone}
-  result: result
+  result: chart_result
+
+assign_chart_data:
+  assign:
+    chart_data: ${chart_result.response.body}
+
+post_summary_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-quality-overview-summary"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: summary_result
+
+assign_summary_data:
+  assign:
+    summary_data: ${summary_result.response.body}
 
 return_value:
-  return: ${result.response.body}
+  return: ${[chart_data, summary_data]}
   next: end
 
 return_incorrect_request:

@@ -2,6 +2,7 @@
   "global": {
     "save": "Salvesta",
     "add": "Lisa",
+    "apply": "Rakenda",
     "edit": "Muuda",
     "delete": "Kustuta",
     "cancel": "Tühista",
@@ -48,7 +49,9 @@
     "dateTime": "Kuupäev",
     "statusClarification": "Staatuse täpsustus",
     "selectAll": "Vali kõik",
-    "test": "Test"
+    "test": "Test",
+    "preserve": "Säilitada",
+    "clearFilters": "Tühjenda filtrid"
   },
   "mainMenu": {
     "closeMenu": "Kitsendan menüü",
@@ -56,6 +59,8 @@
   },
   "multiDomains": {
     "selectDomains": "Vali Domeenid",
+    "chooseDomain": "Vali domeen:",
+    "allDomains": "Kõik",
     "noDomains": "Domeene ei ole saadaval. Palun võtke ühendust süsteemiadministraatoriga."
   },
   "general": {
@@ -81,7 +86,11 @@
   "toast": {
     "success": {
       "updateSuccess": "Värskendamine õnnestus",
-      "chatCommentChanged": "Vestluse kommentaar muudetud"
+      "chatCommentChanged": "Vestluse kommentaar muudetud",
+      "userUpdated": "Kasutaja uuendatud",
+      "conversationThemeSaved": "Valdkonna valik on salvestatud.",
+      "conversationQualitySaved": "Vastuse kvaliteedi valik on salvestatud.",
+      "conversationFollowUpActionSaved": "Järeltegevuse valik on salvestatud."
     }
   },
   "burokratt": {
@@ -101,8 +110,7 @@
     "editView": "Muuda vaadet",
     "totalChatsChart": "Vestluste koguarv",
     "edit": "Muuda",
-    "openSearch": "Ava OpenSearch",
-    "openSearchDashboard": "OpenSearch Dashboard (OSD)",
+
     "metric": {
       "avg_chats_by_month": "Keskmine vestluste arv päevas: kuu / eelmine",
       "avg_chats_by_week": "Keskmine vestluste arv päevas: nädal / eelmine",
@@ -158,7 +166,18 @@
     "ended": "Lõppenud",
     "view": "Vaata",
     "comment": "Kommentaar",
-    "feedback": "Tagasiside"
+    "positiveFeedbackScore": "Positiivne tagasiside (%)",
+    "averageNps": "Keskmine (NPS)",
+    "averageFeedbackRating": "Keskmine tagasiside hinne",
+    "satisfied": "Rahulolevad vastajaid (%)",
+    "passive": "Passiivseid vastajaid (%)",
+    "dissatisfied": "Rahulolematuid vastajaid (%)",
+    "percentOfChatsWithFeedback": "% vestlustest, millele anti tagasiside",
+    "chatsWithNoFeedback": "Tagasisidet pole",
+    "tooltip_averageFeedbackRating": "Keskmine hinne arvutatakse järgnevalt: liidetakse kokku kõik tagasiside väärtused ja jagatakse vestluste arvuga, millel on tagasiside antud.",
+    "tooltip_satisfied": "Rahulolevate skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolevate koguarv (4-5p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolevate koguarv (9-10p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_passive": "Passiivsete skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: passiivsete koguarv (3p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: passiivsete koguarv (7-8p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_dissatisfied": "Rahulolematute skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolematute koguarv (1-2p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolematute koguarv (0-6p) / vastajate koguarv (0-10p) * 100."
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -166,15 +185,35 @@
     "cip": "Kontakti jätmised",
     "avgConversationTime": "Vestluste keskmine aeg (min)",
     "avgWaitingTime": "Keskmine ooteaja pikkus (min)",
-    "avgNumOfMessages": "Keskmine sõnumite arv vestluses",
-    "idle": "Bürokrati lõpetatud vestluste arv",
     "onlyBYK": "Bürokrati vastatud",
     "csaInvolved": "Nõustaja kaasatud",
     "outsideWorkingHours": "Tööpäeva väline aeg",
     "longWaitingTime": "Pikk ooteaeg",
     "allCsvAway": "Kõik nõustajad ära / hõivatud",
     "medianWaitingTime": "Mediaan (min)",
-    "averageWaitingTime": "Aritmeetiline keskmine (min)"
+    "averageWaitingTime": "Aritmeetiline keskmine (min)",
+    "chat_forwards": "Suunamised",
+    "forwards": {
+      "from_csa": "Nõustajalt suunatud vestluste arv",
+      "to_csa": "Nõustajale suunatud vestluste arv",
+      "to_other": "Suunamised asutusest välja"
+    },
+    "avg_pick_time": "Keskmine vastamise kiirus asutuses",
+    "avg_present_csa": "Keskmine nõustajate kohalolu",
+    "num_chats_csa": "Vestluste arv nõustaja lõikes",
+    "avg_chat_time_csa": "Vestluste aeg (min) nõustaja lõikes",
+    "theme_overview": "Valdkonna ülevaade",
+    "follow_up_action_overview": "Järeltegevuste staatuste ülevaade",
+    "quality_overview": "Kvaliteedi ülevaade",
+    "themes": "Valdkonnad",
+    "responseQuality": "Bürokrati vastuse kvaliteet",
+    "followUp": "Järeltegevuste staatused",
+    "qualityThemesSentence": "Vestluste koguarvust on {{value}}% vestlustele määratud valdkond.",
+    "qualityResponseQualitySentence": "Bürokrati vestluste koguarvust on {{value}}% määratud vastuse kvaliteet.",
+    "qualityFollowUpSentence": "Järeltegevuse staatusega on {{value}} vestlust.",
+    "qualityThemesTooltip": "Lauses on valem, mis peegeldab kui paljudele vestlustele on määratud valdkonna valik. Eesmärk on peegeldada kui paljudele vestlustele on määratud valdkond ja kui suure osa see kogu vestluste arvu vaatest moodustab. Valemi kuju on: valdkondadega vestluste arv / vestluste koguarv * 100.",
+    "qualityResponseQualityTooltip": "Lauses on valem, mis peegeldab kui paljudele vestlustele on määratud Bürokrati vastuse kvaliteedi valik. Eesmärk on peegeldada kui paljudele Bürokrati vestlustele on antud vastuse hinnang ja kui suure osa see kogu Bürokrati vestluste arvu vaatest moodustab. Valemi kuju on: valdkondadega vestluste arv / vestluste koguarv Bürokratiga * 100.",
+    "qualityFollowUpTooltip": "Lauses olev number näitab mitu vestlust on saanud endale järeltegevuse staatuse. Staatuse detaile või tähendust ei ole lauses arvesse võetud, sest loendatakse järeltegevuste staatuse välja täitmist koguvestluste vaatest."
   },
   "chart": {
     "csa": "Csa",
@@ -195,7 +234,6 @@
     "avg": "Keskmine",
     "nps": "NPS",
     "avgWaitingTimeSeconds": "Keskmine (Sec)",
-    "customerSupportFullName": "CSA Full Name",
     "id": "Id",
     "baseId": "Id",
     "rating": "Hinnang",
@@ -410,6 +448,8 @@
       "endTime": "Lõppaeg",
       "csaName": "Nõustaja nimi",
       "contact": "Kontaktandmed",
+      "www": "Veebileht",
+      "authenticatedPerson": "Autenditud isik",
       "comment": "Kommentaar",
       "label": "Märksõna",
       "nps": "Soovitusindeks",
@@ -418,7 +458,22 @@
       "rating": "Hinnang",
       "chosenCsa": "Valitud nõustaja(d)",
       "chosenColumn": "Valitud tulba(d)",
-      "feedback": "Tagasiside"
+      "feedback": "Tagasiside",
+      "commentAuthor": "Kommentaari lisaja",
+      "commentAddedDate": "Kommentaari lisamise kuupäev",
+      "statusAdder": "Staatuse lisaja",
+      "statusAddedDate": "Staatuse lisamise kuupäev",
+      "chooseAll": "Vali kõik",
+      "conversationResponseQuality": "Vastuse kvaliteet",
+      "followUpAction": "Järeltegevus",
+      "chooseFollowUpAction": "- Vali järeltegevus -",
+      "chooseConversationResponseQuality": "- Vali vastuse kvaliteet -",
+      "chooseConversationTheme": "- Vali vestluse valdkond -",
+      "conversationTheme": "Vestluse valdkond",
+      "theme": "Valdkond",
+      "responseQuality": "Bürokrati vastuse kvaliteet",
+      "followUpStatus": "Järeltegevuste staatus",
+      "analysis": "Analüüs"
     },
     "plainEvents": {
       "answered": "Vastatud",
@@ -461,7 +516,9 @@
       "user-not-reached": "Kasutajaga ei õnnestunud ühendust saada",
       "ask_to_forward_to_csa": "Vestlus paluti klienditeenindajale suunata",
       "forwarded_to_backoffice": "Vestlus suunatakse klienditeenindajale",
-      "continue_chatting_with_bot": "Jätkake vestlust kasutajaga bürokratt"
+      "continue_chatting_with_bot": "Jätkake vestlust kasutajaga bürokratt",
+      "waiting_validation": "Vastust koostatakse",
+      "approved_validation": "Kinnitatud valideerimine"
     },
     "events": {
       "answered": "Vastatud {{date}}",
@@ -491,6 +548,7 @@
       "requested-chat-forward-accepted": "Vestluse suunamine aktsepteeritud {{date}}",
       "requested-chat-forward-rejected": "Vestluse suunamine tagasi lükatud {{date}}",
       "message-read": "Loetud",
+      "read": "Loetud {{ date }}",
       "contact-information-skipped": "Kontaktandmeid ei saadetud",
       "unavailable-contact-information-fulfilled": "Kontaktandmed on antud",
       "unavailable_organization": "Asutus ei ole kättesaadav",
@@ -506,7 +564,9 @@
       "taken-over": "Klienditeenindaja võttis vestluse üle",
       "ask_to_forward_to_csa": "Vestlus paluti klienditeenindajale suunata",
       "forwarded_to_backoffice": "Vestlus suunatakse klienditeenindajale",
-      "continue_chatting_with_bot": "Jätkake vestlust kasutajaga bürokratt"
+      "continue_chatting_with_bot": "Jätkake vestlust kasutajaga bürokratt",
+      "waiting_validation": "Vastust koostatakse",
+      "approved_validation": "Kinnitatud valideerimine"
     },
     "validations": {
       "title": "Valideerimised",
@@ -521,6 +581,12 @@
         "requestedAt": "Taotletud Kell",
         "approve": "Kinnita"
       }
+    },
+    "quality": {
+      "theme": "Vestluse valdkond",
+      "responseQuality": "Vastuse kvaliteet",
+      "followUpAction": "Järeltegevus",
+      "selectionEmptied": "Valik tühjendatud"
     }
   },
   "units": {

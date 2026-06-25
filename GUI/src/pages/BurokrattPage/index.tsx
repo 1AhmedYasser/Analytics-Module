@@ -21,13 +21,20 @@ const BurokrattPage: React.FC = () => {
     const [updateKey, setUpdateKey] = useState<number>(0)
     const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
 
-    if (multiDomainEnabled) {
-        useStore.subscribe((state, prevState) => {
-            if (JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
-                setUpdateKey(prevState => prevState + 1);
+    useEffect(() => {
+        if (!multiDomainEnabled) return;
+
+        const unsubscribe = useStore.subscribe((state, prevState) => {
+            if (
+                JSON.stringify(state.userDomains) !==
+                JSON.stringify(prevState.userDomains)
+            ) {
+                setUpdateKey((v) => v + 1);
             }
         });
-    }
+
+        return () => unsubscribe();
+    }, [multiDomainEnabled, useStore]);
 
     const [configsSubject] = useState(() => new Subject())
     useEffect(() => {

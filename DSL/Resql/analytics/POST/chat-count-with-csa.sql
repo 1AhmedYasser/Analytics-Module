@@ -6,7 +6,7 @@ WHERE c.status = 'ENDED'
     ORDER BY c.base_id, c.updated DESC
 )
 SELECT
-    DATE_TRUNC(:period, lp.ended) AS time,
+    DATE_TRUNC(:period, lp.ended AT TIME ZONE :timezone) AT TIME ZONE :timezone AS time,
     COUNT(*) AS count
 FROM latest_per_base lp
 WHERE (:showTest = TRUE OR lp.test = FALSE)
@@ -18,13 +18,13 @@ WHERE (:showTest = TRUE OR lp.test = FALSE)
     SELECT 1
     FROM message m
     WHERE m.chat_base_id = lp.base_id
-  AND m.author_role = 'backoffice-user'
-    )
+      AND m.author_role = 'backoffice-user'
+  )
   AND EXISTS (
     SELECT 1
     FROM message m
     WHERE m.chat_base_id = lp.base_id
-  AND m.event = 'taken-over' or m.event = 'pending-assigned'
-    )
+      AND (m.event = 'taken-over' OR m.event = 'pending-assigned')
+  )
 GROUP BY time
 ORDER BY time ASC;

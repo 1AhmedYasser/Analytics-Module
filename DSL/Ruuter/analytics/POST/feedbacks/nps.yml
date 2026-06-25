@@ -50,7 +50,7 @@ get_nps_object:
       type: "json"
     body:
       pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
-      periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps}
+      periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps ?? 0}
   result: nps
 
 return_value:

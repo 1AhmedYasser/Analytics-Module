@@ -6,13 +6,6 @@ WITH rating_config AS (
       AND id IN (SELECT max(id) FROM configuration WHERE key = 'isFiveRatingScale' AND "domain" IS NULL)
       AND NOT deleted
 ),
-latest_chats AS (
-    SELECT DISTINCT ON (base_id)
-        base_id,
-        test
-    FROM chat
-    ORDER BY base_id, updated DESC
-),
 chats_filtered AS (
     SELECT DISTINCT
         base_id,
@@ -39,48 +32,30 @@ chats_filtered AS (
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
       AND (
-        COALESCE(:showTest, FALSE) = TRUE
-            OR EXISTS (
-                SELECT 1
-                FROM latest_chats
-                WHERE latest_chats.base_id = chat.base_id
-                AND COALESCE(latest_chats.test, FALSE) = FALSE
-            )
+        :showTest = TRUE
+            OR chat.test = FALSE
     )
-        AND STATUS = 'ENDED'
-        AND CASE
+      AND STATUS = 'ENDED'
+      AND customer_support_id NOT IN (:excluded_csas)
+      AND customer_support_id <> ''
+      AND customer_support_id <> 'chatbot'
+      AND CASE
             WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
             THEN feedback_rating_five IS NOT NULL
             ELSE feedback_rating IS NOT NULL
         END
         AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-        AND (
-            (:chat_type = 'buerokratt' AND EXISTS (
-                SELECT 1
-                FROM message
-                WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'buerokratt'
-            ) AND NOT EXISTS (
-                SELECT 1
-                FROM message
-                WHERE message.chat_base_id = chat.base_id
-                AND message.author_role = 'backoffice-user'
-            ))
-            OR
-            (:chat_type = 'csa' AND customer_support_id <> ''
-                AND EXISTS (
-                    SELECT 1
-                    FROM message
-                    WHERE message.chat_base_id = chat.base_id
-                    AND message.author_role = 'backoffice-user'
-                )
-                AND EXISTS (
-                    SELECT 1
-                    FROM message
-                    WHERE message.chat_base_id = chat.base_id
-                    AND message.author_role = 'end-user'
-                )
-            )
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+            AND message.author_role = 'backoffice-user'
+        )
+        AND EXISTS (
+            SELECT 1
+            FROM message
+            WHERE message.chat_base_id = chat.base_id
+            AND message.author_role = 'end-user'
         )
 ),
 all_ended_chats AS (
@@ -90,33 +65,18 @@ all_ended_chats AS (
         array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
             OR chat.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
     )
-      AND (
-          COALESCE(:showTest, FALSE) = TRUE
-          OR EXISTS (
-              SELECT 1
-              FROM latest_chats
-              WHERE latest_chats.base_id = chat.base_id
-              AND COALESCE(latest_chats.test, FALSE) = FALSE
-          )
-      )
+      AND (:showTest = TRUE OR chat.test = FALSE)
       AND STATUS = 'ENDED'
       AND ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
-      AND (
-            (:chat_type = 'buerokratt' AND EXISTS (
-                SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'buerokratt'
-            ) AND NOT EXISTS (
-                SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
-            ))
-            OR
-            (:chat_type = 'csa' AND customer_support_id <> ''
-                AND EXISTS (
-                    SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
-                )
-                AND EXISTS (
-                    SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'end-user'
-                )
-            )
-      )
+      AND customer_support_id NOT IN (:excluded_csas)
+      AND customer_support_id <> ''
+      AND customer_support_id <> 'chatbot'
+      AND EXISTS (
+            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'backoffice-user'
+        )
+      AND EXISTS (
+            SELECT 1 FROM message WHERE message.chat_base_id = chat.base_id AND message.author_role = 'end-user'
+        )
 ),
 rating_counts AS (
     SELECT feedback_rating_dynamic AS rating, COUNT(*) AS cnt

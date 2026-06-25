@@ -22,6 +22,7 @@ import Drawer from './Drawer'
 import Dialog from './Dialog'
 import Section from './Section'
 import CustomChartTooltip from './CustomChartTooltip'
+import RatingDistributionTooltip from './RatingDistributionTooltip'
 
 export {
   Toast,
@@ -46,4 +47,5 @@ export {
   Dialog,
   Section,
   CustomChartTooltip,
+  RatingDistributionTooltip,
 };

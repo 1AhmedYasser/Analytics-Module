@@ -9,7 +9,6 @@ const menuItems = [
     { to: ROUTES.CHATS_ROUTE, titleKey: 'menu.chats' },
     { to: ROUTES.BUROKRATT_ROUTE, titleKey: 'menu.burokratt' },
     { to: ROUTES.FEEDBACK_ROUTE, titleKey: 'menu.feedback' },
-    { to: ROUTES.ADVISORS_ROUTE, titleKey: 'menu.advisors' },
     { to: ROUTES.REPORTS_ROUTE, titleKey: 'menu.reports' },
 ]
 

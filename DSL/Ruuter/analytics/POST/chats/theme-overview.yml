@@ -1,7 +1,7 @@
 declaration:
   call: declare
   version: 0.1
-  description: "Decription placeholder for 'BUEROKRATT-CHATS-NPS'"
+  description: "Theme overview metric for chat analytics"
   method: post
   accepts: json
   returns: json
@@ -11,51 +11,39 @@ declaration:
       - field: end_date
         type: string
         description: "Body field 'end_date'"
-      - field: metric
-        type: string
-        description: "Body field 'metric'"
+      - field: excluded_themes
+        type: object
+        description: "Body field 'excluded_themes'"
       - field: start_date
         type: string
         description: "Body field 'start_date'"
       - field: urls
-        type: string
+        type: array
         description: "Body field 'urls'"
       - field: showTest
-        type: string
+        type: boolean
         description: "Body field 'showTest'"
 
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
   next: post_step
 
 post_step:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/feedback-buerokratt-chats-nps"
+    url: "[#ANALYTICS_RESQL]/chat-theme-overview"
     body:
-      metric: ${incoming.body.metric}
       start: ${incoming.body.start_date}
       end: ${incoming.body.end_date}
+      excluded_themes: ${incoming.body.excluded_themes}
       urls: ${incoming.body.urls}
       showTest: ${incoming.body.showTest}
   result: result
 
-get_nps_object:
-  call: http.post
-  args:
-    url: "[#ANALYTICS_DMAPPER_HBS]/get-csa-nps-object"
-    headers:
-      type: "json"
-    body:
-      pointNps: ${JSON.parse(result.response.body[0].result.value).pointNps ?? []}
-      periodNps: ${JSON.parse(result.response.body[0].result.value).periodNps ?? 0}
-  result: nps
-
 return_value:
-  wrapper: false
-  return: ${nps.response.body}
+  return: ${result.response.body}
   next: end
 
 return_incorrect_request:

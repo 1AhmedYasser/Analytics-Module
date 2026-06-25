@@ -32,6 +32,32 @@ export const getTicks = (startDate: string, endDate: string, start: Date, end: D
   return Array.from(new Set(ticks));
 };
 
+const getReadableAxisStep = (maxValue: number) => {
+  const minStep = 10;
+  const normalizedMax = Math.max(maxValue, minStep);
+  const magnitude = Math.pow(10, Math.max(0, Math.floor(Math.log10(normalizedMax)) - 1));
+  const multipliers = [1, 2, 2.5, 5, 10];
+
+  for (const multiplier of multipliers) {
+    const step = Math.max(minStep, multiplier * magnitude);
+    if (normalizedMax / step <= 6) return step;
+  }
+
+  return Math.max(minStep, magnitude * 10);
+};
+
+export const getDistributionYAxisTicks = (yAxisMax: number) => {
+  const normalizedMax = Math.max(yAxisMax, 10);
+  const step = getReadableAxisStep(normalizedMax);
+  const ticks: number[] = [];
+
+  for (let tick = 0; tick < normalizedMax; tick += step) ticks.push(tick);
+
+  if (ticks[ticks.length - 1] !== normalizedMax) ticks.push(normalizedMax);
+
+  return ticks;
+};
+
 export const formatDate = (value: Date, dateFormat?: string) => format(value, dateFormat ?? 'dd-MM-yyyy');
 
 export const formatTimestamp = (timestamp: string) => formatDate(new Date(timestamp), 'dd.MM.yyyy');
