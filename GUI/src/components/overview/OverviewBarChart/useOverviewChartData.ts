@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { eachDayOfInterval, eachHourOfInterval, formatISO } from 'date-fns';
+import { eachDayOfInterval, eachHourOfInterval, format, formatISO } from 'date-fns';
 import { Methods, request } from '../../../util/axios-client';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
@@ -13,7 +13,8 @@ export type OverviewChartBucket = {
   leftWithoutAnswer: number;
 };
 
-const bucketKey = (date: string | Date): number => new Date(date).getTime();
+const bucketKey = (date: string | Date, period: 'hour' | 'day'): string =>
+  format(new Date(date), period === 'hour' ? "yyyy-MM-dd'T'HH" : 'yyyy-MM-dd');
 
 export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
   const [buckets, setBuckets] = useState<OverviewChartBucket[]>([]);
@@ -45,11 +46,11 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
         if (cancelled) return;
         const bykRows: { time: string; count: number }[] = totalCountRes.response?.[0] ?? [];
         const csaRows: { time: string; count: number }[] = totalCountRes.response?.[1] ?? [];
-        const leftWithoutAnswerRows: { dateTime: string; count: number }[] = statusRes.response?.[0] ?? [];
+        const leftWithoutAnswerRows: { date_time: string; count: number }[] = statusRes.response?.[0] ?? [];
 
-        const bykMap = new Map(bykRows.map((r) => [bucketKey(r.time), Number(r.count)]));
-        const csaMap = new Map(csaRows.map((r) => [bucketKey(r.time), Number(r.count)]));
-        const leftMap = new Map(leftWithoutAnswerRows.map((r) => [bucketKey(r.dateTime), Number(r.count)]));
+        const bykMap = new Map(bykRows.map((r) => [bucketKey(r.time, period), Number(r.count)]));
+        const csaMap = new Map(csaRows.map((r) => [bucketKey(r.time, period), Number(r.count)]));
+        const leftMap = new Map(leftWithoutAnswerRows.map((r) => [bucketKey(r.date_time, period), Number(r.count)]));
 
         const intervals =
           period === 'hour'
@@ -58,9 +59,9 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
 
         setBuckets(
           intervals.map((date) => {
-            const key = date.getTime();
+            const key = bucketKey(date, period);
             return {
-              bucket: key,
+              bucket: date.getTime(),
               burokratt: bykMap.get(key) ?? 0,
               csa: csaMap.get(key) ?? 0,
               leftWithoutAnswer: leftMap.get(key) ?? 0,
