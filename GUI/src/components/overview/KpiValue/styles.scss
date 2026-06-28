@@ -1,0 +1,27 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+
+.kpi-value {
+  &__value {
+    margin: get-spacing(loksa) 0;
+  }
+
+  &__footer {
+    font-size: 13px;
+    color: get-color(black-coral-6);
+  }
+
+  &__trend {
+    &--up {
+      color: get-color(sea-green-6);
+    }
+
+    &--down {
+      color: get-color(jasper-6);
+    }
+  }
+
+  &__dot {
+    color: get-color(black-coral-4);
+  }
+}

@@ -154,3 +154,7 @@ export const getQualityOverview = (): string => {
   return baseUrl + '/chats/quality-overview';
 };
 
+export const getRedirectedOverview = (): string => {
+  return baseUrl + '/chats/redirected-overview';
+};
+

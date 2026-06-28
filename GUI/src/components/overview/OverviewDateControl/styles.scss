@@ -1,0 +1,25 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+
+.overview-date-control {
+  &__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: get-spacing(loksa);
+    color: get-color(black-coral-5);
+
+    &:hover {
+      color: get-color(black-coral-8);
+    }
+  }
+
+  &__dates {
+    .datepicker {
+      width: 130px;
+    }
+  }
+}

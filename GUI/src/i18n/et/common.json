@@ -107,9 +107,26 @@
     "closed": "Keskmine aeg (min) Bürokratiga, kliendi lõpetatud"
   },
   "overview": {
-    "editView": "Muuda vaadet",
-    "totalChatsChart": "Vestluste koguarv",
+    "editView": "Muuda ülevaadet",
+    "editDescription": "Lülita valikulised komponendid sisse või välja, et näha seda, mis sulle kõige olulisem on.",
+    "confirmEdit": "Jah, muuda",
+    "totalChatsChart": "Vestluste koguarv: {{range}}",
     "edit": "Muuda",
+    "day": "Päev",
+    "week": "Nädal",
+    "month": "Kuu",
+    "lastDay": "Eelnev päev",
+    "lastWeek": "Eelnev nädal",
+    "lastMonth": "Eelnev kuu",
+    "positiveFeedback": "Positiivne tagasiside",
+    "responseQuality": "Vastuse kvaliteet",
+    "themesForPeriod": "Teemad perioodil",
+    "followUp": "Järeltegevus",
+    "legend": {
+      "burokratt": "Bürokratt vastas",
+      "csa": "Nõustaja vastas",
+      "leftWithoutAnswer": "Lahkus vastuseta"
+    },
 
     "metric": {
       "avg_chats_by_month": "Keskmine vestluste arv päevas: kuu / eelmine",
@@ -121,7 +138,19 @@
       "total_chats_day": "Vestluste arv: täna / eile",
       "total_forwarded_chats_yesterday": "Suunatud vestlused eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
-      "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine"
+      "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine",
+      "total_chats": "Vestluste koguarv",
+      "avg_waiting_time": "Keskmine ooteaeg",
+      "avg_rating": "Keskmine hinnang",
+      "burokratt_rate": "Vastas Bürokratt",
+      "csa_rate": "Vastas nõustaja",
+      "redirected_rate": "Edasi suunatud",
+      "left_without_answer_rate": "Lahkus vastuseta",
+      "chart": "Vestluste koguarv graafikuna",
+      "positive_feedback": "Positiivne tagasiside",
+      "quality": "Vastuste kvaliteet",
+      "themes": "Populaarsemad teemad perioodil",
+      "follow_up": "Järeltegevuste top"
     }
   },
   "feedback": {
