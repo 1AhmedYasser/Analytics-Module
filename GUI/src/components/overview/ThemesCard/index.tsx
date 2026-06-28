@@ -61,14 +61,16 @@ const ThemesCard = ({ range }: Props) => {
     <Card>
       <Track justify="between" className="overview-secondary-card__header">
         <span>{t('overview.themesForPeriod')}</span>
-        <FormSelect
-          label="top-n"
-          name="themes-top-n"
-          hideLabel
-          options={TOP_N_OPTIONS}
-          defaultValue={String(topN)}
-          onSelectionChange={(selection) => selection && setTopN(Number(selection.value))}
-        />
+        <div className="overview-secondary-card__top-n-select">
+          <FormSelect
+            label="top-n"
+            name="themes-top-n"
+            hideLabel
+            options={TOP_N_OPTIONS}
+            defaultValue={String(topN)}
+            onSelectionChange={(selection) => selection && setTopN(Number(selection.value))}
+          />
+        </div>
       </Track>
       <Track direction="vertical" align="stretch" gap={8}>
         {visibleThemes.map((theme) => (
