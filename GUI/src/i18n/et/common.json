@@ -111,6 +111,7 @@
     "editDescription": "Lülita valikulised komponendid sisse või välja, et näha seda, mis sulle kõige olulisem on.",
     "confirmEdit": "Jah, muuda",
     "totalChatsChart": "Vestluste koguarv: {{range}}",
+    "totalChatsChartTitle": "Vestluste koguarv {{unit}} {{range}} lõikes",
     "edit": "Muuda",
     "day": "Päev",
     "week": "Nädal",

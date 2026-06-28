@@ -111,6 +111,7 @@
     "editDescription": "Toggle the optional components on or off, to see what matters most to you.",
     "confirmEdit": "Yes, change",
     "totalChatsChart": "Total number of chats: {{range}}",
+    "totalChatsChartTitle": "Total number of chats {{unit}} {{range}}",
     "edit": "Edit",
     "day": "Day",
     "week": "Week",

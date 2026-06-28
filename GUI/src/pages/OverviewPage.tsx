@@ -12,7 +12,6 @@ import ThemesCard from '../components/overview/ThemesCard';
 import FollowUpCard from '../components/overview/FollowUpCard';
 import { overviewMetricPreferences } from '../resources/api-constants';
 import { OverviewMetricPreference } from '../types/overview-metrics';
-import { formatDate } from '../util/charts-utils';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { getRange, getPreviousRange, OverviewUnit } from '../util/overview-date-utils';
@@ -52,8 +51,6 @@ const OverviewPage: React.FC = () => {
     return preference ? preference.active : true;
   };
 
-  const chartRangeLabel = `${formatDate(range.start, 'dd.MM.yyyy')} - ${formatDate(range.end, 'dd.MM.yyyy')}`;
-
   return (
     <>
       <h1>{t('menu.overview')}</h1>
@@ -91,13 +88,7 @@ const OverviewPage: React.FC = () => {
             <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
 
             {isActive('chart') && (
-              <Card
-                header={
-                  <Track>
-                    <h3>{t('overview.totalChatsChart', { range: chartRangeLabel })}</h3>
-                  </Track>
-                }
-              >
+              <Card>
                 <OverviewBarChart range={range} unit={unit} />
               </Card>
             )}

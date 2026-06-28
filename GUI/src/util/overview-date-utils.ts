@@ -5,6 +5,7 @@ import {
   endOfDay,
   endOfMonth,
   endOfWeek,
+  format,
   startOfDay,
   startOfMonth,
   startOfWeek,
@@ -52,5 +53,20 @@ export const periodLabelKey = (unit: OverviewUnit): string => {
       return 'overview.lastMonth';
     default:
       return 'overview.lastDay';
+  }
+};
+
+export const formatOverviewChartTitleRange = (range: DateRange, unit: OverviewUnit): string => {
+  const sameMonth = range.start.getMonth() === range.end.getMonth() && range.start.getFullYear() === range.end.getFullYear();
+
+  switch (unit) {
+    case 'week':
+      return sameMonth
+        ? `${format(range.start, 'd')}-${format(range.end, 'd. MMM')}`
+        : `${format(range.start, 'd.MM')} - ${format(range.end, 'd.MM')}`;
+    case 'month':
+      return format(range.start, 'MMMM yyyy');
+    default:
+      return format(range.start, 'd.MM');
   }
 };
