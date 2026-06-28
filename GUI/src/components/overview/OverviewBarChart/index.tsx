@@ -3,6 +3,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from '
 import { useTranslation } from 'react-i18next';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
 import { DateRange, formatOverviewChartTitleRange, OverviewUnit } from '../../../util/overview-date-utils';
+import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
 import './styles.scss';
 
@@ -89,9 +90,13 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           tickLine={false}
           tick={{ fill: TICK_FILL, fontSize: 12 }}
         />
-        <Bar dataKey="burokratt" stackId="total" fill={BLUE} isAnimationActive={false} />
-        <Bar dataKey="csa" stackId="total" fill={GREEN} isAnimationActive={false} />
-        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} isAnimationActive={false}>
+        <Tooltip
+          cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
+          labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')}
+        />
+        <Bar dataKey="burokratt" stackId="total" fill={BLUE} shape={createStackedBarShape('burokratt')} isAnimationActive={false} />
+        <Bar dataKey="csa" stackId="total" fill={GREEN} shape={createStackedBarShape('csa')} isAnimationActive={false} />
+        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} shape={createStackedBarShape('leftWithoutAnswer')} isAnimationActive={false}>
           <LabelList
             position="top"
             content={({ x, y, width: barWidth, index }) => {
@@ -117,7 +122,6 @@ const OverviewBarChart = ({ range, unit }: Props) => {
             }}
           />
         </Bar>
-        <Tooltip labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')} />
       </BarChart>
     </div>
   );
