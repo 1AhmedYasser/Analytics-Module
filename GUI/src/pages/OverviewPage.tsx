@@ -55,57 +55,63 @@ const OverviewPage: React.FC = () => {
   const chartRangeLabel = `${formatDate(range.start, 'dd.MM.yyyy')} - ${formatDate(range.end, 'dd.MM.yyyy')}`;
 
   return (
-    <><h1>{t('menu.overview')}</h1>
-    <Card>
-      <Track justify="between">
-          <Button appearance="text" onClick={() => setIsEditing(true)}>
-            <Icon icon={<MdEdit />} size="medium" />
-            {t('overview.edit')}
-          </Button>
-          <OverviewDateControl
-            unit={unit}
-            anchorDate={anchorDate}
-            range={range}
-            onUnitChange={setUnit}
-            onAnchorChange={setAnchorDate}
-          />
-        <Button appearance="secondary" size="s" onClick={() => setAnchorDate(new Date())}>
-          {t('global.today')}
-        </Button>
-      </Track>
+    <>
+      <h1>{t('menu.overview')}</h1>
+      <div className="overview-page">
+        <Card>
+          <Track justify="between">
+            <Button appearance="text" onClick={() => setIsEditing(true)}>
+              <Icon icon={<MdEdit />} size="medium" />
+              {t('overview.edit')}
+            </Button>
+            <OverviewDateControl
+              unit={unit}
+              anchorDate={anchorDate}
+              range={range}
+              onUnitChange={setUnit}
+              onAnchorChange={setAnchorDate}
+            />
+            <Button appearance="secondary" size="s" onClick={() => setAnchorDate(new Date())}>
+              {t('global.today')}
+            </Button>
+          </Track>
 
-      {isEditing && (
-        <OverviewEditModal
-          preferences={metricPreferences}
-          onClose={() => setIsEditing(false)}
-          onConfirm={(preferences) => {
-            saveMetricPreferences(preferences).catch(console.error);
-            setIsEditing(false);
-          }}
-        />
-      )}
+          {isEditing && (
+            <OverviewEditModal
+              preferences={metricPreferences}
+              onClose={() => setIsEditing(false)}
+              onConfirm={(preferences) => {
+                saveMetricPreferences(preferences).catch(console.error);
+                setIsEditing(false);
+              }}
+            />
+          )}
 
-      <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
+          <div className="overview-page__sections">
+            <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
 
-      {isActive('chart') && (
-        <Card
-          header={
-            <Track>
-              <h3>{t('overview.totalChatsChart', { range: chartRangeLabel })}</h3>
-            </Track>
-          }
-        >
-          <OverviewBarChart range={range} unit={unit} />
+            {isActive('chart') && (
+              <Card
+                header={
+                  <Track>
+                    <h3>{t('overview.totalChatsChart', { range: chartRangeLabel })}</h3>
+                  </Track>
+                }
+              >
+                <OverviewBarChart range={range} unit={unit} />
+              </Card>
+            )}
+
+            <div className="overview-secondary-grid">
+              {isActive('positive_feedback') && <PositiveFeedbackCard range={range} previousRange={previousRange} unit={unit} />}
+              {isActive('quality') && <ResponseQualityCard range={range} />}
+              {isActive('themes') && <ThemesCard range={range} />}
+              {isActive('follow_up') && <FollowUpCard range={range} />}
+            </div>
+          </div>
         </Card>
-      )}
-
-      <div className="overview-secondary-grid">
-        {isActive('positive_feedback') && <PositiveFeedbackCard range={range} previousRange={previousRange} unit={unit} />}
-        {isActive('quality') && <ResponseQualityCard range={range} />}
-        {isActive('themes') && <ThemesCard range={range} />}
-        {isActive('follow_up') && <FollowUpCard range={range} />}
       </div>
-    </Card></>
+    </>
   );
 };
 

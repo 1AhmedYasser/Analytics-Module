@@ -1,5 +1,18 @@
 @import 'src/styles/tools/spacing';
 
+.overview-page {
+  > .card {
+    max-height: none;
+  }
+}
+
+.overview-page__sections {
+  display: flex;
+  flex-direction: column;
+  gap: get-spacing(haapsalu);
+  margin-top: get-spacing(haapsalu);
+}
+
 .overview-secondary-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
