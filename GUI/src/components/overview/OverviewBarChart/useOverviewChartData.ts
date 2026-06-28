@@ -13,8 +13,22 @@ export type OverviewChartBucket = {
   leftWithoutAnswer: number;
 };
 
-const bucketKey = (date: string | Date, period: 'hour' | 'day'): string =>
-  format(new Date(date), period === 'hour' ? "yyyy-MM-dd'T'HH" : 'yyyy-MM-dd');
+const bucketKey = (date: string | Date, period: 'hour' | 'day'): string | null => {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return format(parsed, period === 'hour' ? "yyyy-MM-dd'T'HH" : 'yyyy-MM-dd');
+};
+
+const toBucketEntries = (
+  rows: Record<string, unknown>[],
+  dateField: string,
+  period: 'hour' | 'day'
+): [string, number][] =>
+  rows.reduce<[string, number][]>((entries, row) => {
+    const key = bucketKey(row[dateField] as string | Date, period);
+    if (key !== null) entries.push([key, Number(row.count)]);
+    return entries;
+  }, []);
 
 export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
   const [buckets, setBuckets] = useState<OverviewChartBucket[]>([]);
@@ -48,26 +62,25 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
         const csaRows: { time: string; count: number }[] = totalCountRes.response?.[1] ?? [];
         const leftWithoutAnswerRows: { date_time: string; count: number }[] = statusRes.response?.[0] ?? [];
 
-        const bykMap = new Map(bykRows.map((r) => [bucketKey(r.time, period), Number(r.count)]));
-        const csaMap = new Map(csaRows.map((r) => [bucketKey(r.time, period), Number(r.count)]));
-        const leftMap = new Map(leftWithoutAnswerRows.map((r) => [bucketKey(r.date_time, period), Number(r.count)]));
+        const bykMap = new Map(toBucketEntries(bykRows, 'time', period));
+        const csaMap = new Map(toBucketEntries(csaRows, 'time', period));
+        const leftMap = new Map(toBucketEntries(leftWithoutAnswerRows, 'date_time', period));
 
         const intervals =
           period === 'hour'
             ? eachHourOfInterval({ start: range.start, end: range.end })
             : eachDayOfInterval({ start: range.start, end: range.end });
 
-        setBuckets(
-          intervals.map((date) => {
-            const key = bucketKey(date, period);
-            return {
-              bucket: date.getTime(),
-              burokratt: bykMap.get(key) ?? 0,
-              csa: csaMap.get(key) ?? 0,
-              leftWithoutAnswer: leftMap.get(key) ?? 0,
-            };
-          })
-        );
+        const newBuckets = intervals.map((date) => {
+          const key = bucketKey(date, period) ?? '';
+          return {
+            bucket: date.getTime(),
+            burokratt: bykMap.get(key) ?? 0,
+            csa: csaMap.get(key) ?? 0,
+            leftWithoutAnswer: leftMap.get(key) ?? 0,
+          };
+        });
+        setBuckets(newBuckets);
       })
       .catch(console.error);
 
