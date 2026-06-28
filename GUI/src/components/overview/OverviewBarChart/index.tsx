@@ -71,7 +71,6 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           padding={{ left: unit === 'day' ? 8 : 14, right: unit === 'day' ? 8 : 14 }}
         />
         <YAxis domain={[0, yAxisMax]} ticks={yAxisTicks} allowDecimals={false}>
-          <Label dx={-25} angle={270} value={String(t('chart.count'))} />
         </YAxis>
         <Tooltip labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')} />
         <Bar dataKey="burokratt" stackId="total" fill={BLUE} />
