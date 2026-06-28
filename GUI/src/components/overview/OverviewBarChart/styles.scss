@@ -5,6 +5,10 @@
 .overview-bar-chart {
   width: 100%;
 
+  .recharts-cartesian-grid-horizontal line {
+    pointer-events: none;
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;

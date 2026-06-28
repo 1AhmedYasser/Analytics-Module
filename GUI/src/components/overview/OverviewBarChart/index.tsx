@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, Label, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
 import { DateRange, formatOverviewChartTitleRange, OverviewUnit } from '../../../util/overview-date-utils';
@@ -9,6 +9,9 @@ import './styles.scss';
 const BLUE = '#3D6FA8';
 const GREEN = '#3E9142';
 const RED = '#B72727';
+const AXIS_STROKE = '#D2D3D8';
+const GRID_STROKE = '#D2D3D8';
+const TICK_FILL = '#9799A4';
 
 const LEGEND_ITEMS = [
   { key: 'overview.legend.burokratt', color: BLUE },
@@ -61,7 +64,12 @@ const OverviewBarChart = ({ range, unit }: Props) => {
         </div>
       </div>
       <BarChart width={width} height={width / 3.76} data={buckets} barSize={unit === 'day' ? 8 : 20} margin={{ top: 20, right: 20, bottom: 30 }}>
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid
+          vertical={false}
+          horizontalValues={yAxisTicks.filter((tick) => tick > 0)}
+          stroke={GRID_STROKE}
+          strokeDasharray="3 3"
+        />
         <XAxis
           dataKey="bucket"
           tickFormatter={tickFormatter}
@@ -69,13 +77,21 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           domain={['dataMin', 'dataMax']}
           scale="time"
           padding={{ left: unit === 'day' ? 8 : 14, right: unit === 'day' ? 8 : 14 }}
+          axisLine={{ stroke: AXIS_STROKE }}
+          tickLine={false}
+          tick={{ fill: TICK_FILL, fontSize: 12 }}
         />
-        <YAxis domain={[0, yAxisMax]} ticks={yAxisTicks} allowDecimals={false}>
-        </YAxis>
-        <Tooltip labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')} />
-        <Bar dataKey="burokratt" stackId="total" fill={BLUE} />
-        <Bar dataKey="csa" stackId="total" fill={GREEN} />
-        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED}>
+        <YAxis
+          domain={[0, yAxisMax]}
+          ticks={yAxisTicks}
+          allowDecimals={false}
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: TICK_FILL, fontSize: 12 }}
+        />
+        <Bar dataKey="burokratt" stackId="total" fill={BLUE} isAnimationActive={false} />
+        <Bar dataKey="csa" stackId="total" fill={GREEN} isAnimationActive={false} />
+        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} isAnimationActive={false}>
           <LabelList
             position="top"
             content={({ x, y, width: barWidth, index }) => {
@@ -101,6 +117,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
             }}
           />
         </Bar>
+        <Tooltip labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')} />
       </BarChart>
     </div>
   );
