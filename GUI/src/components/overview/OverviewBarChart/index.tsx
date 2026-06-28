@@ -40,7 +40,14 @@ const OverviewBarChart = ({ range, unit }: Props) => {
     <div ref={ref} className="overview-bar-chart">
       <BarChart width={width} height={width / 3.76} data={buckets} barSize={unit === 'day' ? 8 : 20} margin={{ top: 40, right: 20, bottom: 30 }}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="bucket" tickFormatter={tickFormatter} type="number" domain={['dataMin', 'dataMax']} scale="time" />
+        <XAxis
+          dataKey="bucket"
+          tickFormatter={tickFormatter}
+          type="number"
+          domain={['dataMin', 'dataMax']}
+          scale="time"
+          padding={{ left: unit === 'day' ? 8 : 14, right: unit === 'day' ? 8 : 14 }}
+        />
         <YAxis domain={[0, yAxisMax]} ticks={yAxisTicks} allowDecimals={false}>
           <Label dx={-25} angle={270} value={String(t('chart.count'))} />
         </YAxis>
