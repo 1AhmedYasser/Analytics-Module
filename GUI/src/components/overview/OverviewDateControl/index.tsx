@@ -1,7 +1,7 @@
 import React from 'react';
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import Button from '../../Button';
+import { MdChevronLeft, MdChevronRight, MdOutlineCalendarMonth } from 'react-icons/md';
 import Icon from '../../Icon';
 import Track from '../../Track';
 import { FormDatepicker } from '../../FormElements';
@@ -18,24 +18,29 @@ type Props = {
 
 const units: OverviewUnit[] = ['day', 'week', 'month'];
 const noop = () => undefined;
+const calendarIcon = <MdOutlineCalendarMonth fontSize={16} />;
 
 const OverviewDateControl = ({ unit, anchorDate, range, onUnitChange, onAnchorChange }: Props) => {
   const { t } = useTranslation();
 
   return (
-    <Track gap={8} className="overview-date-control">
-      <Track gap={4}>
+    <Track gap={6} className="overview-date-control">
+      <div className="overview-date-control__units" role="group">
         {units.map((u) => (
-          <Button
+          <button
             key={u}
-            appearance={u === unit ? 'primary' : 'secondary'}
-            size="s"
+            type="button"
+            className={clsx(
+              'overview-date-control__unit',
+              u === unit && 'overview-date-control__unit--active',
+            )}
+            aria-pressed={u === unit}
             onClick={() => onUnitChange(u)}
           >
             {t(`overview.${u}`)}
-          </Button>
+          </button>
         ))}
-      </Track>
+      </div>
 
       <button
         type="button"
@@ -43,7 +48,7 @@ const OverviewDateControl = ({ unit, anchorDate, range, onUnitChange, onAnchorCh
         onClick={() => onAnchorChange(shiftAnchor(unit, anchorDate, -1))}
         aria-label="previous"
       >
-        <Icon icon={<MdChevronLeft />} size="medium" />
+        <Icon icon={<MdChevronLeft />} size="small" />
       </button>
 
       <Track gap={4} className="overview-date-control__dates">
@@ -52,6 +57,7 @@ const OverviewDateControl = ({ unit, anchorDate, range, onUnitChange, onAnchorCh
           name="overview-start-date"
           hideLabel
           value={range.start}
+          trailingIcon={calendarIcon}
           onChange={(date: Date | null) => date && onAnchorChange(date)}
           onBlur={noop}
           ref={noop}
@@ -62,6 +68,7 @@ const OverviewDateControl = ({ unit, anchorDate, range, onUnitChange, onAnchorCh
           name="overview-end-date"
           hideLabel
           value={range.end}
+          trailingIcon={calendarIcon}
           onChange={(date: Date | null) => date && onAnchorChange(date)}
           onBlur={noop}
           ref={noop}
@@ -74,7 +81,7 @@ const OverviewDateControl = ({ unit, anchorDate, range, onUnitChange, onAnchorCh
         onClick={() => onAnchorChange(shiftAnchor(unit, anchorDate, 1))}
         aria-label="next"
       >
-        <Icon icon={<MdChevronRight />} size="medium" />
+        <Icon icon={<MdChevronRight />} size="small" />
       </button>
     </Track>
   );
