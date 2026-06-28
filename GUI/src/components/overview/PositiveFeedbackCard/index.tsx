@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatISO } from 'date-fns';
+import { MdArrowUpward } from 'react-icons/md';
 import Card from '../../Card';
 import Track from '../../Track';
+import Icon from '../../Icon';
 import ProgressBar from '../../ProgressBar';
-import KpiValue from '../KpiValue';
 import { Methods, request } from '../../../util/axios-client';
 import { getDistributionOnBuerokrattChatsFeedback } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
-import { DistributionResult, getGreenRatings, getYellowRatings, mapDistributionChartData } from '../../../util/feedback-distribution-utils';
+import {
+  colorForBucketLabel,
+  DistributionResult,
+  getDistributionBucketGroups,
+  getGreenCount,
+  mapDistributionChartData,
+} from '../../../util/feedback-distribution-utils';
 import { DateRange, OverviewUnit, periodLabelKey } from '../../../util/overview-date-utils';
-import './styles.scss';
-
-const GREEN = '#3E9142';
-const YELLOW = '#E5A82E';
-const RED = '#B72727';
+import { formatKpiValue } from '../kpiFormat';
+import '../overviewSecondaryCard.scss';
 
 type Props = {
   range: DateRange;
@@ -39,15 +43,8 @@ const fetchDistribution = async (range: DateRange): Promise<DistributionResult> 
 };
 
 const positivePercentOf = (distribution: DistributionResult): number => {
-  const green = getGreenRatings(distribution.isFiveScale);
-  const greenCount = distribution.chartData.filter((d) => green.includes(d.rating)).reduce((sum, d) => sum + d.count, 0);
+  const greenCount = getGreenCount(distribution.chartData, distribution.isFiveScale);
   return distribution.totalFeedback > 0 ? (greenCount / distribution.totalFeedback) * 100 : 0;
-};
-
-const colorForRating = (rating: number, isFiveScale: boolean): string => {
-  if (getGreenRatings(isFiveScale).includes(rating)) return GREEN;
-  if (getYellowRatings(isFiveScale).includes(rating)) return YELLOW;
-  return RED;
 };
 
 const PositiveFeedbackCard = ({ range, previousRange, unit }: Props) => {
@@ -72,22 +69,46 @@ const PositiveFeedbackCard = ({ range, previousRange, unit }: Props) => {
   if (!current) return null;
 
   const positivePercent = positivePercentOf(current);
-  const previousPositivePercent = previous ? positivePercentOf(previous) : 0;
-  const sortedRows = [...current.chartData].sort((a, b) => b.rating - a.rating);
+  const greenCount = getGreenCount(current.chartData, current.isFiveScale);
+  const previousGreenCount = previous ? getGreenCount(previous.chartData, previous.isFiveScale) : 0;
+  const previousTotal = previous?.totalFeedback ?? 0;
+  const bucketRows = getDistributionBucketGroups(current.chartData, current.isFiveScale);
+  const maxBucketCount = Math.max(...bucketRows.map((row) => row.count), 1);
 
   return (
     <Card>
-      <Track className="overview-list-card__title">{t('overview.positiveFeedback')}</Track>
-      <KpiValue value={positivePercent} previousValue={previousPositivePercent} format="percent" periodLabelKey={periodLabelKey(unit)} />
-      <Track direction="vertical" align="stretch" gap={8} className="overview-list-card__rows">
-        {sortedRows.map((row) => (
-          <Track key={row.rating} gap={8} className="overview-list-card__row">
-            <span className="overview-list-card__row-label">{row.rating}</span>
-            <ProgressBar value={row.count} max={current.totalFeedback} color={colorForRating(row.rating, current.isFiveScale)} />
-            <span className="overview-list-card__row-count">{row.count}</span>
-          </Track>
-        ))}
-      </Track>
+      <Track className="overview-secondary-card__header">{t('overview.positiveFeedback')}</Track>
+      <div className="overview-secondary-card__body">
+        <div className="overview-secondary-card__summary">
+          <h2 className="overview-secondary-card__value">{formatKpiValue(positivePercent, 'percent')}</h2>
+          {current.totalFeedback > 0 && (
+            <Track gap={2} className="overview-secondary-card__ratio">
+              <Icon icon={<MdArrowUpward />} size="small" />
+              <span>
+                {greenCount}/{current.totalFeedback}
+              </span>
+            </Track>
+          )}
+          {previous && previousTotal > 0 && (
+            <div className="overview-secondary-card__previous">
+              {t(periodLabelKey(unit))} {previousGreenCount}/{previousTotal}
+            </div>
+          )}
+        </div>
+        <Track direction="vertical" align="stretch" gap={8} className="overview-secondary-card__distribution">
+          {bucketRows.map((row) => (
+            <Track key={row.label} gap={8} className="overview-secondary-card__row">
+              <span className="overview-secondary-card__row-label overview-secondary-card__row-label--bucket">{row.label}</span>
+              <ProgressBar
+                value={row.count}
+                max={maxBucketCount}
+                color={colorForBucketLabel(row.label, current.isFiveScale)}
+              />
+              <span className="overview-secondary-card__row-count">{row.count}</span>
+            </Track>
+          ))}
+        </Track>
+      </div>
     </Card>
   );
 };

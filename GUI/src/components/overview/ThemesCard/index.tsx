@@ -10,7 +10,7 @@ import { getThemeOverview } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
-import './styles.scss';
+import '../overviewSecondaryCard.scss';
 
 const COLOR = '#3D6FA8';
 const TOP_N_OPTIONS = [
@@ -59,7 +59,7 @@ const ThemesCard = ({ range }: Props) => {
 
   return (
     <Card>
-      <Track justify="between" className="overview-list-card__title">
+      <Track justify="between" className="overview-secondary-card__header">
         <span>{t('overview.themesForPeriod')}</span>
         <FormSelect
           label="top-n"
@@ -70,12 +70,15 @@ const ThemesCard = ({ range }: Props) => {
           onSelectionChange={(selection) => selection && setTopN(Number(selection.value))}
         />
       </Track>
-      <Track direction="vertical" align="stretch" gap={8} className="overview-list-card__rows">
+      <Track direction="vertical" align="stretch" gap={8}>
         {visibleThemes.map((theme) => (
-          <Track key={theme.theme} gap={8} className="overview-list-card__row">
-            <span className="overview-list-card__row-label overview-list-card__row-label--wide">{theme.theme}</span>
+          <Track key={theme.theme} gap={8} className="overview-secondary-card__row">
+            <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide overview-secondary-card__row-label--muted">{theme.theme}</span>
             <ProgressBar value={Number(theme.count)} max={total} color={COLOR} />
-            <span className="overview-list-card__row-count">{theme.count}</span>
+            <span className="overview-secondary-card__row-count">{theme.count}</span>
+            <span className="overview-secondary-card__row-percent">
+              {total > 0 ? Math.round((Number(theme.count) / total) * 100) : 0}%
+            </span>
           </Track>
         ))}
       </Track>

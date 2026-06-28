@@ -9,7 +9,7 @@ import { getChatsStatuses } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
-import './styles.scss';
+import '../overviewSecondaryCard.scss';
 
 const EVENT_LABEL_KEYS: Record<string, string> = {
   ACCEPTED: 'chart.accepted',
@@ -18,11 +18,15 @@ const EVENT_LABEL_KEYS: Record<string, string> = {
   CLIENT_LEFT_WITH_NO_RESOLUTION: 'chart.clientLeftWithNoResolution',
 };
 
-const COLOR = '#3D6FA8';
+const EVENT_ORDER = Object.keys(EVENT_LABEL_KEYS);
+const BLUE = '#3D6FA8';
+const RED = '#B72727';
 
 type Row = { event: string; count: number };
 
 type Props = { range: DateRange };
+
+const colorForEvent = (event: string) => (event === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ? RED : BLUE);
 
 const ResponseQualityCard = ({ range }: Props) => {
   const { t } = useTranslation();
@@ -38,7 +42,7 @@ const ResponseQualityCard = ({ range }: Props) => {
         metric: 'day',
         start_date: formatISO(range.start),
         end_date: formatISO(range.end),
-        events: Object.keys(EVENT_LABEL_KEYS),
+        events: EVENT_ORDER,
         urls: getDomainsArray(),
         showTest: getShowTestData(),
       },
@@ -46,12 +50,10 @@ const ResponseQualityCard = ({ range }: Props) => {
       .then((result: any) => {
         if (cancelled) return;
         const statusRows: Row[] = result.response?.[0] ?? [];
-        const totals = Object.keys(EVENT_LABEL_KEYS)
-          .map((event) => ({
-            event,
-            count: statusRows.filter((row) => row.event === event).reduce((sum, row) => sum + Number(row.count), 0),
-          }))
-          .sort((a, b) => b.count - a.count);
+        const totals = EVENT_ORDER.map((event) => ({
+          event,
+          count: statusRows.filter((row) => row.event === event).reduce((sum, row) => sum + Number(row.count), 0),
+        }));
         setRows(totals);
       })
       .catch(console.error);
@@ -66,14 +68,16 @@ const ResponseQualityCard = ({ range }: Props) => {
 
   return (
     <Card>
-      <Track className="overview-list-card__title">{t('overview.responseQuality')}</Track>
-      <Track direction="vertical" align="stretch" gap={8} className="overview-list-card__rows">
+      <Track className="overview-secondary-card__header">{t('overview.responseQuality')}</Track>
+      <Track direction="vertical" align="stretch" gap={8}>
         {rows.map((row) => (
-          <Track key={row.event} gap={8} className="overview-list-card__row">
-            <span className="overview-list-card__row-label overview-list-card__row-label--wide">{t(EVENT_LABEL_KEYS[row.event])}</span>
-            <ProgressBar value={row.count} max={total} color={COLOR} />
-            <span className="overview-list-card__row-count">{row.count}</span>
-            <span className="overview-list-card__row-percent">{total > 0 ? Math.round((row.count / total) * 100) : 0}%</span>
+          <Track key={row.event} gap={8} className="overview-secondary-card__row">
+            <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide">
+              {t(EVENT_LABEL_KEYS[row.event])}
+            </span>
+            <ProgressBar value={row.count} max={total} color={colorForEvent(row.event)} />
+            <span className="overview-secondary-card__row-count">{row.count}</span>
+            <span className="overview-secondary-card__row-percent">{total > 0 ? Math.round((row.count / total) * 100) : 0}%</span>
           </Track>
         ))}
       </Track>

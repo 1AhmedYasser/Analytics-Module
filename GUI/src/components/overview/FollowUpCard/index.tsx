@@ -8,7 +8,7 @@ import { getFollowUpActionOverview } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
-import './styles.scss';
+import '../overviewSecondaryCard.scss';
 
 type FollowUpAction = { followUpAction: string; count: number };
 
@@ -46,12 +46,12 @@ const FollowUpCard = ({ range }: Props) => {
 
   return (
     <Card>
-      <Track className="overview-follow-up-card__title">{t('overview.followUp')}</Track>
-      <Track direction="vertical" align="stretch" gap={12} className="overview-follow-up-card__rows">
+      <Track className="overview-secondary-card__header">{t('overview.followUp')}</Track>
+      <Track direction="vertical" align="stretch" gap={12}>
         {actions.map((action) => (
-          <Track key={action.followUpAction} justify="between" className="overview-follow-up-card__row">
+          <Track key={action.followUpAction} justify="between" className="overview-secondary-card__follow-up-row">
             <span>{action.followUpAction}</span>
-            <span className="overview-follow-up-card__row-count">{action.count}</span>
+            <span className="overview-secondary-card__follow-up-count">{action.count}</span>
           </Track>
         ))}
       </Track>
