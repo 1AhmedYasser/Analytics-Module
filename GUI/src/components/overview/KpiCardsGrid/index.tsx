@@ -12,6 +12,8 @@ type Props = {
   isActive: (metric: string) => boolean;
 };
 
+const primaryMetrics = new Set(['total_chats', 'avg_waiting_time', 'avg_rating']);
+
 const cards: { metric: string; titleKey: string; format: KpiFormat; key: 'totalChats' | 'avgWaitingTime' | 'avgRating' | 'burokrattRate' | 'csaRate' | 'redirectedRate' | 'leftWithoutAnswerRate' }[] = [
   { metric: 'total_chats', titleKey: 'overview.metric.total_chats', format: 'number', key: 'totalChats' },
   { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime' },
@@ -25,21 +27,35 @@ const cards: { metric: string; titleKey: string; format: KpiFormat; key: 'totalC
 const KpiCardsGrid = ({ unit, range, previousRange, isActive }: Props) => {
   const { current, previous } = useOverviewKpis(range, previousRange);
   const visibleCards = cards.filter((card) => isActive(card.metric));
+  const primaryCards = visibleCards.filter((card) => primaryMetrics.has(card.metric));
+  const secondaryCards = visibleCards.filter((card) => !primaryMetrics.has(card.metric));
 
   if (visibleCards.length === 0) return null;
 
+  const renderCard = (card: (typeof cards)[number], highlighted: boolean) => (
+    <KpiCard
+      key={card.metric}
+      titleKey={card.titleKey}
+      value={current[card.key]}
+      previousValue={previous[card.key]}
+      format={card.format}
+      periodLabelKey={periodLabelKey(unit)}
+      highlighted={highlighted}
+    />
+  );
+
   return (
     <div className="kpi-cards-grid">
-      {visibleCards.map((card) => (
-        <KpiCard
-          key={card.metric}
-          titleKey={card.titleKey}
-          value={current[card.key]}
-          previousValue={previous[card.key]}
-          format={card.format}
-          periodLabelKey={periodLabelKey(unit)}
-        />
-      ))}
+      {primaryCards.length > 0 && (
+        <div className="kpi-cards-grid__row kpi-cards-grid__row--primary">
+          {primaryCards.map((card) => renderCard(card, true))}
+        </div>
+      )}
+      {secondaryCards.length > 0 && (
+        <div className="kpi-cards-grid__row kpi-cards-grid__row--secondary">
+          {secondaryCards.map((card) => renderCard(card, false))}
+        </div>
+      )}
     </div>
   );
 };

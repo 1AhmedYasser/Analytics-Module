@@ -12,27 +12,34 @@ type Props = {
   previousValue: number;
   format: KpiFormat;
   periodLabelKey: string;
+  highlighted?: boolean;
 };
 
-const KpiValue = ({ value, previousValue, format, periodLabelKey }: Props) => {
+const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }: Props) => {
   const { t } = useTranslation();
   const hasPrevious = previousValue !== 0;
   const percentChange = hasPrevious ? Math.round(((value - previousValue) / previousValue) * 100) : 0;
   const isUp = percentChange >= 0;
+  const trendClass = isUp ? 'kpi-value__trend--up' : 'kpi-value__trend--down';
 
   return (
     <>
       <h2 className="kpi-value__value">{formatKpiValue(value, format)}</h2>
       <Track gap={4} className="kpi-value__footer">
         {hasPrevious && (
-          <Track gap={2} className={clsx('kpi-value__trend', isUp ? 'kpi-value__trend--up' : 'kpi-value__trend--down')}>
+          <Track gap={2} className={clsx('kpi-value__trend', trendClass)}>
             <Icon icon={isUp ? <MdArrowUpward /> : <MdArrowDownward />} size="small" />
             <span>{Math.abs(percentChange)}%</span>
           </Track>
         )}
-        <span className="kpi-value__dot">·</span>
-        <span className="kpi-value__period">{t(periodLabelKey)}</span>
-        <span className="kpi-value__previous">{formatKpiValue(previousValue, format)}</span>
+        <Track
+          gap={4}
+          className={clsx(highlighted && hasPrevious && trendClass)}
+        >
+          <span className="kpi-value__dot">·</span>
+          <span className="kpi-value__period">{t(periodLabelKey)}</span>
+          <span className="kpi-value__previous">{formatKpiValue(previousValue, format)}</span>
+        </Track>
       </Track>
     </>
   );
