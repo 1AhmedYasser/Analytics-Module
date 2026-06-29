@@ -21,15 +21,17 @@ type BarShapeProps = {
   readonly leftWithoutAnswer?: number;
 };
 
-const getBucket = (props: BarShapeProps): OverviewChartBucket | null => {
-  if (props.payload) return props.payload;
+type BucketFields = Pick<BarShapeProps, 'payload' | 'bucket' | 'burokratt' | 'csa' | 'leftWithoutAnswer'>;
 
-  if (props.bucket !== undefined) {
+const getBucket = ({ payload, bucket, burokratt, csa, leftWithoutAnswer }: BucketFields): OverviewChartBucket | null => {
+  if (payload) return payload;
+
+  if (bucket !== undefined) {
     return {
-      bucket: props.bucket,
-      burokratt: props.burokratt ?? 0,
-      csa: props.csa ?? 0,
-      leftWithoutAnswer: props.leftWithoutAnswer ?? 0,
+      bucket,
+      burokratt: burokratt ?? 0,
+      csa: csa ?? 0,
+      leftWithoutAnswer: leftWithoutAnswer ?? 0,
     };
   }
 
@@ -43,8 +45,8 @@ const hasSegmentAbove = (payload: OverviewChartBucket, segment: SegmentKey): boo
   SEGMENT_ORDER.slice(SEGMENT_ORDER.indexOf(segment) + 1).some((key) => payload[key] > 0);
 
 export const createStackedBarShape = (segment: SegmentKey) => (props: BarShapeProps) => {
-  const { x = 0, y = 0, width = 0, height = 0, fill } = props;
-  const payload = getBucket(props);
+  const { x = 0, y = 0, width = 0, height = 0, fill, payload: payloadProp, bucket, burokratt, csa, leftWithoutAnswer } = props;
+  const payload = getBucket({ payload: payloadProp, bucket, burokratt, csa, leftWithoutAnswer });
 
   if (!height || height <= 0 || !payload) return null;
 
