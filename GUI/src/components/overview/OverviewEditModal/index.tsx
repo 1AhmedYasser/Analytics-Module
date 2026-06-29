@@ -3,28 +3,13 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../Button';
 import Dialog from '../../Dialog';
 import { FormCheckbox } from '../../FormElements';
-import { OverviewMetricPreference } from '../../../types/overview-metrics';
+import { OVERVIEW_SECTION_METRICS, OverviewMetricPreference } from '../../../types/overview-metrics';
 import './styles.scss';
 
-export const OVERVIEW_SECTION_METRICS = [
-  'total_chats',
-  'avg_waiting_time',
-  'avg_rating',
-  'burokratt_rate',
-  'csa_rate',
-  'redirected_rate',
-  'left_without_answer_rate',
-  'chart',
-  'positive_feedback',
-  'quality',
-  'themes',
-  'follow_up',
-] as const;
-
 type Props = {
-  preferences: OverviewMetricPreference[];
-  onClose: () => void;
-  onConfirm: (preferences: OverviewMetricPreference[]) => void;
+  readonly preferences: readonly OverviewMetricPreference[];
+  readonly onClose: () => void;
+  readonly onConfirm: (preferences: OverviewMetricPreference[]) => void;
 };
 
 const OverviewEditModal = ({ preferences, onClose, onConfirm }: Props) => {

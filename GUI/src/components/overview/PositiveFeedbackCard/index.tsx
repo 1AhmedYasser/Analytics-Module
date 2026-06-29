@@ -18,17 +18,18 @@ import {
   mapDistributionChartData,
 } from '../../../util/feedback-distribution-utils';
 import { DateRange, OverviewUnit, periodLabelKey } from '../../../util/overview-date-utils';
+import { DistributionFeedbackResponse, OverviewDateRangeRequestData } from '../../../types/overview-api';
 import { formatKpiValue } from '../kpiFormat';
 import '../overviewSecondaryCard.scss';
 
 type Props = {
-  range: DateRange;
-  previousRange: DateRange;
-  unit: OverviewUnit;
+  readonly range: DateRange;
+  readonly previousRange: DateRange;
+  readonly unit: OverviewUnit;
 };
 
 const fetchDistribution = async (range: DateRange): Promise<DistributionResult> => {
-  const result = await request<any, any>({
+  const result = await request<OverviewDateRangeRequestData, DistributionFeedbackResponse>({
     url: getDistributionOnBuerokrattChatsFeedback(),
     method: Methods.post,
     withCredentials: true,

@@ -16,7 +16,7 @@ import {
 
 export type OverviewUnit = 'day' | 'week' | 'month';
 
-export type DateRange = { start: Date; end: Date };
+export type DateRange = { readonly start: Date; readonly end: Date };
 
 const WEEK_OPTIONS = { weekStartsOn: 1 as const };
 

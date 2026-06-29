@@ -1,46 +1,75 @@
 import { randomColor } from './generateRandomColor';
+import { OVERVIEW_GREEN, OVERVIEW_RED, OVERVIEW_YELLOW } from './overview-colors';
+import { DistributionFeedbackApiBody, DistributionFeedbackData, DistributionFeedbackInput } from '../types/overview-api';
+
+export type DistributionChartEntry = {
+  readonly rating: number;
+  readonly count: number;
+};
+
+export type DistributionColorEntry = {
+  readonly id: string;
+  readonly color: string;
+};
 
 export type DistributionResult = {
-  chartData: { rating: number; count: number }[];
-  colors: { id: string; color: string }[];
-  isRatingDistribution: true;
-  totalFeedback: number;
-  totalChats: number;
-  noFeedbackCount: number;
-  isFiveScale: boolean;
-  yAxisMax: number;
+  readonly chartData: readonly DistributionChartEntry[];
+  readonly colors: readonly DistributionColorEntry[];
+  readonly isRatingDistribution: true;
+  readonly totalFeedback: number;
+  readonly totalChats: number;
+  readonly noFeedbackCount: number;
+  readonly isFiveScale: boolean;
+  readonly yAxisMax: number;
 };
+
+const FIVE_SCALE_RATINGS = {
+  green: [4, 5],
+  yellow: [3],
+  bucket2: [2],
+  bucket1: [1],
+} as const;
+
+const TEN_SCALE_RATINGS = {
+  greenHigh: [9, 10],
+  greenMid: [7, 8],
+  yellow: [5, 6],
+  neutral: [3, 4],
+  red: [0, 1, 2],
+} as const;
 
 export const getRatingBuckets = (isFiveScale: boolean) =>
   isFiveScale ? [1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export const getGreenRatings = (isFiveScale: boolean) => (isFiveScale ? [4, 5] : [9, 10]);
+export const getGreenRatings = (isFiveScale: boolean) =>
+  isFiveScale ? [...FIVE_SCALE_RATINGS.green] : [...TEN_SCALE_RATINGS.greenHigh];
 
-export const getYellowRatings = (isFiveScale: boolean) => (isFiveScale ? [3] : [7, 8]);
+export const getYellowRatings = (isFiveScale: boolean) =>
+  isFiveScale ? [...FIVE_SCALE_RATINGS.yellow] : [...TEN_SCALE_RATINGS.greenMid];
 
 export type DistributionBucketGroup = {
-  label: string;
-  ratings: number[];
-  count: number;
+  readonly label: string;
+  readonly ratings: readonly number[];
+  readonly count: number;
 };
 
 export const getDistributionBucketGroups = (
-  chartData: { rating: number; count: number }[],
+  chartData: readonly DistributionChartEntry[],
   isFiveScale: boolean,
 ): DistributionBucketGroup[] => {
   const groupDefs = isFiveScale
     ? [
-        { label: '4-5', ratings: [4, 5] },
-        { label: '3', ratings: [3] },
-        { label: '2', ratings: [2] },
-        { label: '1', ratings: [1] },
+        { label: '4-5', ratings: FIVE_SCALE_RATINGS.green },
+        { label: '3', ratings: FIVE_SCALE_RATINGS.yellow },
+        { label: '2', ratings: FIVE_SCALE_RATINGS.bucket2 },
+        { label: '1', ratings: FIVE_SCALE_RATINGS.bucket1 },
       ]
     : [
-        { label: '9-10', ratings: [9, 10] },
-        { label: '7-8', ratings: [7, 8] },
-        { label: '5-6', ratings: [5, 6] },
-        { label: '3-4', ratings: [3, 4] },
-        { label: '1-2', ratings: [0, 1, 2] },
+        { label: '9-10', ratings: TEN_SCALE_RATINGS.greenHigh },
+        { label: '7-8', ratings: TEN_SCALE_RATINGS.greenMid },
+        { label: '5-6', ratings: TEN_SCALE_RATINGS.yellow },
+        { label: '3-4', ratings: TEN_SCALE_RATINGS.neutral },
+        { label: '1-2', ratings: TEN_SCALE_RATINGS.red },
       ];
 
   const countByRating = new Map(chartData.map(({ rating, count }) => [rating, count]));
@@ -51,24 +80,20 @@ export const getDistributionBucketGroups = (
   }));
 };
 
-export const getGreenCount = (chartData: { rating: number; count: number }[], isFiveScale: boolean) =>
+export const getGreenCount = (chartData: readonly DistributionChartEntry[], isFiveScale: boolean) =>
   chartData
     .filter(({ rating }) => getGreenRatings(isFiveScale).includes(rating))
     .reduce((sum, { count }) => sum + count, 0);
 
-const BUCKET_GREEN = '#3E9142';
-const BUCKET_YELLOW = '#E5A82E';
-const BUCKET_RED = '#B72727';
-
 export const colorForBucketLabel = (label: string, isFiveScale: boolean): string => {
   if (isFiveScale) {
-    if (label === '4-5') return BUCKET_GREEN;
-    if (label === '3') return BUCKET_YELLOW;
-    return BUCKET_RED;
+    if (label === '4-5') return OVERVIEW_GREEN;
+    if (label === '3') return OVERVIEW_YELLOW;
+    return OVERVIEW_RED;
   }
-  if (label === '9-10' || label === '7-8') return BUCKET_GREEN;
-  if (label === '5-6') return BUCKET_YELLOW;
-  return BUCKET_RED;
+  if (label === '9-10' || label === '7-8') return OVERVIEW_GREEN;
+  if (label === '5-6') return OVERVIEW_YELLOW;
+  return OVERVIEW_RED;
 };
 
 export const getRoundedDistributionMax = (maxCount: number) => {
@@ -76,18 +101,22 @@ export const getRoundedDistributionMax = (maxCount: number) => {
   return Math.ceil(maxCount / 10) * 10;
 };
 
-export const mapDistributionChartData = (result: any): DistributionResult => {
-  const response = result.response ?? result;
-  const raw = Array.isArray(response) ? response[0] : response;
-  const data: {
-    distribution?: {
-      rating: number | string;
-      count: number;
-    }[];
-    total_feedback?: number;
-    total_chats?: number;
-    is_five_scale?: boolean;
-  } = raw?.result?.value ? JSON.parse(raw.result.value) : raw?.result ?? raw;
+const parseDistributionFeedbackData = (body: DistributionFeedbackApiBody): DistributionFeedbackData => {
+  const response = Array.isArray(body) ? body[0] : body;
+  const raw = response?.result;
+  if (raw && 'value' in raw && raw.value) {
+    return JSON.parse(raw.value) as DistributionFeedbackData;
+  }
+  if (raw && !('value' in raw)) {
+    return raw;
+  }
+  return response as DistributionFeedbackData;
+};
+
+export const mapDistributionChartData = (result: DistributionFeedbackInput): DistributionResult => {
+  const body: DistributionFeedbackApiBody =
+    'response' in result && result.response !== undefined ? result.response : result;
+  const data = parseDistributionFeedbackData(body);
   const distribution = data?.distribution ?? [];
   const totalFeedback = data?.total_feedback ?? 0;
   const totalChats = data?.total_chats ?? 0;

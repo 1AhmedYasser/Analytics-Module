@@ -9,11 +9,11 @@ import { DateRange, OverviewUnit, shiftAnchor } from '../../../util/overview-dat
 import './styles.scss';
 
 type Props = {
-  unit: OverviewUnit;
-  anchorDate: Date;
-  range: DateRange;
-  onUnitChange: (unit: OverviewUnit) => void;
-  onAnchorChange: (date: Date) => void;
+  readonly unit: OverviewUnit;
+  readonly anchorDate: Date;
+  readonly range: DateRange;
+  readonly onUnitChange: (unit: OverviewUnit) => void;
+  readonly onAnchorChange: (date: Date) => void;
 };
 
 const units: OverviewUnit[] = ['day', 'week', 'month'];

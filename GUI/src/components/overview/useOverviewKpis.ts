@@ -5,15 +5,26 @@ import { getDomainsArray } from '../../util/multiDomain-utils';
 import { getShowTestData } from '../../util/testChat-utils';
 import { getAverageFeedbackOnBuerokrattChats, getRedirectedOverview, getTotalChats, getAvgChatWaitingTime, getChatsStatuses } from '../../resources/api-constants';
 import { DateRange } from '../../util/overview-date-utils';
+import {
+  AvgRatingOverviewResponse,
+  AvgWaitingTimeOverviewResponse,
+  ChatsStatusesOverviewResponse,
+  ChatsStatusesRequestData,
+  CountRow,
+  OverviewChartRequestData,
+  OverviewDateRangeRequestData,
+  RedirectedOverviewResponse,
+  TotalChatsOverviewResponse,
+} from '../../types/overview-api';
 
 export type OverviewKpiValues = {
-  totalChats: number;
-  avgWaitingTime: number;
-  avgRating: number;
-  burokrattRate: number;
-  csaRate: number;
-  redirectedRate: number;
-  leftWithoutAnswerRate: number;
+  readonly totalChats: number;
+  readonly avgWaitingTime: number;
+  readonly avgRating: number;
+  readonly burokrattRate: number;
+  readonly csaRate: number;
+  readonly redirectedRate: number;
+  readonly leftWithoutAnswerRate: number;
 };
 
 const emptyKpis: OverviewKpiValues = {
@@ -26,7 +37,7 @@ const emptyKpis: OverviewKpiValues = {
   leftWithoutAnswerRate: 0,
 };
 
-const sumCounts = (rows: { count: number }[] | undefined): number =>
+const sumCounts = (rows: readonly CountRow[] | undefined): number =>
   (rows ?? []).reduce((sum, row) => sum + Number(row.count ?? 0), 0);
 
 const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> => {
@@ -36,43 +47,62 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
   const end_date = formatISO(range.end);
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const [totalCountRes, waitingTimeRes, ratingRes, redirectedRes, statusRes]: any[] = await Promise.all([
-    request({
+  const chartRequestData: OverviewChartRequestData = {
+    options: ['byk', 'csa'],
+    period: 'day',
+    start_date,
+    end_date,
+    urls,
+    showTest,
+    timezone,
+  };
+
+  const dateRangeRequestData: OverviewDateRangeRequestData = {
+    start_date,
+    end_date,
+    urls,
+    showTest,
+  };
+
+  const statusRequestData: ChatsStatusesRequestData = {
+    metric: 'day',
+    start_date,
+    end_date,
+    events: ['CLIENT_LEFT_WITH_NO_RESOLUTION'],
+    urls,
+    showTest,
+  };
+
+  const [totalCountRes, waitingTimeRes, ratingRes, redirectedRes, statusRes] = await Promise.all([
+    request<OverviewChartRequestData, TotalChatsOverviewResponse>({
       url: getTotalChats(),
       method: Methods.post,
       withCredentials: true,
-      data: { options: ['byk', 'csa'], period: 'day', start_date, end_date, urls, showTest, timezone },
+      data: chartRequestData,
     }),
-    request({
+    request<OverviewChartRequestData, AvgWaitingTimeOverviewResponse>({
       url: getAvgChatWaitingTime(),
       method: Methods.post,
       withCredentials: true,
-      data: { options: ['handoff'], period: 'day', start_date, end_date, urls, showTest },
+      data: { ...chartRequestData, options: ['handoff'] },
     }),
-    request({
+    request<OverviewDateRangeRequestData & { combined: boolean }, AvgRatingOverviewResponse>({
       url: getAverageFeedbackOnBuerokrattChats(),
       method: Methods.post,
       withCredentials: true,
-      data: { combined: true, start_date, end_date, urls, showTest },
+      data: { combined: true, ...dateRangeRequestData },
     }),
-    request({
+    request<OverviewDateRangeRequestData, RedirectedOverviewResponse>({
       url: getRedirectedOverview(),
       method: Methods.post,
       withCredentials: true,
-      data: { start_date, end_date, urls, showTest },
+      data: dateRangeRequestData,
     }),
-    request({
+    request<ChatsStatusesRequestData, ChatsStatusesOverviewResponse>({
       url: getChatsStatuses(),
       method: Methods.post,
       withCredentials: true,
-      data: {
-        metric: 'day',
-        start_date,
-        end_date,
-        events: ['CLIENT_LEFT_WITH_NO_RESOLUTION'],
-        urls,
-        showTest,
-      },
+      data: statusRequestData,
     }),
   ]);
 

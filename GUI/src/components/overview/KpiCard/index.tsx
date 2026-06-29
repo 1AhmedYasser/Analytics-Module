@@ -8,12 +8,12 @@ import { KpiFormat } from '../kpiFormat';
 import './styles.scss';
 
 type Props = {
-  titleKey: string;
-  value: number;
-  previousValue: number;
-  format: KpiFormat;
-  periodLabelKey: string;
-  highlighted?: boolean;
+  readonly titleKey: string;
+  readonly value: number;
+  readonly previousValue: number;
+  readonly format: KpiFormat;
+  readonly periodLabelKey: string;
+  readonly highlighted?: boolean;
 };
 
 const KpiCard = ({ titleKey, value, previousValue, format, periodLabelKey, highlighted }: Props) => {

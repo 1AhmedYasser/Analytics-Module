@@ -10,18 +10,21 @@ import { getThemeOverview } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
+import { OVERVIEW_BLUE } from '../../../util/overview-colors';
+import { OverviewDateRangeRequestData, ThemeOverviewResponse, ThemeOverviewRow } from '../../../types/overview-api';
 import '../overviewSecondaryCard.scss';
 
-const COLOR = '#3D6FA8';
 const TOP_N_OPTIONS = [
   { label: '3', value: '3' },
   { label: '5', value: '5' },
   { label: '10', value: '10' },
 ];
 
-type Theme = { theme: string; count: number };
+type Theme = ThemeOverviewRow;
 
-type Props = { range: DateRange };
+type Props = {
+  readonly range: DateRange;
+};
 
 const ThemesCard = ({ range }: Props) => {
   const { t } = useTranslation();
@@ -30,7 +33,10 @@ const ThemesCard = ({ range }: Props) => {
 
   useEffect(() => {
     let cancelled = false;
-    request<any, any>({
+    request<
+      OverviewDateRangeRequestData & { excluded_themes: readonly string[] },
+      ThemeOverviewResponse
+    >({
       url: getThemeOverview(),
       method: Methods.post,
       withCredentials: true,
@@ -42,9 +48,9 @@ const ThemesCard = ({ range }: Props) => {
         showTest: getShowTestData(),
       },
     })
-      .then((result: any) => {
+      .then((result) => {
         if (cancelled) return;
-        setThemes(result.response ?? []);
+        setThemes([...(result.response ?? [])]);
       })
       .catch(console.error);
     return () => {
@@ -76,7 +82,7 @@ const ThemesCard = ({ range }: Props) => {
         {visibleThemes.map((theme) => (
           <Track key={theme.theme} gap={8} className="overview-secondary-card__row">
             <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide overview-secondary-card__row-label--muted">{theme.theme}</span>
-            <ProgressBar value={Number(theme.count)} max={total} color={COLOR} />
+            <ProgressBar value={Number(theme.count)} max={total} color={OVERVIEW_BLUE} />
             <span className="overview-secondary-card__row-count">{theme.count}</span>
             <span className="overview-secondary-card__row-percent">
               {total > 0 ? Math.round((Number(theme.count) / total) * 100) : 0}%

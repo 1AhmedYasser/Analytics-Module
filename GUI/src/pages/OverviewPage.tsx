@@ -11,7 +11,7 @@ import ResponseQualityCard from '../components/overview/ResponseQualityCard';
 import ThemesCard from '../components/overview/ThemesCard';
 import FollowUpCard from '../components/overview/FollowUpCard';
 import { overviewMetricPreferences } from '../resources/api-constants';
-import { OverviewMetricPreference } from '../types/overview-metrics';
+import { OverviewMetricPreference, OverviewSectionMetric } from '../types/overview-metrics';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { getRange, getPreviousRange, OverviewUnit } from '../util/overview-date-utils';
@@ -46,7 +46,7 @@ const OverviewPage: React.FC = () => {
     });
   };
 
-  const isActive = (metric: string): boolean => {
+  const isActive = (metric: OverviewSectionMetric): boolean => {
     const preference = metricPreferences.find((p) => p.metric === metric);
     return preference ? preference.active : true;
   };

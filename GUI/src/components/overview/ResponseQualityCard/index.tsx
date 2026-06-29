@@ -9,6 +9,8 @@ import { getChatsStatuses } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
+import { OVERVIEW_BLUE, OVERVIEW_RED } from '../../../util/overview-colors';
+import { ChatsStatusesByEventResponse, ChatsStatusesRequestData, StatusEventRow } from '../../../types/overview-api';
 import '../overviewSecondaryCard.scss';
 
 const EVENT_LABEL_KEYS: Record<string, string> = {
@@ -19,14 +21,14 @@ const EVENT_LABEL_KEYS: Record<string, string> = {
 };
 
 const EVENT_ORDER = Object.keys(EVENT_LABEL_KEYS);
-const BLUE = '#3D6FA8';
-const RED = '#B72727';
 
-type Row = { event: string; count: number };
+type Row = StatusEventRow;
 
-type Props = { range: DateRange };
+type Props = {
+  readonly range: DateRange;
+};
 
-const colorForEvent = (event: string) => (event === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ? RED : BLUE);
+const colorForEvent = (event: string) => (event === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ? OVERVIEW_RED : OVERVIEW_BLUE);
 
 const ResponseQualityCard = ({ range }: Props) => {
   const { t } = useTranslation();
@@ -34,7 +36,7 @@ const ResponseQualityCard = ({ range }: Props) => {
 
   useEffect(() => {
     let cancelled = false;
-    request<any, any>({
+    request<ChatsStatusesRequestData, ChatsStatusesByEventResponse>({
       url: getChatsStatuses(),
       method: Methods.post,
       withCredentials: true,
@@ -47,9 +49,9 @@ const ResponseQualityCard = ({ range }: Props) => {
         showTest: getShowTestData(),
       },
     })
-      .then((result: any) => {
+      .then((result) => {
         if (cancelled) return;
-        const statusRows: Row[] = result.response?.[0] ?? [];
+        const statusRows = result.response?.[0] ?? [];
         const totals = EVENT_ORDER.map((event) => ({
           event,
           count: statusRows.filter((row) => row.event === event).reduce((sum, row) => sum + Number(row.count), 0),

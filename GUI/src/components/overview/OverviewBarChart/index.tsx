@@ -3,28 +3,22 @@ import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from '
 import { useTranslation } from 'react-i18next';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
 import { DateRange, formatOverviewChartTitleRange, OverviewUnit } from '../../../util/overview-date-utils';
+import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_RED, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
 import './styles.scss';
 
-const BLUE = '#3D6FA8';
-const GREEN = '#3E9142';
-const RED = '#B72727';
-const AXIS_STROKE = '#D2D3D8';
-const GRID_STROKE = '#D2D3D8';
-const TICK_FILL = '#9799A4';
-
 const LEGEND_ITEMS = [
-  { key: 'overview.legend.burokratt', color: BLUE },
-  { key: 'overview.legend.csa', color: GREEN },
-  { key: 'overview.legend.leftWithoutAnswer', color: RED },
+  { key: 'overview.legend.burokratt', color: OVERVIEW_BLUE },
+  { key: 'overview.legend.csa', color: OVERVIEW_GREEN },
+  { key: 'overview.legend.leftWithoutAnswer', color: OVERVIEW_RED },
 ] as const;
 
 const roundUpToTen = (value: number): number => (value <= 10 ? 10 : Math.ceil(value / 10) * 10);
 
 type Props = {
-  range: DateRange;
-  unit: OverviewUnit;
+  readonly range: DateRange;
+  readonly unit: OverviewUnit;
 };
 
 const OverviewBarChart = ({ range, unit }: Props) => {
@@ -68,7 +62,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
         <CartesianGrid
           vertical={false}
           horizontalValues={yAxisTicks.filter((tick) => tick > 0)}
-          stroke={GRID_STROKE}
+          stroke={OVERVIEW_AXIS_STROKE}
           strokeDasharray="3 3"
         />
         <XAxis
@@ -78,9 +72,9 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           domain={['dataMin', 'dataMax']}
           scale="time"
           padding={{ left: unit === 'day' ? 8 : 14, right: unit === 'day' ? 8 : 14 }}
-          axisLine={{ stroke: AXIS_STROKE }}
+          axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}
           tickLine={false}
-          tick={{ fill: TICK_FILL, fontSize: 12 }}
+          tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
         <YAxis
           domain={[0, yAxisMax]}
@@ -88,15 +82,15 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           allowDecimals={false}
           axisLine={false}
           tickLine={false}
-          tick={{ fill: TICK_FILL, fontSize: 12 }}
+          tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
         />
         <Tooltip
           cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
           labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')}
         />
-        <Bar dataKey="burokratt" stackId="total" fill={BLUE} shape={createStackedBarShape('burokratt')} />
-        <Bar dataKey="csa" stackId="total" fill={GREEN} shape={createStackedBarShape('csa')} />
-        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} shape={createStackedBarShape('leftWithoutAnswer')}>
+        <Bar dataKey="burokratt" stackId="total" fill={OVERVIEW_BLUE} shape={createStackedBarShape('burokratt')} />
+        <Bar dataKey="csa" stackId="total" fill={OVERVIEW_GREEN} shape={createStackedBarShape('csa')} />
+        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={OVERVIEW_RED} shape={createStackedBarShape('leftWithoutAnswer')}>
           <LabelList
             position="top"
             content={({ x, y, width: barWidth, index }) => {
@@ -113,7 +107,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
                     </text>
                   )}
                   {bucket.leftWithoutAnswer > 0 && (
-                    <text x={centerX + 14} y={Number(y) - 6} textAnchor="start" fontSize={10} fill={RED}>
+                    <text x={centerX + 14} y={Number(y) - 6} textAnchor="start" fontSize={10} fill={OVERVIEW_RED}>
                       {`-${bucket.leftWithoutAnswer}`}
                     </text>
                   )}

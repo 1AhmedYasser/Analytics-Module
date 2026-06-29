@@ -5,12 +5,18 @@ import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { getChatsStatuses, getTotalChats } from '../../../resources/api-constants';
 import { DateRange, OverviewUnit } from '../../../util/overview-date-utils';
+import {
+  ChatsStatusesOverviewResponse,
+  ChatsStatusesRequestData,
+  OverviewChartRequestData,
+  TotalChatsOverviewResponse,
+} from '../../../types/overview-api';
 
 export type OverviewChartBucket = {
-  bucket: number;
-  burokratt: number;
-  csa: number;
-  leftWithoutAnswer: number;
+  readonly bucket: number;
+  readonly burokratt: number;
+  readonly csa: number;
+  readonly leftWithoutAnswer: number;
 };
 
 const bucketKey = (date: string | Date, period: 'hour' | 'day'): string | null => {
@@ -43,28 +49,28 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     Promise.all([
-      request<any, any>({
+      request<OverviewChartRequestData, TotalChatsOverviewResponse>({
         url: getTotalChats(),
         method: Methods.post,
         withCredentials: true,
         data: { options: ['byk', 'csa'], period, start_date, end_date, urls, showTest, timezone },
       }),
-      request<any, any>({
+      request<ChatsStatusesRequestData, ChatsStatusesOverviewResponse>({
         url: getChatsStatuses(),
         method: Methods.post,
         withCredentials: true,
         data: { metric: period, start_date, end_date, events: ['CLIENT_LEFT_WITH_NO_RESOLUTION'], urls, showTest },
       }),
     ])
-      .then(([totalCountRes, statusRes]: any[]) => {
+      .then(([totalCountRes, statusRes]) => {
         if (cancelled) return;
-        const bykRows: { time: string; count: number }[] = totalCountRes.response?.[0] ?? [];
-        const csaRows: { time: string; count: number }[] = totalCountRes.response?.[1] ?? [];
-        const leftWithoutAnswerRows: { date_time: string; count: number }[] = statusRes.response?.[0] ?? [];
+        const bykRows = totalCountRes.response?.[0] ?? [];
+        const csaRows = totalCountRes.response?.[1] ?? [];
+        const leftWithoutAnswerRows = statusRes.response?.[0] ?? [];
 
-        const bykMap = new Map(toBucketEntries(bykRows, 'time', period));
-        const csaMap = new Map(toBucketEntries(csaRows, 'time', period));
-        const leftMap = new Map(toBucketEntries(leftWithoutAnswerRows, 'date_time', period));
+        const bykMap = new Map(toBucketEntries([...bykRows], 'time', period));
+        const csaMap = new Map(toBucketEntries([...csaRows], 'time', period));
+        const leftMap = new Map(toBucketEntries([...leftWithoutAnswerRows], 'date_time', period));
 
         const intervals =
           period === 'hour'

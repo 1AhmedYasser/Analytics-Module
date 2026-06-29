@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import './ProgressBar.scss';
 
 type ProgressBarProps = {
-  value: number;
-  max: number;
-  color: string;
+  readonly value: number;
+  readonly max: number;
+  readonly color: string;
 };
 
 const ProgressBar: FC<ProgressBarProps> = ({ value, max, color }) => {

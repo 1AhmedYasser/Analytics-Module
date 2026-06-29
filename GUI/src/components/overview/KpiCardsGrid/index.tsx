@@ -3,18 +3,24 @@ import KpiCard from '../KpiCard';
 import { KpiFormat } from '../kpiFormat';
 import { useOverviewKpis } from '../useOverviewKpis';
 import { DateRange, OverviewUnit, periodLabelKey } from '../../../util/overview-date-utils';
+import { OverviewSectionMetric } from '../../../types/overview-metrics';
 import './styles.scss';
 
 type Props = {
-  unit: OverviewUnit;
-  range: DateRange;
-  previousRange: DateRange;
-  isActive: (metric: string) => boolean;
+  readonly unit: OverviewUnit;
+  readonly range: DateRange;
+  readonly previousRange: DateRange;
+  readonly isActive: (metric: OverviewSectionMetric) => boolean;
 };
 
-const primaryMetrics = new Set(['total_chats', 'avg_waiting_time', 'avg_rating']);
+const primaryMetrics = new Set<OverviewSectionMetric>(['total_chats', 'avg_waiting_time', 'avg_rating']);
 
-const cards: { metric: string; titleKey: string; format: KpiFormat; key: 'totalChats' | 'avgWaitingTime' | 'avgRating' | 'burokrattRate' | 'csaRate' | 'redirectedRate' | 'leftWithoutAnswerRate' }[] = [
+const cards: {
+  readonly metric: OverviewSectionMetric;
+  readonly titleKey: string;
+  readonly format: KpiFormat;
+  readonly key: 'totalChats' | 'avgWaitingTime' | 'avgRating' | 'burokrattRate' | 'csaRate' | 'redirectedRate' | 'leftWithoutAnswerRate';
+}[] = [
   { metric: 'total_chats', titleKey: 'overview.metric.total_chats', format: 'number', key: 'totalChats' },
   { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime' },
   { metric: 'avg_rating', titleKey: 'overview.metric.avg_rating', format: 'rating', key: 'avgRating' },

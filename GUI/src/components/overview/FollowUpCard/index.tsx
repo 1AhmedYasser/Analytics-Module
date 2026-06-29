@@ -8,11 +8,14 @@ import { getFollowUpActionOverview } from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { DateRange } from '../../../util/overview-date-utils';
+import { FollowUpActionOverviewResponse, FollowUpActionRow, OverviewDateRangeRequestData } from '../../../types/overview-api';
 import '../overviewSecondaryCard.scss';
 
-type FollowUpAction = { followUpAction: string; count: number };
+type FollowUpAction = FollowUpActionRow;
 
-type Props = { range: DateRange };
+type Props = {
+  readonly range: DateRange;
+};
 
 const FollowUpCard = ({ range }: Props) => {
   const { t } = useTranslation();
@@ -20,7 +23,10 @@ const FollowUpCard = ({ range }: Props) => {
 
   useEffect(() => {
     let cancelled = false;
-    request<any, any>({
+    request<
+      OverviewDateRangeRequestData & { excluded_actions: readonly string[] },
+      FollowUpActionOverviewResponse
+    >({
       url: getFollowUpActionOverview(),
       method: Methods.post,
       withCredentials: true,
@@ -32,9 +38,9 @@ const FollowUpCard = ({ range }: Props) => {
         showTest: getShowTestData(),
       },
     })
-      .then((result: any) => {
+      .then((result) => {
         if (cancelled) return;
-        setActions((result.response ?? []).slice(0, 10));
+        setActions([...(result.response ?? [])].slice(0, 10));
       })
       .catch(console.error);
     return () => {

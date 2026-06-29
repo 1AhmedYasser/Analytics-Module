@@ -9,16 +9,16 @@ type SegmentKey = keyof Pick<OverviewChartBucket, 'burokratt' | 'csa' | 'leftWit
 const SEGMENT_ORDER: SegmentKey[] = ['burokratt', 'csa', 'leftWithoutAnswer'];
 
 type BarShapeProps = {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-  fill?: string;
-  payload?: OverviewChartBucket;
-  bucket?: number;
-  burokratt?: number;
-  csa?: number;
-  leftWithoutAnswer?: number;
+  readonly x?: number;
+  readonly y?: number;
+  readonly width?: number;
+  readonly height?: number;
+  readonly fill?: string;
+  readonly payload?: OverviewChartBucket;
+  readonly bucket?: number;
+  readonly burokratt?: number;
+  readonly csa?: number;
+  readonly leftWithoutAnswer?: number;
 };
 
 const getBucket = (props: BarShapeProps): OverviewChartBucket | null => {
