@@ -94,9 +94,9 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
           labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')}
         />
-        <Bar dataKey="burokratt" stackId="total" fill={BLUE} shape={createStackedBarShape('burokratt')} isAnimationActive={false} />
-        <Bar dataKey="csa" stackId="total" fill={GREEN} shape={createStackedBarShape('csa')} isAnimationActive={false} />
-        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} shape={createStackedBarShape('leftWithoutAnswer')} isAnimationActive={false}>
+        <Bar dataKey="burokratt" stackId="total" fill={BLUE} shape={createStackedBarShape('burokratt')} />
+        <Bar dataKey="csa" stackId="total" fill={GREEN} shape={createStackedBarShape('csa')} />
+        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={RED} shape={createStackedBarShape('leftWithoutAnswer')}>
           <LabelList
             position="top"
             content={({ x, y, width: barWidth, index }) => {
