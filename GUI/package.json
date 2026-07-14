@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@buerokratt-ria/header": "^0.1.52",
+    "@buerokratt-ria/header": "^0.1.53",
     "@buerokratt-ria/menu": "^0.2.15",
     "@buerokratt-ria/styles": "^0.0.1",
-    "@buerokratt-ria/common-gui-components": "^0.0.62",
+    "@buerokratt-ria/common-gui-components": "^0.0.63",
     "@fontsource/roboto": "^4.5.8",
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@hookform/resolvers": "^2.9.11",
