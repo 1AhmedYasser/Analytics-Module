@@ -61,6 +61,7 @@ const ChatsPage: React.FC = () => {
 
   const themes = useRef<QualityMetricOption[]>([]);
   const followUpStatuses = useRef<QualityMetricOption[]>([]);
+  const lastFetchKey = useRef<string>('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
 
@@ -504,8 +505,10 @@ const ChatsPage: React.FC = () => {
           config.urls = userDomains ?? [];
           if (!CSA_METRIC_IDS.has(config.metric)) {
             advisors.current = [];
-            setShowSelectAll(false);
           }
+          const fetchKey = `${config.metric}|${config.start}|${config.end}`;
+          const rangeOrMetricChanged = lastFetchKey.current !== fetchKey;
+          lastFetchKey.current = fetchKey;
           if (
             config.metric !== 'theme_overview' &&
             config.metric !== 'follow_up_action_overview' &&
@@ -518,8 +521,12 @@ const ChatsPage: React.FC = () => {
             }
           } else if (config.metric === 'theme_overview') {
             followUpStatuses.current = [];
+            if (rangeOrMetricChanged) themes.current = [];
+            setShowSelectAll(true);
           } else if (config.metric === 'follow_up_action_overview') {
             themes.current = [];
+            if (rangeOrMetricChanged) followUpStatuses.current = [];
+            setShowSelectAll(true);
           } else if (config.metric === 'quality_overview') {
             themes.current = [];
             followUpStatuses.current = [];
