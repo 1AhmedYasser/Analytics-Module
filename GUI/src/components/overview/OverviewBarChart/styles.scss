@@ -1,0 +1,53 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+@import 'src/styles/settings/variables/typography';
+
+.overview-bar-chart {
+  width: 100%;
+
+  .recharts-cartesian-grid-horizontal line {
+    pointer-events: none;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: get-spacing(haapsalu);
+    margin-bottom: get-spacing(paldiski);
+  }
+
+  &__title {
+    margin: 0;
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-100;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  &__legend {
+    display: flex;
+    flex-shrink: 0;
+    gap: get-spacing(haapsalu);
+    align-items: center;
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__legend-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  &__legend-label {
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-80;
+    white-space: nowrap;
+  }
+}

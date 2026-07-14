@@ -107,9 +107,27 @@
     "closed": "average time of session, closed by customer"
   },
   "overview": {
-    "editView": "Edit view",
-    "totalChatsChart": "Total number of chats",
+    "editView": "Edit overview",
+    "editDescription": "Toggle the optional components on or off, to see what matters most to you.",
+    "confirmEdit": "Yes, change",
+    "totalChatsChart": "Total number of chats: {{range}}",
+    "totalChatsChartTitle": "Total number of chats {{unit}} {{range}}",
     "edit": "Edit",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "lastDay": "Last day",
+    "lastWeek": "Last week",
+    "lastMonth": "Last month",
+    "positiveFeedback": "Positive feedback",
+    "responseQuality": "Response quality",
+    "themesForPeriod": "Themes for period",
+    "followUp": "Follow-up",
+    "legend": {
+      "burokratt": "Bürokratt answered",
+      "csa": "CSA answered",
+      "leftWithoutAnswer": "Left without answer"
+    },
 
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
@@ -121,7 +139,19 @@
       "total_chats_day": "Number of chats: today / yesterday",
       "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
-      "avg_waiting_time_week": "Average waiting time: week / previous"
+      "avg_waiting_time_week": "Average waiting time: week / previous",
+      "total_chats": "Total number of chats",
+      "avg_waiting_time": "Average waiting time",
+      "avg_rating": "Average rating",
+      "burokratt_rate": "Bürokratt answer rate",
+      "csa_rate": "CSA answer rate",
+      "redirected_rate": "Redirected to another CSA",
+      "left_without_answer_rate": "Left without an answer",
+      "chart": "Total number of chats chart",
+      "positive_feedback": "Positive feedback",
+      "quality": "Response quality",
+      "themes": "Most popular themes for period",
+      "follow_up": "Top follow-up actions"
     }
   },
   "feedback": {

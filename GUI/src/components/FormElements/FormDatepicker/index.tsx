@@ -1,4 +1,4 @@
-import React, { forwardRef, useId } from 'react';
+import React, { forwardRef, useId, ReactNode } from 'react';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import clsx from 'clsx';
 import { et } from 'date-fns/locale';
@@ -21,6 +21,7 @@ type FormDatepickerProps = ControllerRenderProps & {
   timePicker?: boolean;
   monthPicker?: boolean;
   portalId?: string;
+  trailingIcon?: ReactNode;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((
@@ -33,6 +34,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
     timePicker,
     monthPicker,
     portalId = 'overlay-root',
+    trailingIcon,
     ...rest
   },
   ref,
@@ -74,11 +76,12 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
           onChange={onChange}
         />
         <Icon
-          icon={timePicker
+          icon={trailingIcon ?? (timePicker
             ? (<MdOutlineSchedule color='#5D6071' fontSize={20} />)
             : (<MdOutlineToday color='#5D6071' fontSize={20} />)
-          }
-          size='medium' />
+          )}
+          size={trailingIcon ? 'small' : 'medium'}
+        />
       </div>
     </div>
   );
