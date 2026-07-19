@@ -489,17 +489,19 @@ const FeedbackPage: React.FC = () => {
                 />
             )}
             {showNegativeChart && (
-                <ChatHistory
-                    toastContext={toastContext}
-                    displayDateFilter={false}
-                    displaySearchBar={false}
-                    displayTitle={false}
-                    showStatus={false}
-                    delegatedEndDate={formatDate(new Date(currentConfigs?.end ?? Date.now()), 'yyyy-MM-dd')}
-                    delegatedStartDate={formatDate(new Date(currentConfigs?.start ?? Date.now()), 'yyyy-MM-dd')}
-                    user={useStore.getState().userInfo}
-                    userDomains={useStore}
-                />
+                <div style={{ minHeight: '500px' }}>
+                    <ChatHistory
+                        toastContext={toastContext}
+                        displayDateFilter={false}
+                        displaySearchBar={false}
+                        displayTitle={false}
+                        showStatus={false}
+                        delegatedEndDate={formatDate(new Date(currentConfigs?.end ?? Date.now()), 'yyyy-MM-dd')}
+                        delegatedStartDate={formatDate(new Date(currentConfigs?.start ?? Date.now()), 'yyyy-MM-dd')}
+                        user={useStore.getState().userInfo}
+                        userDomains={useStore}
+                    />
+                </div>
             )}
         </>
     );
