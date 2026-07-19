@@ -80,7 +80,7 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
     setSelectedItems(options.filter((o) => defaultValue?.includes(String(o.value))));
   }, []);
 
-  const selectClasses = clsx('select', disabled && 'select--disabled');
+  const selectClasses = clsx('analytics-select', disabled && 'analytics-select--disabled');
 
   const placeholderValue = placeholder || t('global.choose');
 
@@ -89,15 +89,15 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
       {label && (
         <label
           htmlFor={id}
-          className="select__label"
+          className="analytics-select__label"
           {...getLabelProps()}
         >
           {label}
         </label>
       )}
-      <div className="select__wrapper">
+      <div className="analytics-select__wrapper">
         <div
-          className="select__trigger"
+          className="analytics-select__trigger"
           {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
         >
           {selectedItems.map((i) => i.label).join(', ') || placeholderValue}
@@ -108,14 +108,14 @@ const FormSelectMultiple: FC<FormSelectMultipleProps> = ({
           />
         </div>
         <ul
-          className="select__menu"
+          className="analytics-select__menu"
           {...getMenuProps()}
         >
           {isOpen &&
             options.map((item, index) => (
               <li
-                className={clsx('select__option', {
-                  'select__option--selected': selectedItems.find((i) => i.value === item.value),
+                className={clsx('analytics-select__option', {
+                  'analytics-select__option--selected': selectedItems.find((i) => i.value === item.value),
                 })}
                 key={`${item.value}${index}`}
                 {...getItemProps({ item, index })}
