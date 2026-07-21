@@ -68,7 +68,8 @@ EndedChatMessages AS (
         c.feedback_text,
         c.feedback_rating,
         c.feedback_rating_five,
-        c.preserve
+        c.preserve,
+        c.test
     FROM chat c
     RIGHT JOIN MaxChats ON c.id = MaxChats.maxId
 ),
@@ -221,6 +222,7 @@ SELECT
         ELSE NULL
     END AS is_five_rating_scale,
     c.preserve as is_preserve,
+    c.test as istest,
     nps,
     CSAFullNames.all_csa_names AS all_csa,
     COUNT(*) OVER() AS total_count,
@@ -262,6 +264,116 @@ WHERE (
             FROM message AS msg
             WHERE msg.chat_base_id = c.base_id
             AND LOWER(msg.content) LIKE LOWER('%' || :search || '%')
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:feedbackRatings]::TEXT[]) AS feedback_ratings(feedback_rating)
+            WHERE NULLIF(feedback_rating, '') IS NOT NULL
+        )
+        OR (
+            CASE
+                WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config)
+                THEN c.feedback_rating_five
+                ELSE c.feedback_rating
+            END
+        )::TEXT IN (
+            SELECT feedback_rating
+            FROM unnest(ARRAY[:feedbackRatings]::TEXT[]) AS feedback_ratings(feedback_rating)
+            WHERE NULLIF(feedback_rating, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:isTest]::TEXT[]) AS test_filters(is_test)
+            WHERE NULLIF(is_test, '') IS NOT NULL
+        )
+        OR (
+            'true' = ANY(ARRAY[:isTest]::TEXT[])
+            AND 'false' = ANY(ARRAY[:isTest]::TEXT[])
+        )
+        OR c.test::TEXT IN (
+            SELECT is_test
+            FROM unnest(ARRAY[:isTest]::TEXT[]) AS test_filters(is_test)
+            WHERE NULLIF(is_test, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:isPreserve]::TEXT[]) AS preserve_filters(is_preserve)
+            WHERE NULLIF(is_preserve, '') IS NOT NULL
+        )
+        OR (
+            'true' = ANY(ARRAY[:isPreserve]::TEXT[])
+            AND 'false' = ANY(ARRAY[:isPreserve]::TEXT[])
+        )
+        OR c.preserve::TEXT IN (
+            SELECT is_preserve
+            FROM unnest(ARRAY[:isPreserve]::TEXT[]) AS preserve_filters(is_preserve)
+            WHERE NULLIF(is_preserve, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:authenticatedChats]::TEXT[]) AS authenticated_filters(authenticated_chat)
+            WHERE NULLIF(authenticated_chat, '') IS NOT NULL
+        )
+        OR (
+            'true' = ANY(ARRAY[:authenticatedChats]::TEXT[])
+            AND 'false' = ANY(ARRAY[:authenticatedChats]::TEXT[])
+        )
+        OR (NULLIF(TRIM(c.end_user_id), '') IS NOT NULL)::TEXT IN (
+            SELECT authenticated_chat
+            FROM unnest(ARRAY[:authenticatedChats]::TEXT[]) AS authenticated_filters(authenticated_chat)
+            WHERE NULLIF(authenticated_chat, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:hasComment]::TEXT[]) AS comment_filters(has_comment)
+            WHERE NULLIF(has_comment, '') IS NOT NULL
+        )
+        OR (
+            'true' = ANY(ARRAY[:hasComment]::TEXT[])
+            AND 'false' = ANY(ARRAY[:hasComment]::TEXT[])
+        )
+        OR (NULLIF(TRIM(s.comment), '') IS NOT NULL)::TEXT IN (
+            SELECT has_comment
+            FROM unnest(ARRAY[:hasComment]::TEXT[]) AS comment_filters(has_comment)
+            WHERE NULLIF(has_comment, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:hasFeedback]::TEXT[]) AS feedback_filters(has_feedback)
+            WHERE NULLIF(has_feedback, '') IS NOT NULL
+        )
+        OR (
+            'true' = ANY(ARRAY[:hasFeedback]::TEXT[])
+            AND 'false' = ANY(ARRAY[:hasFeedback]::TEXT[])
+        )
+        OR (NULLIF(TRIM(c.feedback_text), '') IS NOT NULL)::TEXT IN (
+            SELECT has_feedback
+            FROM unnest(ARRAY[:hasFeedback]::TEXT[]) AS feedback_filters(has_feedback)
+            WHERE NULLIF(has_feedback, '') IS NOT NULL
+        )
+    )
+    AND (
+        NOT EXISTS (
+            SELECT 1
+            FROM unnest(ARRAY[:status]::TEXT[]) AS status_filters(status)
+            WHERE NULLIF(TRIM(status), '') IS NOT NULL
+        )
+        OR LOWER(NULLIF(TRIM(m.event), '')) IN (
+            SELECT LOWER(TRIM(status))
+            FROM unnest(ARRAY[:status]::TEXT[]) AS status_filters(status)
+            WHERE NULLIF(TRIM(status), '') IS NOT NULL
         )
     )
 )

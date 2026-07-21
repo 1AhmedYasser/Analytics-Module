@@ -56,24 +56,24 @@ const FormSelect: FC<FormSelectProps> = (
   });
 
   const selectClasses = clsx(
-    'select',
-    disabled && 'select--disabled',
+    'analytics-select',
+    disabled && 'analytics-select--disabled',
   );
 
   const placeholderValue = placeholder || t('global.choose');
 
   return (
     <div className={selectClasses}>
-      {label && !hideLabel && <label htmlFor={id} className='select__label' {...getLabelProps()}>{label}</label>}
-      <div className='select__wrapper'>
-        <div className='select__trigger' {...getToggleButtonProps()}>
+      {label && !hideLabel && <label htmlFor={id} className='analytics-select__label' {...getLabelProps()}>{label}</label>}
+      <div className='analytics-select__wrapper'>
+        <div className='analytics-select__trigger' {...getToggleButtonProps()}>
           {selectedItem?.label ?? placeholderValue}
           <Icon label='Dropdown icon' size='medium' icon={<MdArrowDropDown color='#5D6071' />} />
         </div>
-        <ul className='select__menu' {...getMenuProps()}>
+        <ul className='analytics-select__menu' {...getMenuProps()}>
           {isOpen && (
             options.map((item, index) => (
-              <li className={clsx('select__option', { 'select__option--selected': highlightedIndex === index })}
+              <li className={clsx('analytics-select__option', { 'analytics-select__option--selected': highlightedIndex === index })}
                   key={`${item.value}${index}`} {...getItemProps({ item, index })}>
                 {item.label}
               </li>
