@@ -12,10 +12,10 @@ declaration:
         type: string
         description: "Body field 'userId'"
       - field: userDomains
-        type: array
+        type: string
         description: "Body field 'userDomains'"
       - field: selectedDomains
-        type: array
+        type: string
         description: "Body field 'selectedDomains'"
 
 extractRequestData:
