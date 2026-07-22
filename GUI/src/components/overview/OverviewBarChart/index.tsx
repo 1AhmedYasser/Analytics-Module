@@ -3,7 +3,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from '
 import { useTranslation } from 'react-i18next';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
 import { DateRange, formatOverviewChartTitleRange, OverviewUnit } from '../../../util/overview-date-utils';
-import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_RED, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
+import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
 import './styles.scss';
@@ -11,7 +11,6 @@ import './styles.scss';
 const LEGEND_ITEMS = [
   { key: 'overview.legend.burokratt', color: OVERVIEW_BLUE },
   { key: 'overview.legend.csa', color: OVERVIEW_GREEN },
-  { key: 'overview.legend.leftWithoutAnswer', color: OVERVIEW_RED },
 ] as const;
 
 const roundUpToTen = (value: number): number => (value <= 10 ? 10 : Math.ceil(value / 10) * 10);
@@ -34,7 +33,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const maxTotal = Math.max(0, ...buckets.map((b) => b.burokratt + b.csa + b.leftWithoutAnswer));
+  const maxTotal = Math.max(0, ...buckets.map((b) => b.burokratt + b.csa));
   const yAxisMax = roundUpToTen(maxTotal);
   const yAxisTicks = getDistributionYAxisTicks(yAxisMax);
 
@@ -89,26 +88,20 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')}
         />
         <Bar dataKey="burokratt" stackId="total" fill={OVERVIEW_BLUE} shape={createStackedBarShape('burokratt')} />
-        <Bar dataKey="csa" stackId="total" fill={OVERVIEW_GREEN} shape={createStackedBarShape('csa')} />
-        <Bar dataKey="leftWithoutAnswer" stackId="total" fill={OVERVIEW_RED} shape={createStackedBarShape('leftWithoutAnswer')}>
+        <Bar dataKey="csa" stackId="total" fill={OVERVIEW_GREEN} shape={createStackedBarShape('csa')}>
           <LabelList
             position="top"
             content={({ x, y, width: barWidth, index }) => {
               if (index === undefined) return null;
               const bucket = buckets[index as number];
               if (!bucket) return null;
-              const total = bucket.burokratt + bucket.csa + bucket.leftWithoutAnswer;
+              const total = bucket.burokratt + bucket.csa;
               const centerX = Number(x) + Number(barWidth) / 2;
               return (
                 <g>
                   {total > 0 && (
                     <text x={centerX} y={Number(y) - 6} textAnchor="middle" fontSize={12} fontWeight={600}>
                       {total}
-                    </text>
-                  )}
-                  {bucket.leftWithoutAnswer > 0 && (
-                    <text x={centerX + 14} y={Number(y) - 6} textAnchor="start" fontSize={10} fill={OVERVIEW_RED}>
-                      {`-${bucket.leftWithoutAnswer}`}
                     </text>
                   )}
                 </g>

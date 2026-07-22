@@ -4,9 +4,9 @@ import { OverviewChartBucket } from './useOverviewChartData';
 const STACK_GAP = 2;
 const CORNER_RADIUS = 4;
 
-type SegmentKey = keyof Pick<OverviewChartBucket, 'burokratt' | 'csa' | 'leftWithoutAnswer'>;
+type SegmentKey = keyof Pick<OverviewChartBucket, 'burokratt' | 'csa'>;
 
-const SEGMENT_ORDER: SegmentKey[] = ['burokratt', 'csa', 'leftWithoutAnswer'];
+const SEGMENT_ORDER: SegmentKey[] = ['burokratt', 'csa'];
 
 type BarShapeProps = {
   readonly x?: number;
@@ -18,12 +18,11 @@ type BarShapeProps = {
   readonly bucket?: number;
   readonly burokratt?: number;
   readonly csa?: number;
-  readonly leftWithoutAnswer?: number;
 };
 
-type BucketFields = Pick<BarShapeProps, 'payload' | 'bucket' | 'burokratt' | 'csa' | 'leftWithoutAnswer'>;
+type BucketFields = Pick<BarShapeProps, 'payload' | 'bucket' | 'burokratt' | 'csa'>;
 
-const getBucket = ({ payload, bucket, burokratt, csa, leftWithoutAnswer }: BucketFields): OverviewChartBucket | null => {
+const getBucket = ({ payload, bucket, burokratt, csa }: BucketFields): OverviewChartBucket | null => {
   if (payload) return payload;
 
   if (bucket !== undefined) {
@@ -31,7 +30,6 @@ const getBucket = ({ payload, bucket, burokratt, csa, leftWithoutAnswer }: Bucke
       bucket,
       burokratt: burokratt ?? 0,
       csa: csa ?? 0,
-      leftWithoutAnswer: leftWithoutAnswer ?? 0,
     };
   }
 
@@ -45,8 +43,8 @@ const hasSegmentAbove = (payload: OverviewChartBucket, segment: SegmentKey): boo
   SEGMENT_ORDER.slice(SEGMENT_ORDER.indexOf(segment) + 1).some((key) => payload[key] > 0);
 
 export const createStackedBarShape = (segment: SegmentKey) => (props: BarShapeProps) => {
-  const { x = 0, y = 0, width = 0, height = 0, fill, payload: payloadProp, bucket, burokratt, csa, leftWithoutAnswer } = props;
-  const payload = getBucket({ payload: payloadProp, bucket, burokratt, csa, leftWithoutAnswer });
+  const { x = 0, y = 0, width = 0, height = 0, fill, payload: payloadProp, bucket, burokratt, csa } = props;
+  const payload = getBucket({ payload: payloadProp, bucket, burokratt, csa });
 
   if (!height || height <= 0 || !payload) return null;
 

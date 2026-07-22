@@ -1,6 +1,10 @@
 import { randomColor } from './generateRandomColor';
 import { OVERVIEW_GREEN, OVERVIEW_RED, OVERVIEW_YELLOW } from './overview-colors';
-import { DistributionFeedbackApiBody, DistributionFeedbackData, DistributionFeedbackInput } from '../types/overview-api';
+import {
+  DistributionFeedbackApiBody,
+  DistributionFeedbackData,
+  DistributionFeedbackInput,
+} from '../types/overview-api';
 
 export type DistributionChartEntry = {
   readonly rating: number;
@@ -25,6 +29,8 @@ export type DistributionResult = {
 
 const FIVE_SCALE_RATINGS = {
   green: [4, 5],
+  five: [5],
+  four: [4],
   yellow: [3],
   bucket2: [2],
   bucket1: [1],
@@ -55,11 +61,12 @@ export type DistributionBucketGroup = {
 
 export const getDistributionBucketGroups = (
   chartData: readonly DistributionChartEntry[],
-  isFiveScale: boolean,
+  isFiveScale: boolean
 ): DistributionBucketGroup[] => {
   const groupDefs = isFiveScale
     ? [
-        { label: '4-5', ratings: FIVE_SCALE_RATINGS.green },
+        { label: '5', ratings: FIVE_SCALE_RATINGS.five },
+        { label: '4', ratings: FIVE_SCALE_RATINGS.four },
         { label: '3', ratings: FIVE_SCALE_RATINGS.yellow },
         { label: '2', ratings: FIVE_SCALE_RATINGS.bucket2 },
         { label: '1', ratings: FIVE_SCALE_RATINGS.bucket1 },
@@ -87,7 +94,7 @@ export const getGreenCount = (chartData: readonly DistributionChartEntry[], isFi
 
 export const colorForBucketLabel = (label: string, isFiveScale: boolean): string => {
   if (isFiveScale) {
-    if (label === '4-5') return OVERVIEW_GREEN;
+    if (label === '5' || label === '4') return OVERVIEW_GREEN;
     if (label === '3') return OVERVIEW_YELLOW;
     return OVERVIEW_RED;
   }
