@@ -12,10 +12,10 @@ declaration:
         type: string
         description: "Body field 'userId'"
       - field: userDomains
-        type: string
+        type: array
         description: "Body field 'userDomains'"
       - field: selectedDomains
-        type: string
+        type: array
         description: "Body field 'selectedDomains'"
 
 extractRequestData:
@@ -33,6 +33,7 @@ updateUserSelection:
       userId: ${userId}
       domains: ${domains}
       selected: ${selected}
+  result: updateResult    
 
 return_result:
   return: "User selection updated successfully"
