@@ -18,33 +18,19 @@ import { getRange, getPreviousRange, OverviewUnit } from '../util/overview-date-
 import useStore from '../store/user/store';
 import './OverviewPage.scss';
 
-const multiDomainEnabled = import.meta.env.REACT_APP_ENABLE_MULTI_DOMAIN?.toLowerCase() === 'true';
-
 const OverviewPage: React.FC = () => {
   const { t } = useTranslation();
   const [metricPreferences, setMetricPreferences] = useState<OverviewMetricPreference[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<OverviewUnit>('week');
   const [anchorDate, setAnchorDate] = useState(new Date());
-  const [updateKey, setUpdateKey] = useState(0);
+  const userDomains = useStore((state) => state.userDomains);
 
   const range = useMemo(() => getRange(unit, anchorDate), [unit, anchorDate]);
   const previousRange = useMemo(() => getPreviousRange(unit, anchorDate), [unit, anchorDate]);
 
   useEffect(() => {
     fetchMetricPreferences().catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    if (!multiDomainEnabled) return;
-
-    const unsubscribe = useStore.subscribe((state, prevState) => {
-      if (JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
-        setUpdateKey((v) => v + 1);
-      }
-    });
-
-    return () => unsubscribe();
   }, []);
 
   const fetchMetricPreferences = async () => {
@@ -100,7 +86,7 @@ const OverviewPage: React.FC = () => {
             />
           )}
 
-          <div className="overview-page__sections" key={updateKey}>
+          <div className="overview-page__sections" key={userDomains.join(',')}>
             <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
 
             {isActive('chart') && (
