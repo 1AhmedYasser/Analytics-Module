@@ -37,6 +37,6 @@ rated_chats AS (
         )
       )
 )
-SELECT ROUND(AVG(rating), 1) AS metric_value
+SELECT ROUND(AVG(rating), 2) AS metric_value
 FROM rated_chats
 WHERE rating IS NOT NULL;

@@ -15,6 +15,7 @@ import { OverviewMetricPreference, OverviewSectionMetric } from '../types/overvi
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import { getRange, getPreviousRange, OverviewUnit } from '../util/overview-date-utils';
+import useStore from '../store/user/store';
 import './OverviewPage.scss';
 
 const OverviewPage: React.FC = () => {
@@ -23,6 +24,7 @@ const OverviewPage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [unit, setUnit] = useState<OverviewUnit>('week');
   const [anchorDate, setAnchorDate] = useState(new Date());
+  const userDomains = useStore((state) => state.userDomains);
 
   const range = useMemo(() => getRange(unit, anchorDate), [unit, anchorDate]);
   const previousRange = useMemo(() => getPreviousRange(unit, anchorDate), [unit, anchorDate]);
@@ -84,7 +86,7 @@ const OverviewPage: React.FC = () => {
             />
           )}
 
-          <div className="overview-page__sections">
+          <div className="overview-page__sections" key={userDomains.join(',')}>
             <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
 
             {isActive('chart') && (
