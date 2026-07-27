@@ -66,11 +66,10 @@ const ResponseQualityCard = ({ range }: Props) => {
 
   const total = rows.reduce((sum, row) => sum + row.count, 0);
 
-  if (rows.length === 0) return null;
-
-  return (
-    <Card>
-      <Track className="overview-secondary-card__header">{t('overview.responseQuality')}</Track>
+  const body =
+    rows.length === 0 ? (
+      <p className="overview-secondary-card__empty">{t('overview.noData')}</p>
+    ) : (
       <Track direction="vertical" align="stretch" gap={8}>
         {rows.map((row) => (
           <Track key={row.event} gap={8} className="overview-secondary-card__row">
@@ -83,6 +82,12 @@ const ResponseQualityCard = ({ range }: Props) => {
           </Track>
         ))}
       </Track>
+    );
+
+  return (
+    <Card>
+      <Track className="overview-secondary-card__header">{t('overview.responseQuality')}</Track>
+      {body}
     </Card>
   );
 };

@@ -48,11 +48,10 @@ const FollowUpCard = ({ range }: Props) => {
     };
   }, [range.start.getTime(), range.end.getTime()]);
 
-  if (actions.length === 0) return null;
-
-  return (
-    <Card>
-      <Track className="overview-secondary-card__header">{t('overview.followUp')}</Track>
+  const body =
+    actions.length === 0 ? (
+      <p className="overview-secondary-card__empty">{t('overview.noData')}</p>
+    ) : (
       <Track direction="vertical" align="stretch" gap={12}>
         {actions.map((action) => (
           <Track key={action.followUpAction} justify="between" className="overview-secondary-card__follow-up-row">
@@ -61,6 +60,12 @@ const FollowUpCard = ({ range }: Props) => {
           </Track>
         ))}
       </Track>
+    );
+
+  return (
+    <Card>
+      <Track className="overview-secondary-card__header">{t('overview.followUp')}</Track>
+      {body}
     </Card>
   );
 };
