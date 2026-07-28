@@ -32,6 +32,10 @@ export const overviewMetricPreferences = (): string => {
   return baseUrl + '/overview/preferences';
 };
 
+export const overviewDatePreference = (): string => {
+  return baseUrl + '/overview/date-preference';
+};
+
 export const overviewMetrics = (): string => {
   return baseUrl + `/overview/metrics`;
 };

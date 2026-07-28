@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTranslation } from 'react-i18next';
+import { endOfWeek } from 'date-fns';
+import { MdFlag } from 'react-icons/md';
+import Icon from '../../Icon';
+import TooltipWrapper from '../../TooltipWrapper';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
-import { DateRange, formatOverviewDate, OverviewUnit } from '../../../util/overview-date-utils';
+import { DateRange, formatOverviewDate, isLongPeriod, OverviewUnit, WEEK_OPTIONS } from '../../../util/overview-date-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
@@ -22,9 +26,10 @@ type Props = {
 
 const OverviewBarChart = ({ range, unit }: Props) => {
   const { t } = useTranslation();
-  const buckets = useOverviewChartData(range, unit);
+  const { buckets, period } = useOverviewChartData(range, unit);
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState<number>(0);
+  const isHourly = period === 'hour';
 
   useEffect(() => {
     const handleResize = () => setWidth(ref.current?.clientWidth ?? 0);
@@ -37,7 +42,17 @@ const OverviewBarChart = ({ range, unit }: Props) => {
   const yAxisMax = roundUpToTen(maxTotal);
   const yAxisTicks = getDistributionYAxisTicks(yAxisMax);
 
-  const tickFormatter = (value: number) => formatDate(new Date(value), unit === 'day' ? 'HH:mm' : 'dd.MM');
+  const tickFormatter = (value: number) => formatDate(new Date(value), isHourly ? 'HH:mm' : 'dd.MM');
+
+  const tooltipLabelFormatter = (value: number) => {
+    const date = new Date(value);
+    if (isHourly) return formatDate(date, 'HH:mm');
+    if (period === 'week') {
+      const weekEnd = endOfWeek(date, WEEK_OPTIONS);
+      return `${formatDate(date, 'dd.MM.yyyy')} - ${formatDate(weekEnd, 'dd.MM.yyyy')}`;
+    }
+    return formatDate(date, 'dd-MM-yyyy');
+  };
 
   const totalCount = buckets.reduce((sum, bucket) => sum + bucket.burokratt + bucket.csa, 0);
 
@@ -50,7 +65,16 @@ const OverviewBarChart = ({ range, unit }: Props) => {
   return (
     <div ref={ref} className="overview-bar-chart">
       <div className="overview-bar-chart__header">
-        <h2 className="overview-bar-chart__title">{title}</h2>
+        <h2 className="overview-bar-chart__title">
+          {title}
+          {isLongPeriod(range) && (
+            <span className="overview-bar-chart__title-warning">
+              <TooltipWrapper enabled text={t('overview.longPeriodWarning')}>
+                <Icon icon={<MdFlag />} size="small" />
+              </TooltipWrapper>
+            </span>
+          )}
+        </h2>
         <div className="overview-bar-chart__legend">
           {LEGEND_ITEMS.map(({ key, color }) => (
             <div key={key} className="overview-bar-chart__legend-item">
@@ -60,7 +84,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           ))}
         </div>
       </div>
-      <BarChart width={width} height={width / 3.76} data={buckets} barSize={unit === 'day' ? 8 : 20} margin={{ top: 20, right: 20, bottom: 30 }}>
+      <BarChart width={width} height={width / 3.76} data={buckets} barSize={isHourly ? 8 : 20} margin={{ top: 20, right: 20, bottom: 30 }}>
         <CartesianGrid
           vertical={false}
           horizontalValues={yAxisTicks.filter((tick) => tick > 0)}
@@ -73,7 +97,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
           type="number"
           domain={['dataMin', 'dataMax']}
           scale="time"
-          padding={{ left: unit === 'day' ? 8 : 14, right: unit === 'day' ? 8 : 14 }}
+          padding={{ left: isHourly ? 8 : 14, right: isHourly ? 8 : 14 }}
           axisLine={{ stroke: OVERVIEW_AXIS_STROKE }}
           tickLine={false}
           tick={{ fill: OVERVIEW_TICK_FILL, fontSize: 12 }}
@@ -88,7 +112,7 @@ const OverviewBarChart = ({ range, unit }: Props) => {
         />
         <Tooltip
           cursor={{ fill: 'rgba(151, 153, 164, 0.12)' }}
-          labelFormatter={(value) => formatDate(new Date(value as number), unit === 'day' ? 'HH:mm' : 'dd-MM-yyyy')}
+          labelFormatter={(value) => tooltipLabelFormatter(value as number)}
         />
         <Bar dataKey="burokratt" stackId="total" fill={OVERVIEW_BLUE} shape={createStackedBarShape('burokratt')} />
         <Bar dataKey="csa" stackId="total" fill={OVERVIEW_GREEN} shape={createStackedBarShape('csa')}>

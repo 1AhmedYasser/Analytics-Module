@@ -28,3 +28,7 @@ export interface OverviewMetricData {
     right: number
   }
 }
+
+export interface OverviewDatePreference {
+  unit: string
+}

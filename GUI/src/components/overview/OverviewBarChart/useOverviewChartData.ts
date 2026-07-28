@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { eachDayOfInterval, eachHourOfInterval, format, formatISO } from 'date-fns';
+import { eachDayOfInterval, eachHourOfInterval, eachWeekOfInterval, format, formatISO, startOfWeek } from 'date-fns';
 import { Methods, request } from '../../../util/axios-client';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { getTotalChats } from '../../../resources/api-constants';
-import { DateRange, OverviewUnit } from '../../../util/overview-date-utils';
+import { DateRange, isWeeklyBucketPeriod, OverviewUnit, WEEK_OPTIONS } from '../../../util/overview-date-utils';
 import { OverviewChartRequestData, TotalChatsOverviewResponse } from '../../../types/overview-api';
+
+export type OverviewChartPeriod = 'hour' | 'day' | 'week';
 
 export type OverviewChartBucket = {
   readonly bucket: number;
@@ -13,16 +15,18 @@ export type OverviewChartBucket = {
   readonly csa: number;
 };
 
-const bucketKey = (date: string | Date, period: 'hour' | 'day'): string | null => {
+const bucketKey = (date: string | Date, period: OverviewChartPeriod): string | null => {
   const parsed = new Date(date);
   if (Number.isNaN(parsed.getTime())) return null;
-  return format(parsed, period === 'hour' ? "yyyy-MM-dd'T'HH" : 'yyyy-MM-dd');
+  if (period === 'hour') return format(parsed, "yyyy-MM-dd'T'HH");
+  if (period === 'week') return format(startOfWeek(parsed, WEEK_OPTIONS), 'yyyy-MM-dd');
+  return format(parsed, 'yyyy-MM-dd');
 };
 
 const toBucketEntries = (
   rows: Record<string, unknown>[],
   dateField: string,
-  period: 'hour' | 'day'
+  period: OverviewChartPeriod
 ): [string, number][] =>
   rows.reduce<[string, number][]>((entries, row) => {
     const key = bucketKey(row[dateField] as string | Date, period);
@@ -30,12 +34,23 @@ const toBucketEntries = (
     return entries;
   }, []);
 
+const getChartPeriod = (range: DateRange, unit: OverviewUnit): OverviewChartPeriod => {
+  if (unit === 'day') return 'hour';
+  return isWeeklyBucketPeriod(range) ? 'week' : 'day';
+};
+
+const getIntervals = (range: DateRange, period: OverviewChartPeriod): Date[] => {
+  if (period === 'hour') return eachHourOfInterval({ start: range.start, end: range.end });
+  if (period === 'week') return eachWeekOfInterval({ start: range.start, end: range.end }, WEEK_OPTIONS);
+  return eachDayOfInterval({ start: range.start, end: range.end });
+};
+
 export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
   const [buckets, setBuckets] = useState<OverviewChartBucket[]>([]);
+  const period = getChartPeriod(range, unit);
 
   useEffect(() => {
     let cancelled = false;
-    const period = unit === 'day' ? 'hour' : 'day';
     const urls = getDomainsArray();
     const showTest = getShowTestData();
     const start_date = formatISO(range.start);
@@ -56,10 +71,7 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
         const bykMap = new Map(toBucketEntries([...bykRows], 'time', period));
         const csaMap = new Map(toBucketEntries([...csaRows], 'time', period));
 
-        const intervals =
-          period === 'hour'
-            ? eachHourOfInterval({ start: range.start, end: range.end })
-            : eachDayOfInterval({ start: range.start, end: range.end });
+        const intervals = getIntervals(range, period);
 
         const newBuckets = intervals.map((date) => {
           const key = bucketKey(date, period) ?? '';
@@ -76,7 +88,7 @@ export const useOverviewChartData = (range: DateRange, unit: OverviewUnit) => {
     return () => {
       cancelled = true;
     };
-  }, [range.start.getTime(), range.end.getTime(), unit]);
+  }, [range.start.getTime(), range.end.getTime(), unit, period]);
 
-  return buckets;
+  return { buckets, period };
 };

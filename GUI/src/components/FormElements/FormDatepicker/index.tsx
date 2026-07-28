@@ -22,6 +22,8 @@ type FormDatepickerProps = ControllerRenderProps & {
   monthPicker?: boolean;
   portalId?: string;
   trailingIcon?: ReactNode;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((

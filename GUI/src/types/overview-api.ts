@@ -99,7 +99,7 @@ export type OverviewDateRangeRequestData = Readonly<{
 
 export type OverviewChartRequestData = Readonly<
   OverviewDateRangeRequestData & {
-    period: 'hour' | 'day';
+    period: 'hour' | 'day' | 'week';
     options: readonly string[];
     timezone: string;
   }
