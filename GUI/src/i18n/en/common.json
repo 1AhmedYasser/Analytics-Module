@@ -128,8 +128,7 @@
     "followUp": "Top after-actions",
     "legend": {
       "burokratt": "Bürokratt answered",
-      "csa": "CSA answered",
-      "leftWithoutAnswer": "Left without answer"
+      "csa": "CSA answered"
     },
 
     "metric": {

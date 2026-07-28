@@ -128,8 +128,7 @@
     "followUp": "Järeltegevuste top",
     "legend": {
       "burokratt": "Bürokratt vastas",
-      "csa": "Nõustaja vastas",
-      "leftWithoutAnswer": "Lahkus vastuseta"
+      "csa": "Nõustaja vastas"
     },
 
     "metric": {
