@@ -28,10 +28,11 @@ export type DistributionResult = {
 };
 
 const FIVE_SCALE_RATINGS = {
-  green: [4, 5],
+  green: [5],
   five: [5],
   four: [4],
-  yellow: [3],
+  yellow: [4],
+  three: [3],
   bucket2: [2],
   bucket1: [1],
 } as const;
@@ -67,7 +68,7 @@ export const getDistributionBucketGroups = (
     ? [
         { label: '5', ratings: FIVE_SCALE_RATINGS.five },
         { label: '4', ratings: FIVE_SCALE_RATINGS.four },
-        { label: '3', ratings: FIVE_SCALE_RATINGS.yellow },
+        { label: '3', ratings: FIVE_SCALE_RATINGS.three },
         { label: '2', ratings: FIVE_SCALE_RATINGS.bucket2 },
         { label: '1', ratings: FIVE_SCALE_RATINGS.bucket1 },
       ]
@@ -94,8 +95,8 @@ export const getGreenCount = (chartData: readonly DistributionChartEntry[], isFi
 
 export const colorForBucketLabel = (label: string, isFiveScale: boolean): string => {
   if (isFiveScale) {
-    if (label === '5' || label === '4') return OVERVIEW_GREEN;
-    if (label === '3') return OVERVIEW_YELLOW;
+    if (label === '5') return OVERVIEW_GREEN;
+    if (label === '4') return OVERVIEW_YELLOW;
     return OVERVIEW_RED;
   }
   if (label === '9-10') return OVERVIEW_GREEN;

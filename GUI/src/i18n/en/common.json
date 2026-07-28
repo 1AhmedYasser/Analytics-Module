@@ -122,10 +122,10 @@
     "lastDay": "Last day",
     "lastWeek": "Last week",
     "lastMonth": "Last month",
-    "positiveFeedback": "Positive feedback",
+    "positiveFeedback": "Feedback",
     "responseQuality": "Response quality",
-    "themesForPeriod": "Themes for period",
-    "followUp": "Follow-up",
+    "themesForPeriod": "Most popular themes in period",
+    "followUp": "Top after-actions",
     "legend": {
       "burokratt": "Bürokratt answered",
       "csa": "CSA answered",
@@ -145,16 +145,16 @@
       "avg_waiting_time_week": "Average waiting time: week / previous",
       "total_chats": "Total number of chats",
       "avg_waiting_time": "Average waiting time",
-      "avg_rating": "Average rating",
-      "burokratt_rate": "Bürokratt answer rate",
-      "csa_rate": "CSA answer rate",
-      "redirected_rate": "Redirected to another CSA",
+      "avg_rating": "Average feedback rating",
+      "burokratt_rate": "Bürokratt answered",
+      "csa_rate": "CSA answered",
+      "redirected_rate": "Redirected",
       "left_without_answer_rate": "Left without an answer",
-      "chart": "Total number of chats chart",
-      "positive_feedback": "Positive feedback",
+      "chart": "Total number of chats as a graph",
+      "positive_feedback": "Feedback",
       "quality": "Response quality",
-      "themes": "Most popular themes for period",
-      "follow_up": "Top follow-up actions"
+      "themes": "Most popular themes in period",
+      "follow_up": "Top after-actions"
     }
   },
   "feedback": {

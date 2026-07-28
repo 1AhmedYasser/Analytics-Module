@@ -122,10 +122,10 @@
     "lastDay": "eelmine päev",
     "lastWeek": "eelmine nädal",
     "lastMonth": "eelmine kuu",
-    "positiveFeedback": "Positiivne tagasiside",
-    "responseQuality": "Vastuse kvaliteet",
-    "themesForPeriod": "Teemad perioodil",
-    "followUp": "Järeltegevus",
+    "positiveFeedback": "Tagasiside",
+    "responseQuality": "Vastuste kvaliteet",
+    "themesForPeriod": "Populaarsemad teemad perioodil",
+    "followUp": "Järeltegevuste top",
     "legend": {
       "burokratt": "Bürokratt vastas",
       "csa": "Nõustaja vastas",
@@ -151,7 +151,7 @@
       "redirected_rate": "Edasi suunatud",
       "left_without_answer_rate": "Lahkus vastuseta",
       "chart": "Vestluste koguarv graafikuna",
-      "positive_feedback": "Positiivne tagasiside",
+      "positive_feedback": "Tagasiside",
       "quality": "Vastuste kvaliteet",
       "themes": "Populaarsemad teemad perioodil",
       "follow_up": "Järeltegevuste top"
