@@ -45,6 +45,8 @@ export const shiftAnchor = (unit: OverviewUnit, anchorDate: Date, direction: 1 |
 export const getPreviousRange = (unit: OverviewUnit, anchorDate: Date): DateRange =>
   getRange(unit, shiftAnchor(unit, anchorDate, -1));
 
+export const formatOverviewDate = (date: Date): string => format(date, 'd.MM');
+
 export const periodLabelKey = (unit: OverviewUnit): string => {
   switch (unit) {
     case 'week':
@@ -53,20 +55,5 @@ export const periodLabelKey = (unit: OverviewUnit): string => {
       return 'overview.lastMonth';
     default:
       return 'overview.lastDay';
-  }
-};
-
-export const formatOverviewChartTitleRange = (range: DateRange, unit: OverviewUnit): string => {
-  const sameMonth = range.start.getMonth() === range.end.getMonth() && range.start.getFullYear() === range.end.getFullYear();
-
-  switch (unit) {
-    case 'week':
-      return sameMonth
-        ? `${format(range.start, 'd')}-${format(range.end, 'd. MMM')}`
-        : `${format(range.start, 'd.MM')} - ${format(range.end, 'd.MM')}`;
-    case 'month':
-      return format(range.start, 'MMMM yyyy');
-    default:
-      return format(range.start, 'd.MM');
   }
 };

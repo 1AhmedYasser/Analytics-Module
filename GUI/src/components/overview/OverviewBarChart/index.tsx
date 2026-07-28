@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, LabelList, Tooltip, XAxis, YAxis } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { formatDate, getDistributionYAxisTicks } from '../../../util/charts-utils';
-import { DateRange, formatOverviewChartTitleRange, OverviewUnit } from '../../../util/overview-date-utils';
+import { DateRange, formatOverviewDate, OverviewUnit } from '../../../util/overview-date-utils';
 import { OVERVIEW_AXIS_STROKE, OVERVIEW_BLUE, OVERVIEW_GREEN, OVERVIEW_TICK_FILL } from '../../../util/overview-colors';
 import { createStackedBarShape } from './barShapes';
 import { useOverviewChartData } from './useOverviewChartData';
@@ -39,9 +39,12 @@ const OverviewBarChart = ({ range, unit }: Props) => {
 
   const tickFormatter = (value: number) => formatDate(new Date(value), unit === 'day' ? 'HH:mm' : 'dd.MM');
 
-  const title = t('overview.totalChatsChartTitle', {
-    unit: t(`overview.${unit}`),
-    range: formatOverviewChartTitleRange(range, unit),
+  const totalCount = buckets.reduce((sum, bucket) => sum + bucket.burokratt + bucket.csa, 0);
+
+  const title = t('overview.chartTitle', {
+    count: totalCount,
+    start: formatOverviewDate(range.start),
+    end: formatOverviewDate(range.end),
   });
 
   return (

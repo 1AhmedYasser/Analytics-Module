@@ -81,6 +81,15 @@ const PositiveFeedbackCard = ({ range, previousRange, unit }: Props) => {
 
   if (!current) return null;
 
+  if (current.totalFeedback === 0) {
+    return (
+      <Card>
+        <Track className="overview-secondary-card__header">{t('overview.positiveFeedback')}</Track>
+        <p className="overview-secondary-card__empty">{t('overview.noData')}</p>
+      </Card>
+    );
+  }
+
   const positivePercent = positivePercentOf(current);
   const greenCount = getGreenCount(current.chartData, current.isFiveScale);
   const previousGreenCount = previous ? getGreenCount(previous.chartData, previous.isFiveScale) : 0;
@@ -94,14 +103,12 @@ const PositiveFeedbackCard = ({ range, previousRange, unit }: Props) => {
       <div className="overview-secondary-card__body">
         <div className="overview-secondary-card__summary">
           <h2 className="overview-secondary-card__value">{formatKpiValue(positivePercent, 'percent')}</h2>
-          {current.totalFeedback > 0 && (
-            <Track gap={2} className="overview-secondary-card__ratio">
-              <Icon icon={<MdArrowUpward />} size="small" />
-              <span>
-                {greenCount}/{current.totalFeedback}
-              </span>
-            </Track>
-          )}
+          <Track gap={2} className="overview-secondary-card__ratio">
+            <Icon icon={<MdArrowUpward />} size="small" />
+            <span>
+              {greenCount}/{current.totalFeedback}
+            </span>
+          </Track>
           {previous && previousTotal > 0 && (
             <div className="overview-secondary-card__previous">
               {t(periodLabelKey(unit))} {previousGreenCount}/{previousTotal}

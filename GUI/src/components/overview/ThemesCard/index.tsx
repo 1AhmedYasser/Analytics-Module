@@ -61,7 +61,23 @@ const ThemesCard = ({ range }: Props) => {
   const total = themes.reduce((sum, theme) => sum + Number(theme.count), 0);
   const visibleThemes = themes.slice(0, topN);
 
-  if (themes.length === 0) return null;
+  const body =
+    themes.length === 0 ? (
+      <p className="overview-secondary-card__empty">{t('overview.noData')}</p>
+    ) : (
+      <Track direction="vertical" align="stretch" gap={8}>
+        {visibleThemes.map((theme) => (
+          <Track key={theme.theme} gap={8} className="overview-secondary-card__row">
+            <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide overview-secondary-card__row-label--muted">{theme.theme}</span>
+            <ProgressBar value={Number(theme.count)} max={total} color={OVERVIEW_BLUE} />
+            <span className="overview-secondary-card__row-count">{theme.count}</span>
+            <span className="overview-secondary-card__row-percent">
+              {total > 0 ? Math.round((Number(theme.count) / total) * 100) : 0}%
+            </span>
+          </Track>
+        ))}
+      </Track>
+    );
 
   return (
     <Card>
@@ -78,18 +94,7 @@ const ThemesCard = ({ range }: Props) => {
           />
         </div>
       </Track>
-      <Track direction="vertical" align="stretch" gap={8}>
-        {visibleThemes.map((theme) => (
-          <Track key={theme.theme} gap={8} className="overview-secondary-card__row">
-            <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide overview-secondary-card__row-label--muted">{theme.theme}</span>
-            <ProgressBar value={Number(theme.count)} max={total} color={OVERVIEW_BLUE} />
-            <span className="overview-secondary-card__row-count">{theme.count}</span>
-            <span className="overview-secondary-card__row-percent">
-              {total > 0 ? Math.round((Number(theme.count) / total) * 100) : 0}%
-            </span>
-          </Track>
-        ))}
-      </Track>
+      {body}
     </Card>
   );
 };
