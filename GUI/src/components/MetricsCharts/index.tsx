@@ -54,13 +54,13 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       : '—';
 
   const satisfiedCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [4, 5])
+    ? getCountForRatings(distributionChartData, [5])
     : getCountForRatings(distributionChartData, [9, 10]);
   const passiveCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [3])
+    ? getCountForRatings(distributionChartData, [4])
     : getCountForRatings(distributionChartData, [7, 8]);
   const dissatisfiedCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [1, 2])
+    ? getCountForRatings(distributionChartData, [1, 2, 3])
     : getCountForRatings(distributionChartData, [0, 1, 2, 3, 4, 5, 6]);
 
   const satisfiedPct = calcPct(satisfiedCount, totalFeedback);
