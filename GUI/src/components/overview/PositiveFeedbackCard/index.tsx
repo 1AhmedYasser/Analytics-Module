@@ -7,7 +7,10 @@ import Track from '../../Track';
 import Icon from '../../Icon';
 import ProgressBar from '../../ProgressBar';
 import { Methods, request } from '../../../util/axios-client';
-import { getDistributionOnBuerokrattChatsFeedback } from '../../../resources/api-constants';
+import {
+  getDistributionOnBuerokrattChatsFeedback,
+  getDistributionOnCSAChatsFeedback,
+} from '../../../resources/api-constants';
 import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import {
@@ -16,6 +19,7 @@ import {
   getDistributionBucketGroups,
   getGreenCount,
   mapDistributionChartData,
+  mergeDistributionResults,
 } from '../../../util/feedback-distribution-utils';
 import { DateRange, OverviewUnit, periodLabelKey } from '../../../util/overview-date-utils';
 import { DistributionFeedbackResponse, OverviewDateRangeRequestData } from '../../../types/overview-api';
@@ -28,9 +32,9 @@ type Props = {
   readonly unit: OverviewUnit;
 };
 
-const fetchDistribution = async (range: DateRange): Promise<DistributionResult> => {
+const fetchDistributionFrom = async (url: string, range: DateRange): Promise<DistributionResult> => {
   const result = await request<OverviewDateRangeRequestData, DistributionFeedbackResponse>({
-    url: getDistributionOnBuerokrattChatsFeedback(),
+    url,
     method: Methods.post,
     withCredentials: true,
     data: {
@@ -41,6 +45,14 @@ const fetchDistribution = async (range: DateRange): Promise<DistributionResult> 
     },
   });
   return mapDistributionChartData(result);
+};
+
+const fetchDistribution = async (range: DateRange): Promise<DistributionResult> => {
+  const [buerokratt, csa] = await Promise.all([
+    fetchDistributionFrom(getDistributionOnBuerokrattChatsFeedback(), range),
+    fetchDistributionFrom(getDistributionOnCSAChatsFeedback(), range),
+  ]);
+  return mergeDistributionResults(buerokratt, csa);
 };
 
 const positivePercentOf = (distribution: DistributionResult): number => {

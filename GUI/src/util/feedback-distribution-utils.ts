@@ -37,10 +37,10 @@ const FIVE_SCALE_RATINGS = {
 } as const;
 
 const TEN_SCALE_RATINGS = {
-  greenHigh: [9, 10],
-  greenMid: [7, 8],
-  yellow: [5, 6],
-  neutral: [3, 4],
+  green: [9, 10],
+  yellow: [7, 8],
+  bucket56: [5, 6],
+  bucket34: [3, 4],
   red: [0, 1, 2],
 } as const;
 
@@ -48,10 +48,10 @@ export const getRatingBuckets = (isFiveScale: boolean) =>
   isFiveScale ? [1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const getGreenRatings = (isFiveScale: boolean) =>
-  isFiveScale ? [...FIVE_SCALE_RATINGS.green] : [...TEN_SCALE_RATINGS.greenHigh];
+  isFiveScale ? [...FIVE_SCALE_RATINGS.green] : [...TEN_SCALE_RATINGS.green];
 
 export const getYellowRatings = (isFiveScale: boolean) =>
-  isFiveScale ? [...FIVE_SCALE_RATINGS.yellow] : [...TEN_SCALE_RATINGS.greenMid];
+  isFiveScale ? [...FIVE_SCALE_RATINGS.yellow] : [...TEN_SCALE_RATINGS.yellow];
 
 export type DistributionBucketGroup = {
   readonly label: string;
@@ -72,10 +72,10 @@ export const getDistributionBucketGroups = (
         { label: '1', ratings: FIVE_SCALE_RATINGS.bucket1 },
       ]
     : [
-        { label: '9-10', ratings: TEN_SCALE_RATINGS.greenHigh },
-        { label: '7-8', ratings: TEN_SCALE_RATINGS.greenMid },
-        { label: '5-6', ratings: TEN_SCALE_RATINGS.yellow },
-        { label: '3-4', ratings: TEN_SCALE_RATINGS.neutral },
+        { label: '9-10', ratings: TEN_SCALE_RATINGS.green },
+        { label: '7-8', ratings: TEN_SCALE_RATINGS.yellow },
+        { label: '5-6', ratings: TEN_SCALE_RATINGS.bucket56 },
+        { label: '3-4', ratings: TEN_SCALE_RATINGS.bucket34 },
         { label: '1-2', ratings: TEN_SCALE_RATINGS.red },
       ];
 
@@ -98,8 +98,8 @@ export const colorForBucketLabel = (label: string, isFiveScale: boolean): string
     if (label === '3') return OVERVIEW_YELLOW;
     return OVERVIEW_RED;
   }
-  if (label === '9-10' || label === '7-8') return OVERVIEW_GREEN;
-  if (label === '5-6') return OVERVIEW_YELLOW;
+  if (label === '9-10') return OVERVIEW_GREEN;
+  if (label === '7-8') return OVERVIEW_YELLOW;
   return OVERVIEW_RED;
 };
 
@@ -168,6 +168,36 @@ export const mapDistributionChartData = (result: DistributionFeedbackInput): Dis
     totalChats,
     noFeedbackCount,
     isFiveScale: scaleIsFive,
+    yAxisMax,
+  };
+};
+
+export const mergeDistributionResults = (
+  buerokratt: DistributionResult,
+  csa: DistributionResult
+): DistributionResult => {
+  const countByRating = new Map<number, number>();
+  [...buerokratt.chartData, ...csa.chartData].forEach(({ rating, count }) => {
+    countByRating.set(rating, (countByRating.get(rating) ?? 0) + count);
+  });
+
+  const chartData = buerokratt.chartData.map(({ rating }) => ({
+    rating,
+    count: countByRating.get(rating) ?? 0,
+  }));
+
+  const totalFeedback = buerokratt.totalFeedback + csa.totalFeedback;
+  const totalChats = buerokratt.totalChats + csa.totalChats;
+  const yAxisMax = getRoundedDistributionMax(Math.max(...chartData.map((entry) => entry.count), 0));
+
+  return {
+    chartData,
+    colors: buerokratt.colors,
+    isRatingDistribution: true,
+    totalFeedback,
+    totalChats,
+    noFeedbackCount: totalChats - totalFeedback,
+    isFiveScale: buerokratt.isFiveScale,
     yAxisMax,
   };
 };
