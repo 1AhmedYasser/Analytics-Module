@@ -162,6 +162,10 @@ export const getQualityOverview = (): string => {
   return baseUrl + '/chats/quality-overview';
 };
 
+export const getQualityRatingOverview = (): string => {
+  return baseUrl + '/chats/quality-rating-overview';
+};
+
 export const getRedirectedOverview = (): string => {
   return baseUrl + '/chats/redirected-overview';
 };
