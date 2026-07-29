@@ -29,6 +29,7 @@ import {
   getThemeOverview,
   getFollowUpActionOverview,
   getQualityOverview,
+  getQualityRatingOverview,
 } from '../../resources/api-constants';
 import { Methods, request } from '../../util/axios-client';
 import { getDomainsArray } from '../../util/multiDomain-utils';
@@ -61,6 +62,7 @@ const ChatsPage: React.FC = () => {
 
   const themes = useRef<QualityMetricOption[]>([]);
   const followUpStatuses = useRef<QualityMetricOption[]>([]);
+  const qualityRatings = useRef<QualityMetricOption[]>([]);
   const lastFetchKey = useRef<string>('');
   const [showSelectAll, setShowSelectAll] = useState<boolean>(false);
   const [allMetrics, setAllMetrics] = useState<Option[]>([...chatOptions]);
@@ -335,6 +337,61 @@ const ChatsPage: React.FC = () => {
     return result;
   };
 
+  const fetchQualityRatingOverview = async (config: MetricOptionsState): Promise<ChartData> => {
+    setShowSelectAll(true);
+    let result: ChartData = { chartData: [], colors: [] };
+    try {
+      const excluded_quality = qualityRatings.current
+        .map((q) => q.id)
+        .filter((id) => !config.options.includes(id));
+      const response = await request<
+        Readonly<{
+          start_date: string;
+          end_date: string;
+          excluded_quality: string[];
+          urls: (string | null)[];
+          showTest: boolean;
+        }>,
+        { response: { quality: string; count: number }[] }
+      >({
+        url: getQualityRatingOverview(),
+        method: Methods.post,
+        withCredentials: true,
+        data: {
+          start_date: config.start,
+          end_date: config.end,
+          excluded_quality: excluded_quality.length > 0 ? excluded_quality : [''],
+          urls: getDomainsArray(),
+          showTest: getShowTestData(),
+        },
+      });
+      const res = response.response;
+      const fetchedQualityRatings: QualityMetricOption[] = res.map((item) => ({
+        id: item.quality,
+        labelKey: item.quality,
+        color: qualityRatings.current.find((q) => q.id === item.quality)?.color ?? randomColor(),
+        isSelected: true,
+      }));
+      if (qualityRatings.current.length === 0) {
+        qualityRatings.current = fetchedQualityRatings;
+      }
+      const updatedMetrics = [...allMetrics];
+      updatedMetrics[11].subOptions = qualityRatings.current;
+      setAllMetrics(updatedMetrics);
+      const qualityData: Record<string, number> = {};
+      res.forEach((item) => {
+        qualityData[item.quality] = item.count;
+      });
+      result = {
+        chartData: [qualityData],
+        colors: qualityRatings.current.map(({ id, color }) => ({ id, color })),
+      };
+    } catch (e) {
+      console.error(e);
+    }
+    return result;
+  };
+
   const fetchQualityOverview = async (config: MetricOptionsState): Promise<ChartData> => {
     setShowSelectAll(true);
     let result: ChartData = { chartData: [], colors: [] };
@@ -474,6 +531,8 @@ const ChatsPage: React.FC = () => {
         return fetchThemeOverview(config);
       case 'follow_up_action_overview':
         return fetchFollowUpActionOverview(config);
+      case 'quality_overview':
+        return fetchQualityRatingOverview(config);
       case 'chat_analysis_overview':
         return fetchQualityOverview(config);
       default:
@@ -512,24 +571,34 @@ const ChatsPage: React.FC = () => {
           if (
             config.metric !== 'theme_overview' &&
             config.metric !== 'follow_up_action_overview' &&
+            config.metric !== 'quality_overview' &&
             config.metric !== 'chat_analysis_overview'
           ) {
             themes.current = [];
             followUpStatuses.current = [];
+            qualityRatings.current = [];
             if (!CSA_METRIC_IDS.has(config.metric)) {
               setShowSelectAll(false);
             }
           } else if (config.metric === 'theme_overview') {
             followUpStatuses.current = [];
+            qualityRatings.current = [];
             if (rangeOrMetricChanged) themes.current = [];
             setShowSelectAll(true);
           } else if (config.metric === 'follow_up_action_overview') {
             themes.current = [];
+            qualityRatings.current = [];
             if (rangeOrMetricChanged) followUpStatuses.current = [];
+            setShowSelectAll(true);
+          } else if (config.metric === 'quality_overview') {
+            themes.current = [];
+            followUpStatuses.current = [];
+            if (rangeOrMetricChanged) qualityRatings.current = [];
             setShowSelectAll(true);
           } else if (config.metric === 'chat_analysis_overview') {
             themes.current = [];
             followUpStatuses.current = [];
+            qualityRatings.current = [];
             setShowSelectAll(true);
           }
           setConfigs(config);
