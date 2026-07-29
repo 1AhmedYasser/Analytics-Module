@@ -5,9 +5,7 @@ import { getDomainsArray } from '../../../util/multiDomain-utils';
 import { getShowTestData } from '../../../util/testChat-utils';
 import { getTotalChats } from '../../../resources/api-constants';
 import { DateRange, isWeeklyBucketPeriod, OverviewUnit, WEEK_OPTIONS } from '../../../util/overview-date-utils';
-import { OverviewChartRequestData, TotalChatsOverviewResponse } from '../../../types/overview-api';
-
-export type OverviewChartPeriod = 'hour' | 'day' | 'week';
+import { OverviewChartPeriod, OverviewChartRequestData, TotalChatsOverviewResponse } from '../../../types/overview-api';
 
 export type OverviewChartBucket = {
   readonly bucket: number;

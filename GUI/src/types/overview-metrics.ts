@@ -30,5 +30,9 @@ export interface OverviewMetricData {
 }
 
 export interface OverviewDatePreference {
-  unit: string
+  readonly unit: string
+}
+
+export interface OverviewDatePreferenceResponse {
+  readonly response: readonly OverviewDatePreference[]
 }

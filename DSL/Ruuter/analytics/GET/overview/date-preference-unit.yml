@@ -22,7 +22,7 @@ check_if_authorized:
 get_date_preference:
   call: http.post
   args:
-    url: "[#ANALYTICS_RESQL]/overview-date-preference"
+    url: "[#ANALYTICS_RESQL]/select-user-overview-date-preference-unit"
     body:
       user_id_code: ${authority_result.idCode}
   result: preference

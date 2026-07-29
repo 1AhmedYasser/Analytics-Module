@@ -10,8 +10,8 @@ import PositiveFeedbackCard from '../components/overview/PositiveFeedbackCard';
 import ResponseQualityCard from '../components/overview/ResponseQualityCard';
 import ThemesCard from '../components/overview/ThemesCard';
 import FollowUpCard from '../components/overview/FollowUpCard';
-import { overviewMetricPreferences, overviewDatePreference } from '../resources/api-constants';
-import { OverviewDatePreference, OverviewMetricPreference, OverviewSectionMetric } from '../types/overview-metrics';
+import { overviewMetricPreferences, overviewDatePreference, overviewDatePreferenceUnit } from '../resources/api-constants';
+import { OverviewDatePreferenceResponse, OverviewMetricPreference, OverviewSectionMetric } from '../types/overview-metrics';
 import { request, Methods } from '../util/axios-client';
 import withAuthorization, { ROLES } from '../hoc/with-authorization';
 import {
@@ -80,8 +80,11 @@ const OverviewPage: React.FC = () => {
   };
 
   const fetchDatePreference = async () => {
-    const result: any = await request({ url: overviewDatePreference(), withCredentials: true });
-    const rows: OverviewDatePreference[] = result.response ?? [];
+    const result = await request<undefined, OverviewDatePreferenceResponse>({
+      url: overviewDatePreferenceUnit(),
+      withCredentials: true,
+    });
+    const rows = result.response ?? [];
     const preference = rows[0];
 
     if (preference) {
