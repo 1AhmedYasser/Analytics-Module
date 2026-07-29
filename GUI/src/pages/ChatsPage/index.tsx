@@ -297,7 +297,12 @@ const ChatsPage: React.FC = () => {
           urls: (string | null)[];
           showTest: boolean;
         }>,
-        { response: { theme: string; count: number }[] }
+        {
+          response: [
+            { theme: string; count: number }[],
+            { totalChats: string; chatsWithThemes: string }[],
+          ];
+        }
       >({
         url: getThemeOverview(),
         method: Methods.post,
@@ -310,7 +315,8 @@ const ChatsPage: React.FC = () => {
           showTest: getShowTestData(),
         },
       });
-      const res = response.response;
+      const res = response.response[0] ?? [];
+      const summary = response.response[1]?.[0];
       const fetchedThemes: QualityMetricOption[] = res.map((item) => ({
         id: item.theme,
         labelKey: item.theme,
@@ -330,6 +336,12 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: [themeData],
         colors: themes.current.map(({ id, color }) => ({ id, color })),
+        qualityData: summary
+          ? {
+              totalChats: parseInt(summary.totalChats) || 0,
+              chatsWithThemes: parseInt(summary.chatsWithThemes) || 0,
+            }
+          : undefined,
       };
     } catch (e) {
       console.error(e);
@@ -352,7 +364,12 @@ const ChatsPage: React.FC = () => {
           urls: (string | null)[];
           showTest: boolean;
         }>,
-        { response: { quality: string; count: number }[] }
+        {
+          response: [
+            { quality: string; count: number }[],
+            { totalBuerokrattChats: string; buerokrattChatsWithQuality: string }[],
+          ];
+        }
       >({
         url: getQualityRatingOverview(),
         method: Methods.post,
@@ -365,7 +382,8 @@ const ChatsPage: React.FC = () => {
           showTest: getShowTestData(),
         },
       });
-      const res = response.response;
+      const res = response.response[0] ?? [];
+      const summary = response.response[1]?.[0];
       const fetchedQualityRatings: QualityMetricOption[] = res.map((item) => ({
         id: item.quality,
         labelKey: item.quality,
@@ -378,13 +396,19 @@ const ChatsPage: React.FC = () => {
       const updatedMetrics = [...allMetrics];
       updatedMetrics[11].subOptions = qualityRatings.current;
       setAllMetrics(updatedMetrics);
-      const qualityData: Record<string, number> = {};
+      const qualityCounts: Record<string, number> = {};
       res.forEach((item) => {
-        qualityData[item.quality] = item.count;
+        qualityCounts[item.quality] = item.count;
       });
       result = {
-        chartData: [qualityData],
+        chartData: [qualityCounts],
         colors: qualityRatings.current.map(({ id, color }) => ({ id, color })),
+        qualityData: summary
+          ? {
+              totalBuerokrattChats: parseInt(summary.totalBuerokrattChats) || 0,
+              buerokrattChatsWithQuality: parseInt(summary.buerokrattChatsWithQuality) || 0,
+            }
+          : undefined,
       };
     } catch (e) {
       console.error(e);
@@ -475,7 +499,12 @@ const ChatsPage: React.FC = () => {
           urls: (string | null)[];
           showTest: boolean;
         }>,
-        { response: { followUpAction: string; count: number }[] }
+        {
+          response: [
+            { followUpAction: string; count: number }[],
+            { chatsWithFollowUp: string }[],
+          ];
+        }
       >({
         url: getFollowUpActionOverview(),
         method: Methods.post,
@@ -488,7 +517,8 @@ const ChatsPage: React.FC = () => {
           showTest: getShowTestData(),
         },
       });
-      const res = response.response;
+      const res = response.response[0] ?? [];
+      const summary = response.response[1]?.[0];
       const fetchedStatuses = res.map((item) => ({
         id: item.followUpAction,
         labelKey: item.followUpAction,
@@ -508,6 +538,11 @@ const ChatsPage: React.FC = () => {
       result = {
         chartData: [actionData],
         colors: followUpStatuses.current.map(({ id, color }) => ({ id, color })),
+        qualityData: summary
+          ? {
+              chatsWithFollowUp: parseInt(summary.chatsWithFollowUp) || 0,
+            }
+          : undefined,
       };
     } catch (e) {
       console.error(e);

@@ -206,35 +206,41 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       </div>
       {data.qualityData != null && (
         <div style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
-          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityThemesSentence', {
-                  value: data.qualityData.totalChats > 0
-                    ? ((data.qualityData.chatsWithThemes / data.qualityData.totalChats) * 100).toFixed(1)
-                    : '0',
-                })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
-          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityResponseQualityTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityResponseQualitySentence', {
-                  value: data.qualityData.totalBuerokrattChats > 0
-                    ? ((data.qualityData.buerokrattChatsWithQuality / data.qualityData.totalBuerokrattChats) * 100).toFixed(1)
-                    : '0',
-                })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityFollowUpTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityFollowUpSentence', { value: data.qualityData.chatsWithFollowUp })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
+          {data.qualityData.totalChats != null && data.qualityData.chatsWithThemes != null && (
+            <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityThemesSentence', {
+                    value: data.qualityData.totalChats > 0
+                      ? ((data.qualityData.chatsWithThemes / data.qualityData.totalChats) * 100).toFixed(1)
+                      : '0',
+                  })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
+          {data.qualityData.totalBuerokrattChats != null && data.qualityData.buerokrattChatsWithQuality != null && (
+            <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityResponseQualityTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityResponseQualitySentence', {
+                    value: data.qualityData.totalBuerokrattChats > 0
+                      ? ((data.qualityData.buerokrattChatsWithQuality / data.qualityData.totalBuerokrattChats) * 100).toFixed(1)
+                      : '0',
+                  })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
+          {data.qualityData.chatsWithFollowUp != null && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityFollowUpTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityFollowUpSentence', { value: data.qualityData.chatsWithFollowUp })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
         </div>
       )}
       {isRatingDistribution && (data.distributionData?.totalChats != null || data.distributionData?.totalFeedback != null) && (

@@ -42,8 +42,19 @@ post_step:
       showTest: ${incoming.body.showTest}
   result: result
 
+post_summary_data:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/chat-quality-overview-summary"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: summary_result
+
 return_value:
-  return: ${result.response.body}
+  return: ${[result.response.body, summary_result.response.body]}
   next: end
 
 return_incorrect_request:
