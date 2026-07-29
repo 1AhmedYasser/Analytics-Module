@@ -17,8 +17,15 @@ type Props = {
 
 const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }: Props) => {
   const { t } = useTranslation();
-  const hasPrevious = previousValue !== 0;
-  const percentChange = hasPrevious ? Math.round(((value - previousValue) / previousValue) * 100) : 0;
+  const hasPrevious = previousValue !== 0 || value !== 0;
+
+  const getPercentChange = (): number => {
+    if (previousValue !== 0) {
+      return Math.round(((value - previousValue) / previousValue) * 100);
+    }
+    return value !== 0 ? 100 : 0;
+  };
+  const percentChange = getPercentChange();
   const isUp = percentChange >= 0;
   const trendClass = isUp ? 'kpi-value__trend--up' : 'kpi-value__trend--down';
 
