@@ -1,0 +1,55 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DATE-PREFERENCE'"
+  method: post
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    body:
+      - field: unit
+        type: string
+        description: "Body field 'unit'"
+    header:
+      - field: cookie
+        type: string
+        description: "Cookie field"
+
+check_for_required_parameters:
+  switch:
+    - condition: ${incoming.body == null || incoming.body.unit == null}
+      next: return_incorrect_request
+  next: extract_request_data
+
+extract_request_data:
+  assign:
+    cookie: ${incoming.headers.cookie}
+    unit: ${incoming.body.unit}
+  next: check_if_authorized
+
+check_if_authorized:
+  template: "[#ANALYTICS_PROJECT_LAYER]/check-user-authority"
+  requestType: templates
+  headers:
+    cookie: ${cookie}
+  result: authority_result
+
+update_date_preference:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/update-date-preference"
+    body:
+      user_id_code: ${authority_result.idCode}
+      unit: ${unit}
+  result: result
+  next: return_value
+
+return_value:
+  return: ${result.response.body}
+  next: end
+
+return_incorrect_request:
+  status: 400
+  return: 'missing parameters'
+  next: end

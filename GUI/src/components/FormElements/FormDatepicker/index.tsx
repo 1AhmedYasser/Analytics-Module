@@ -13,15 +13,17 @@ import i18next from 'i18next';
 registerLocale('et-EE', et);
 
 type FormDatepickerProps = ControllerRenderProps & {
-  label: string;
-  name: string;
-  hideLabel?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  timePicker?: boolean;
-  monthPicker?: boolean;
-  portalId?: string;
-  trailingIcon?: ReactNode;
+  readonly label: string;
+  readonly name: string;
+  readonly hideLabel?: boolean;
+  readonly disabled?: boolean;
+  readonly placeholder?: string;
+  readonly timePicker?: boolean;
+  readonly monthPicker?: boolean;
+  readonly portalId?: string;
+  readonly trailingIcon?: ReactNode;
+  readonly minDate?: Date;
+  readonly maxDate?: Date;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((
