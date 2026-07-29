@@ -80,8 +80,8 @@ export const chatOptions: Option[] = [
     defaultChartType: 'pieChart',
   },
   {
-    id: 'quality_overview',
-    labelKey: 'chats.quality_overview',
+    id: 'chat_analysis_overview',
+    labelKey: 'chats.chat_analysis_overview',
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'barChart',
     subOptions: [

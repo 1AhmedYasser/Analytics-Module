@@ -474,7 +474,7 @@ const ChatsPage: React.FC = () => {
         return fetchThemeOverview(config);
       case 'follow_up_action_overview':
         return fetchFollowUpActionOverview(config);
-      case 'quality_overview':
+      case 'chat_analysis_overview':
         return fetchQualityOverview(config);
       default:
         return fetchData(config);
@@ -512,7 +512,7 @@ const ChatsPage: React.FC = () => {
           if (
             config.metric !== 'theme_overview' &&
             config.metric !== 'follow_up_action_overview' &&
-            config.metric !== 'quality_overview'
+            config.metric !== 'chat_analysis_overview'
           ) {
             themes.current = [];
             followUpStatuses.current = [];
@@ -527,7 +527,7 @@ const ChatsPage: React.FC = () => {
             themes.current = [];
             if (rangeOrMetricChanged) followUpStatuses.current = [];
             setShowSelectAll(true);
-          } else if (config.metric === 'quality_overview') {
+          } else if (config.metric === 'chat_analysis_overview') {
             themes.current = [];
             followUpStatuses.current = [];
             setShowSelectAll(true);
