@@ -32,6 +32,14 @@ export const overviewMetricPreferences = (): string => {
   return baseUrl + '/overview/preferences';
 };
 
+export const overviewDatePreference = (): string => {
+  return baseUrl + '/overview/date-preference';
+};
+
+export const overviewDatePreferenceUnit = (): string => {
+  return baseUrl + '/overview/date-preference-unit';
+};
+
 export const overviewMetrics = (): string => {
   return baseUrl + `/overview/metrics`;
 };
@@ -152,5 +160,13 @@ export const getFollowUpActionOverview = (): string => {
 
 export const getQualityOverview = (): string => {
   return baseUrl + '/chats/quality-overview';
+};
+
+export const getQualityRatingOverview = (): string => {
+  return baseUrl + '/chats/quality-rating-overview';
+};
+
+export const getRedirectedOverview = (): string => {
+  return baseUrl + '/chats/redirected-overview';
 };
 

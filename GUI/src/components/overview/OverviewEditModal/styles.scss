@@ -1,0 +1,15 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+
+.overview-edit-modal {
+  &__description {
+    color: get-color(black-coral-6);
+    margin-bottom: get-spacing(haapsalu);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: get-spacing(paldiski);
+  }
+}

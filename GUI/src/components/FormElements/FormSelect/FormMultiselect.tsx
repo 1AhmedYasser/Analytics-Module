@@ -82,8 +82,8 @@ const FormMultiselect: FC<FormMultiselectProps> = (
     });
 
     const selectClasses = clsx(
-        'select',
-        disabled && 'select--disabled',
+        'analytics-select',
+        disabled && 'analytics-select--disabled',
     );
 
     const placeholderValue = placeholder ?? t('global.choose');
@@ -102,15 +102,15 @@ const FormMultiselect: FC<FormMultiselectProps> = (
         {label && !hideLabel && (
           <label
             htmlFor={id}
-            className="select__label"
+            className="analytics-select__label"
             {...getLabelProps()}
           >
             {label}
           </label>
         )}
-        <div className="select__wrapper">
+        <div className="analytics-select__wrapper">
           <div
-            className="select__trigger"
+            className="analytics-select__trigger"
             {...getToggleButtonProps()}
           >
             {selectedItems.length > 0
@@ -124,13 +124,13 @@ const FormMultiselect: FC<FormMultiselectProps> = (
           </div>
 
           <ul
-            className="select__menu"
+            className="analytics-select__menu"
             {...getMenuProps()}
           >
             {enableSelectAll && (
               <li
                 key={`select-all`}
-                className={clsx('select__option', { 'select__option--selected': highlightedIndex === -1 })}
+                className={clsx('analytics-select__option', { 'analytics-select__option--selected': highlightedIndex === -1 })}
                 {...getItemProps({
                   item: { label: 'select-all', value: 'select-all' },
                   index: -1,
@@ -149,7 +149,7 @@ const FormMultiselect: FC<FormMultiselectProps> = (
               options.map((item, index) => (
                 <li
                   key={`${item.label}-${index}`}
-                  className={clsx('select__option', { 'select__option--selected': highlightedIndex === index })}
+                  className={clsx('analytics-select__option', { 'analytics-select__option--selected': highlightedIndex === index })}
                   {...getItemProps({
                     item,
                     index,

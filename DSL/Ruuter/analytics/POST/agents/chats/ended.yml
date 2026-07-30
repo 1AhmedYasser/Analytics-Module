@@ -35,6 +35,27 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: feedbackRatings
+        type: array
+        description: "Body field 'feedbackRatings'"
+      - field: isTest
+        type: array
+        description: "Body field 'isTest'"
+      - field: isPreserve
+        type: array
+        description: "Body field 'isPreserve'"
+      - field: hasComment
+        type: array
+        description: "Body field 'hasComment'"
+      - field: hasFeedback
+        type: array
+        description: "Body field 'hasFeedback'"
+      - field: authenticatedChats
+        type: array
+        description: "Body field 'authenticatedChats'"
+      - field: status
+        type: array
+        description: "Body field 'status'"
 
 
 extractRequestData:
@@ -43,6 +64,13 @@ extractRequestData:
     endDate: ${incoming.body.endDate}
     urls: ${incoming.body.urls}
     showTest: ${incoming.body.showTest}
+    feedbackRatings: ${incoming.body.feedbackRatings ?? []}
+    isTest: ${incoming.body.isTest ?? []}
+    isPreserve: ${incoming.body.isPreserve ?? []}
+    hasComment: ${incoming.body.hasComment ?? []}
+    hasFeedback: ${incoming.body.hasFeedback ?? []}
+    authenticatedChats: ${incoming.body.authenticatedChats ?? []}
+    status: ${incoming.body.status ?? []}
 
 getEndedChats:
   call: http.post
@@ -59,6 +87,13 @@ getEndedChats:
       csaId: ${"chatbot"}
       urls: ${urls}
       showTest: ${showTest}
+      feedbackRatings: ${feedbackRatings}
+      isTest: ${isTest}
+      isPreserve: ${isPreserve}
+      hasComment: ${hasComment}
+      hasFeedback: ${hasFeedback}
+      authenticatedChats: ${authenticatedChats}
+      status: ${status}
   result: res
 
 returnSuccess:

@@ -1,0 +1,137 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+@import 'src/styles/settings/variables/other';
+@import 'src/styles/settings/variables/typography';
+
+.overview-secondary-card {
+  &__header {
+    width: 100%;
+    padding-bottom: get-spacing(paldiski);
+    margin-bottom: get-spacing(elva);
+    border-bottom: 1px solid get-color(black-coral-2);
+    color: get-color(black-coral-6);
+    font-size: $veera-font-size-80;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  &__top-n-select {
+    flex-shrink: 0;
+    width: auto;
+
+    .analytics-select {
+      width: auto;
+    }
+
+    .analytics-select__wrapper {
+      width: auto;
+    }
+
+    .analytics-select__trigger {
+      width: auto;
+      min-width: 48px;
+      height: 28px;
+      padding: 0 get-spacing(paldiski);
+      font-size: $veera-font-size-70;
+      line-height: 1;
+    }
+  }
+
+  &__row {
+    min-width: 0;
+
+    &-label {
+      color: get-color(black-coral-6);
+      font-size: 13px;
+      flex-shrink: 0;
+
+      &--bucket {
+        width: 32px;
+      }
+
+      &--wide {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: get-color(black-coral-8);
+      }
+
+      &--muted {
+        color: get-color(black-coral-6);
+      }
+    }
+
+    &-count {
+      min-width: 24px;
+      text-align: right;
+      font-size: 13px;
+      color: get-color(black-coral-7);
+    }
+
+    &-percent {
+      min-width: 36px;
+      text-align: right;
+      font-size: 13px;
+      color: get-color(black-coral-6);
+    }
+  }
+
+  &__body {
+    display: flex;
+    gap: get-spacing(haapsalu);
+    align-items: flex-start;
+  }
+
+  &__summary {
+    flex: 0 0 auto;
+    min-width: 120px;
+  }
+
+  &__value {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__ratio {
+    margin-top: 4px;
+    font-size: 13px;
+    color: get-color(sea-green-8);
+  }
+
+  &__previous {
+    margin-top: 4px;
+    font-size: 12px;
+    color: get-color(black-coral-6);
+  }
+
+  &__distribution {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__follow-up-row {
+    font-size: 13px;
+    color: get-color(black-coral-8);
+  }
+
+  &__follow-up-count {
+    min-width: 28px;
+    padding: 2px 10px;
+    border-radius: $veera-radius-l;
+    background-color: get-color(sapphire-blue-0);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: get-color(sapphire-blue-9);
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: 13px;
+    color: get-color(black-coral-6);
+  }
+}

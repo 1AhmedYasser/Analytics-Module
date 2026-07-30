@@ -107,9 +107,35 @@
     "closed": "average time of session, closed by customer"
   },
   "overview": {
-    "editView": "Edit view",
-    "totalChatsChart": "Total number of chats",
+    "editView": "Edit overview",
+    "editDescription": "Toggle the components on or off to see metric specific details.",
+    "confirmEdit": "Apply",
+    "totalChatsChart": "Total number of chats: {{range}}",
+    "totalChatsChartTitle": "Total number of chats {{unit}} {{range}}",
+    "chartTitle_one": "{{count}} of chats per period {{start}} to {{end}}",
+    "chartTitle_other": "{{count}} of chats per period {{start}} to {{end}}",
+    "noData": "No data",
     "edit": "Edit",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "period": "Period",
+    "lastDay": "Last day",
+    "lastWeek": "Last week",
+    "lastMonth": "Last month",
+    "lastPeriod": "Previous period",
+    "thisDay": "This day",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "longPeriodWarning": "A long time period is selected, which affects the visual appearance of the chart. Reduce the length of the time period for a better overview.",
+    "positiveFeedback": "Feedback",
+    "responseQuality": "Response quality",
+    "themesForPeriod": "Most popular themes in period",
+    "followUp": "Top after-actions",
+    "legend": {
+      "burokratt": "Bürokratt answered",
+      "csa": "CSA answered"
+    },
 
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
@@ -121,7 +147,19 @@
       "total_chats_day": "Number of chats: today / yesterday",
       "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
-      "avg_waiting_time_week": "Average waiting time: week / previous"
+      "avg_waiting_time_week": "Average waiting time: week / previous",
+      "total_chats": "Total number of chats",
+      "avg_waiting_time": "Average waiting time",
+      "avg_rating": "Average feedback rating",
+      "burokratt_rate": "Bürokratt answered",
+      "csa_rate": "CSA answered",
+      "redirected_rate": "Redirected",
+      "left_without_answer_rate": "Left without an answer",
+      "chart": "Total number of chats as a graph",
+      "positive_feedback": "Feedback",
+      "quality": "Response quality",
+      "themes": "Most popular themes in period",
+      "follow_up": "Top after-actions"
     }
   },
   "feedback": {
@@ -205,6 +243,7 @@
     "theme_overview": "Theme overview",
     "follow_up_action_overview": "Follow-up Action overview",
     "quality_overview": "Quality overview",
+    "chat_analysis_overview": "Chat analysis overview",
     "themes": "Themes",
     "responseQuality": "Bürokratt Response Quality",
     "followUp": "Follow-up statuses",

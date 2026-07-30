@@ -1,4 +1,4 @@
-import React, { forwardRef, useId } from 'react';
+import React, { forwardRef, useId, ReactNode } from 'react';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import clsx from 'clsx';
 import { et } from 'date-fns/locale';
@@ -13,14 +13,17 @@ import i18next from 'i18next';
 registerLocale('et-EE', et);
 
 type FormDatepickerProps = ControllerRenderProps & {
-  label: string;
-  name: string;
-  hideLabel?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
-  timePicker?: boolean;
-  monthPicker?: boolean;
-  portalId?: string;
+  readonly label: string;
+  readonly name: string;
+  readonly hideLabel?: boolean;
+  readonly disabled?: boolean;
+  readonly placeholder?: string;
+  readonly timePicker?: boolean;
+  readonly monthPicker?: boolean;
+  readonly portalId?: string;
+  readonly trailingIcon?: ReactNode;
+  readonly minDate?: Date;
+  readonly maxDate?: Date;
 }
 
 const FormDatepicker = forwardRef<any, FormDatepickerProps>((
@@ -33,6 +36,7 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
     timePicker,
     monthPicker,
     portalId = 'overlay-root',
+    trailingIcon,
     ...rest
   },
   ref,
@@ -74,11 +78,12 @@ const FormDatepicker = forwardRef<any, FormDatepickerProps>((
           onChange={onChange}
         />
         <Icon
-          icon={timePicker
+          icon={trailingIcon ?? (timePicker
             ? (<MdOutlineSchedule color='#5D6071' fontSize={20} />)
             : (<MdOutlineToday color='#5D6071' fontSize={20} />)
-          }
-          size='medium' />
+          )}
+          size={trailingIcon ? 'small' : 'medium'}
+        />
       </div>
     </div>
   );

@@ -1,0 +1,32 @@
+declaration:
+  call: declare
+  version: 0.1
+  description: "Decription placeholder for 'DATE-PREFERENCE'"
+  method: get
+  accepts: json
+  returns: json
+  namespace: analytics
+  allowlist:
+    header:
+      - field: cookie
+        type: string
+        description: "Cookie field"
+
+check_if_authorized:
+  template: "[#ANALYTICS_PROJECT_LAYER]/check-user-authority"
+  requestType: templates
+  headers:
+    cookie: ${incoming.headers.cookie}
+  result: authority_result
+
+get_date_preference:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/select-user-overview-date-preference-unit"
+    body:
+      user_id_code: ${authority_result.idCode}
+  result: preference
+
+return_value:
+  return: ${preference.response.body}
+  next: end
