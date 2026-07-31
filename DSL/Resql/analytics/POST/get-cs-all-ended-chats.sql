@@ -41,7 +41,7 @@ MaxChats AS (
       AND (
         (c.feedback_rating_five IS NOT NULL AND c.feedback_rating_five <= 3)
         OR
-        (c.feedback_rating IS NOT NULL AND c.feedback_rating <= 5)
+        (c.feedback_rating IS NOT NULL AND c.feedback_rating <= 6)
       )
     GROUP BY base_id
 ),
