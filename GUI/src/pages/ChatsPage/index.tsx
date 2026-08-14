@@ -70,6 +70,10 @@ const ChatsPage: React.FC = () => {
   if (multiDomainEnabled) {
     useStore.subscribe((state, prevState) => {
       if (JSON.stringify(state.userDomains) !== JSON.stringify(prevState.userDomains)) {
+        advisors.current = [];
+        themes.current = [];
+        followUpStatuses.current = [];
+        qualityRatings.current = [];
         setUpdateKey((prevState) => prevState + 1);
       }
     });
