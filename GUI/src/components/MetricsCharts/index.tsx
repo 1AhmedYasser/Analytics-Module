@@ -67,6 +67,13 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   const passivePct = calcPct(passiveCount, totalFeedback);
   const dissatisfiedPct = calcPct(dissatisfiedCount, totalFeedback);
 
+  const periodScore =
+    totalFeedback > 0
+      ? isFiveScale
+        ? (satisfiedCount / totalFeedback) * 100
+        : ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100
+      : null;
+
   const charts: ChartType[] = [
     {
       label: t('chart.barChart'),
@@ -247,7 +254,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
         <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
           <div style={{ marginBottom: 4 }}>
             <span>
-              {feedbackScoreLabel}: {formatPeriodScore(data.feedBackData?.periodNps ?? data.periodNps)}
+              {feedbackScoreLabel}: {formatPeriodScore(periodScore)}
             </span>
           </div>
           <div style={{ marginBottom: 4 }}>
