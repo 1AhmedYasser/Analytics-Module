@@ -50,7 +50,7 @@ const ThemesCard = ({ range }: Props) => {
     })
       .then((result) => {
         if (cancelled) return;
-        setThemes([...(result.response ?? [])]);
+        setThemes([...(result.response?.[0] ?? [])]);
       })
       .catch(console.error);
     return () => {
