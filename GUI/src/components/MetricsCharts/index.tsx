@@ -38,6 +38,17 @@ const calcPct = (numerator: number, denominator: number): string => {
   return `${((numerator / denominator) * 100).toFixed(1)}%`;
 };
 
+const calcPeriodScore = (
+  satisfiedCount: number,
+  dissatisfiedCount: number,
+  totalFeedback: number,
+  isFiveScale: boolean,
+): number | null => {
+  if (totalFeedback <= 0) return null;
+  if (isFiveScale) return (satisfiedCount / totalFeedback) * 100;
+  return ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100;
+};
+
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
@@ -66,6 +77,8 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   const satisfiedPct = calcPct(satisfiedCount, totalFeedback);
   const passivePct = calcPct(passiveCount, totalFeedback);
   const dissatisfiedPct = calcPct(dissatisfiedCount, totalFeedback);
+
+  const periodScore = calcPeriodScore(satisfiedCount, dissatisfiedCount, totalFeedback, isFiveScale);
 
   const charts: ChartType[] = [
     {
@@ -247,7 +260,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
         <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
           <div style={{ marginBottom: 4 }}>
             <span>
-              {feedbackScoreLabel}: {formatPeriodScore(data.feedBackData?.periodNps ?? data.periodNps)}
+              {feedbackScoreLabel}: {formatPeriodScore(periodScore)}
             </span>
           </div>
           <div style={{ marginBottom: 4 }}>
