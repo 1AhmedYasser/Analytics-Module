@@ -30,7 +30,7 @@ n_chats AS (
       AND CASE 
           WHEN (SELECT COALESCE(is_five_rating_scale, 'false') = 'true' FROM rating_config) 
           THEN feedback_rating_five IS NOT NULL AND feedback_rating_five <= 3
-          ELSE feedback_rating IS NOT NULL AND feedback_rating <= 5
+          ELSE feedback_rating IS NOT NULL AND feedback_rating <= 6
       END
     GROUP BY base_id
 ),
