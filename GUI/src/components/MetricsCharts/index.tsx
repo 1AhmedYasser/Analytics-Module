@@ -38,6 +38,17 @@ const calcPct = (numerator: number, denominator: number): string => {
   return `${((numerator / denominator) * 100).toFixed(1)}%`;
 };
 
+const calcPeriodScore = (
+  satisfiedCount: number,
+  dissatisfiedCount: number,
+  totalFeedback: number,
+  isFiveScale: boolean,
+): number | null => {
+  if (totalFeedback <= 0) return null;
+  if (isFiveScale) return (satisfiedCount / totalFeedback) * 100;
+  return ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100;
+};
+
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
@@ -67,12 +78,7 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
   const passivePct = calcPct(passiveCount, totalFeedback);
   const dissatisfiedPct = calcPct(dissatisfiedCount, totalFeedback);
 
-  const periodScore =
-    totalFeedback > 0
-      ? isFiveScale
-        ? (satisfiedCount / totalFeedback) * 100
-        : ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100
-      : null;
+  const periodScore = calcPeriodScore(satisfiedCount, dissatisfiedCount, totalFeedback, isFiveScale);
 
   const charts: ChartType[] = [
     {
