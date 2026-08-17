@@ -76,6 +76,7 @@ const FeedbackPage: React.FC = () => {
                 JSON.stringify(state.userDomains) !==
                 JSON.stringify(prevState.userDomains)
             ) {
+                advisors.current = [];
                 setUpdateKey((v) => v + 1);
             }
         });
