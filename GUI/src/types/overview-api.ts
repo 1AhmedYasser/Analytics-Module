@@ -22,9 +22,18 @@ export type ThemeOverviewRow = {
   readonly count: number;
 };
 
+export type ThemeOverviewSummaryRow = {
+  readonly totalChats: string;
+  readonly chatsWithThemes: string;
+};
+
 export type FollowUpActionRow = {
   readonly followUpAction: string;
   readonly count: number;
+};
+
+export type FollowUpActionSummaryRow = {
+  readonly chatsWithFollowUp: string;
 };
 
 export type TotalChatsOverviewResponse = {
@@ -40,11 +49,11 @@ export type ChatsStatusesByEventResponse = {
 };
 
 export type ThemeOverviewResponse = {
-  readonly response: readonly ThemeOverviewRow[];
+  readonly response: readonly [readonly ThemeOverviewRow[], readonly ThemeOverviewSummaryRow[]];
 };
 
 export type FollowUpActionOverviewResponse = {
-  readonly response: readonly FollowUpActionRow[];
+  readonly response: readonly [readonly FollowUpActionRow[], readonly FollowUpActionSummaryRow[]];
 };
 
 export type MetricValueRow = {

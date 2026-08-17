@@ -40,7 +40,7 @@ const FollowUpCard = ({ range }: Props) => {
     })
       .then((result) => {
         if (cancelled) return;
-        setActions([...(result.response ?? [])].slice(0, 10));
+        setActions([...(result.response?.[0] ?? [])].slice(0, 10));
       })
       .catch(console.error);
     return () => {
