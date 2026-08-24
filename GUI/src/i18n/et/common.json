@@ -107,9 +107,35 @@
     "closed": "Keskmine aeg (min) Bürokratiga, kliendi lõpetatud"
   },
   "overview": {
-    "editView": "Muuda vaadet",
-    "totalChatsChart": "Vestluste koguarv",
+    "editView": "Muuda ülevaadet",
+    "editDescription": "Lülita vajalikud komponendid sisse või välja, et näha konkreetseid mõõdikuid.",
+    "confirmEdit": "Salvesta",
+    "totalChatsChart": "Vestluste koguarv: {{range}}",
+    "totalChatsChartTitle": "Vestluste koguarv {{unit}} {{range}} lõikes",
+    "chartTitle_one": "{{count}} vestlus perioodil {{start}} kuni {{end}}",
+    "chartTitle_other": "{{count}} vestlust perioodil {{start}} kuni {{end}}",
+    "noData": "Andmed puuduvad",
     "edit": "Muuda",
+    "day": "Päev",
+    "week": "Nädal",
+    "month": "Kuu",
+    "period": "Periood",
+    "lastDay": "eelmine päev",
+    "lastWeek": "eelmine nädal",
+    "lastMonth": "eelmine kuu",
+    "lastPeriod": "eelmine periood",
+    "thisDay": "Tänane päev",
+    "thisWeek": "See nädal",
+    "thisMonth": "See kuu",
+    "longPeriodWarning": "Valitud on pikk ajaperiood, mis mõjutab graafiku visuaalset välimust. Parima vaate saamiseks vähenda ajaperioodi pikkust.",
+    "positiveFeedback": "Tagasiside",
+    "responseQuality": "Vastuste kvaliteet",
+    "themesForPeriod": "Populaarsemad teemad perioodil",
+    "followUp": "Järeltegevuste top",
+    "legend": {
+      "burokratt": "Bürokratt vastas",
+      "csa": "Nõustaja vastas"
+    },
 
     "metric": {
       "avg_chats_by_month": "Keskmine vestluste arv päevas: kuu / eelmine",
@@ -121,7 +147,19 @@
       "total_chats_day": "Vestluste arv: täna / eile",
       "total_forwarded_chats_yesterday": "Suunatud vestlused eile: sisesed / välised",
       "avg_waiting_time_day": "Keskmine ooteaeg: täna / eile",
-      "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine"
+      "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine",
+      "total_chats": "Vestluste koguarv",
+      "avg_waiting_time": "Keskmine ooteaeg",
+      "avg_rating": "Keskmine hinnang",
+      "burokratt_rate": "Vastas Bürokratt",
+      "csa_rate": "Vastas nõustaja",
+      "redirected_rate": "Edasi suunatud",
+      "left_without_answer_rate": "Lahkus vastuseta",
+      "chart": "Vestluste koguarv graafikuna",
+      "positive_feedback": "Tagasiside",
+      "quality": "Vastuste kvaliteet",
+      "themes": "Populaarsemad teemad perioodil",
+      "follow_up": "Järeltegevuste top"
     }
   },
   "feedback": {
@@ -175,9 +213,9 @@
     "percentOfChatsWithFeedback": "% vestlustest, millele anti tagasiside",
     "chatsWithNoFeedback": "Tagasisidet pole",
     "tooltip_averageFeedbackRating": "Keskmine hinne arvutatakse järgnevalt: liidetakse kokku kõik tagasiside väärtused ja jagatakse vestluste arvuga, millel on tagasiside antud.",
-    "tooltip_satisfied": "Rahulolevate skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolevate koguarv (4-5p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolevate koguarv (9-10p) / vastajate koguarv (0-10p) * 100.",
-    "tooltip_passive": "Passiivsete skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: passiivsete koguarv (3p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: passiivsete koguarv (7-8p) / vastajate koguarv (0-10p) * 100.",
-    "tooltip_dissatisfied": "Rahulolematute skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolematute koguarv (1-2p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolematute koguarv (0-6p) / vastajate koguarv (0-10p) * 100."
+    "tooltip_satisfied": "Rahulolevate skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolevate koguarv (5p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolevate koguarv (9-10p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_passive": "Passiivsete skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: passiivsete koguarv (4p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: passiivsete koguarv (7-8p) / vastajate koguarv (0-10p) * 100.",
+    "tooltip_dissatisfied": "Rahulolematute skoori valem on tagasiside skaalast sõltuv. 5-palli skaalas: rahulolematute koguarv (1-3p) / vastajate koguarv (1-5p) * 100. 10-palli skaalas: rahulolematute koguarv (0-6p) / vastajate koguarv (0-10p) * 100."
   },
   "chats": {
     "total": "Vestluste koguarv",
@@ -205,6 +243,7 @@
     "theme_overview": "Valdkonna ülevaade",
     "follow_up_action_overview": "Järeltegevuste staatuste ülevaade",
     "quality_overview": "Kvaliteedi ülevaade",
+    "chat_analysis_overview": "Vestluste analüüsi ülevaade",
     "themes": "Valdkonnad",
     "responseQuality": "Bürokrati vastuse kvaliteet",
     "followUp": "Järeltegevuste staatused",

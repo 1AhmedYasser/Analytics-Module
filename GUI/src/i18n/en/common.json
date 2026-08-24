@@ -107,9 +107,35 @@
     "closed": "average time of session, closed by customer"
   },
   "overview": {
-    "editView": "Edit view",
-    "totalChatsChart": "Total number of chats",
+    "editView": "Edit overview",
+    "editDescription": "Toggle the components on or off to see metric specific details.",
+    "confirmEdit": "Apply",
+    "totalChatsChart": "Total number of chats: {{range}}",
+    "totalChatsChartTitle": "Total number of chats {{unit}} {{range}}",
+    "chartTitle_one": "{{count}} of chats per period {{start}} to {{end}}",
+    "chartTitle_other": "{{count}} of chats per period {{start}} to {{end}}",
+    "noData": "No data",
     "edit": "Edit",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "period": "Period",
+    "lastDay": "Last day",
+    "lastWeek": "Last week",
+    "lastMonth": "Last month",
+    "lastPeriod": "Previous period",
+    "thisDay": "This day",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "longPeriodWarning": "A long time period is selected, which affects the visual appearance of the chart. Reduce the length of the time period for a better overview.",
+    "positiveFeedback": "Feedback",
+    "responseQuality": "Response quality",
+    "themesForPeriod": "Most popular themes in period",
+    "followUp": "Top after-actions",
+    "legend": {
+      "burokratt": "Bürokratt answered",
+      "csa": "CSA answered"
+    },
 
     "metric": {
       "avg_chats_by_month": "Average chats per day: month / previous",
@@ -121,7 +147,19 @@
       "total_chats_day": "Number of chats: today / yesterday",
       "total_forwarded_chats_yesterday": "Forwarded chats yesterday: internal / external",
       "avg_waiting_time_day": "Average waiting time: today / yesterday",
-      "avg_waiting_time_week": "Average waiting time: week / previous"
+      "avg_waiting_time_week": "Average waiting time: week / previous",
+      "total_chats": "Total number of chats",
+      "avg_waiting_time": "Average waiting time",
+      "avg_rating": "Average feedback rating",
+      "burokratt_rate": "Bürokratt answered",
+      "csa_rate": "CSA answered",
+      "redirected_rate": "Redirected",
+      "left_without_answer_rate": "Left without an answer",
+      "chart": "Total number of chats as a graph",
+      "positive_feedback": "Feedback",
+      "quality": "Response quality",
+      "themes": "Most popular themes in period",
+      "follow_up": "Top after-actions"
     }
   },
   "feedback": {
@@ -175,9 +213,9 @@
     "percentOfChatsWithFeedback": "% of chats that received feedback",
     "chatsWithNoFeedback": "No Feedback",
     "tooltip_averageFeedbackRating": "The average score is calculated as follows: all feedback values are added together and divided by the total number of conversations where feedback was given.",
-    "tooltip_satisfied": "The formula for promoters scores depends on the feedback scale. In a 5-point system: satisfied count (4-5p) / all respondents (1-5p) * 100. On a 10-point scale: total number of satisfied (9-10p) / total number of respondents (0-10p) * 100.",
-    "tooltip_passive": "The passive score formula is dependent on the feedback scale. On a 5-point scale: total number of passives (3p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of passives (7-8p) / total number of respondents (0-10p) * 100.",
-    "tooltip_dissatisfied": "The formula for the dissatisfied score depends on the feedback scale. On a 5-point scale: total number of dissatisfied (1-2p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of dissatisfied (0-6p) / total number of respondents (0-10p) * 100."
+    "tooltip_satisfied": "The formula for promoters scores depends on the feedback scale. In a 5-point system: satisfied count (5p) / all respondents (1-5p) * 100. On a 10-point scale: total number of satisfied (9-10p) / total number of respondents (0-10p) * 100.",
+    "tooltip_passive": "The passive score formula is dependent on the feedback scale. On a 5-point scale: total number of passives (4p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of passives (7-8p) / total number of respondents (0-10p) * 100.",
+    "tooltip_dissatisfied": "The formula for the dissatisfied score depends on the feedback scale. On a 5-point scale: total number of dissatisfied (1-3p) / total number of respondents (1-5p) * 100. On a 10-point scale: total number of dissatisfied (0-6p) / total number of respondents (0-10p) * 100."
   },
   "chats": {
     "total": "Total number of chats",
@@ -205,6 +243,7 @@
     "theme_overview": "Theme overview",
     "follow_up_action_overview": "Follow-up Action overview",
     "quality_overview": "Quality overview",
+    "chat_analysis_overview": "Chat analysis overview",
     "themes": "Themes",
     "responseQuality": "Bürokratt Response Quality",
     "followUp": "Follow-up statuses",

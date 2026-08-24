@@ -17,7 +17,13 @@ export default ({ mode }) => {
       svgr(),
     ],
     optimizeDeps: {
-      include: ['howler']
+      include: ['howler'],
+      esbuildOptions: {
+        jsx: 'automatic',
+      },
+    },
+    esbuild: {
+      jsx: 'automatic',
     },
     base: '/analytics',
     server: {

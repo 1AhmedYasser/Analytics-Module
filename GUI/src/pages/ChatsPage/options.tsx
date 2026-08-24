@@ -61,6 +61,18 @@ export const chatOptions: Option[] = [
     id: 'num_chats_csa',
     labelKey: 'chats.num_chats_csa',
     unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
+  {
+    id: 'quality_overview',
+    labelKey: 'chats.quality_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'barChart',
+    subOptions: [
+      { id: 'themes', labelKey: 'chats.themes', color: '#fdbf47', isSelected: true },
+      { id: 'response_quality', labelKey: 'chats.responseQuality', color: '#ed7d32', isSelected: true },
+      { id: 'follow_up', labelKey: 'chats.followUp', color: '#8ab4d5', isSelected: true },
+    ],
   },
   {
     id: 'avg_chat_time_csa',
@@ -82,6 +94,12 @@ export const chatOptions: Option[] = [
   {
     id: 'quality_overview',
     labelKey: 'chats.quality_overview',
+    unit: t('units.chats') ?? 'chats',
+    defaultChartType: 'pieChart',
+  },
+  {
+    id: 'chat_analysis_overview',
+    labelKey: 'chats.chat_analysis_overview',
     unit: t('units.chats') ?? 'chats',
     defaultChartType: 'barChart',
     subOptions: [

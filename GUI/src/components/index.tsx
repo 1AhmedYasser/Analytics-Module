@@ -23,6 +23,7 @@ import Dialog from './Dialog'
 import Section from './Section'
 import CustomChartTooltip from './CustomChartTooltip'
 import RatingDistributionTooltip from './RatingDistributionTooltip'
+import ProgressBar from './ProgressBar'
 
 export {
   Toast,
@@ -48,4 +49,5 @@ export {
   Section,
   CustomChartTooltip,
   RatingDistributionTooltip,
+  ProgressBar,
 };

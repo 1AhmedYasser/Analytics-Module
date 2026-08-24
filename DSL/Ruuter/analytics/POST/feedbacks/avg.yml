@@ -23,11 +23,20 @@ declaration:
       - field: showTest
         type: boolean
         description: "Body field 'showTest'"
+      - field: combined
+        type: boolean
+        description: "Body field 'combined'"
 
 check_for_required_parameters:
   switch:
-    - condition: ${incoming.body == null || incoming.body.metric == null || incoming.body.start_date == null || incoming.body.end_date == null}
+    - condition: ${incoming.body == null || incoming.body.start_date == null || incoming.body.end_date == null}
       next: return_incorrect_request
+  next: check_combined
+
+check_combined:
+  switch:
+    - condition: ${incoming.body.combined == true}
+      next: post_step_combined
   next: post_step
 
 post_step:
@@ -41,6 +50,19 @@ post_step:
       urls: ${incoming.body.urls}
       showTest: ${incoming.body.showTest}
   result: result
+  next: return_value
+
+post_step_combined:
+  call: http.post
+  args:
+    url: "[#ANALYTICS_RESQL]/overview-feedback-avg-range"
+    body:
+      start: ${incoming.body.start_date}
+      end: ${incoming.body.end_date}
+      urls: ${incoming.body.urls}
+      showTest: ${incoming.body.showTest}
+  result: result
+  next: return_value
 
 return_value:
   return: ${result.response.body}

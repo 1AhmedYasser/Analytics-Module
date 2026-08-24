@@ -38,6 +38,17 @@ const calcPct = (numerator: number, denominator: number): string => {
   return `${((numerator / denominator) * 100).toFixed(1)}%`;
 };
 
+const calcPeriodScore = (
+  satisfiedCount: number,
+  dissatisfiedCount: number,
+  totalFeedback: number,
+  isFiveScale: boolean,
+): number | null => {
+  if (totalFeedback <= 0) return null;
+  if (isFiveScale) return (satisfiedCount / totalFeedback) * 100;
+  return ((satisfiedCount - dissatisfiedCount) / totalFeedback) * 100;
+};
+
 const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, defaultChartType }: Props) => {
   const { t } = useTranslation();
   const formattedStartDate = formatDate(new Date(startDate), 'yyyy-MM-dd');
@@ -54,18 +65,20 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       : '—';
 
   const satisfiedCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [4, 5])
+    ? getCountForRatings(distributionChartData, [5])
     : getCountForRatings(distributionChartData, [9, 10]);
   const passiveCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [3])
+    ? getCountForRatings(distributionChartData, [4])
     : getCountForRatings(distributionChartData, [7, 8]);
   const dissatisfiedCount = isFiveScale
-    ? getCountForRatings(distributionChartData, [1, 2])
+    ? getCountForRatings(distributionChartData, [1, 2, 3])
     : getCountForRatings(distributionChartData, [0, 1, 2, 3, 4, 5, 6]);
 
   const satisfiedPct = calcPct(satisfiedCount, totalFeedback);
   const passivePct = calcPct(passiveCount, totalFeedback);
   const dissatisfiedPct = calcPct(dissatisfiedCount, totalFeedback);
+
+  const periodScore = calcPeriodScore(satisfiedCount, dissatisfiedCount, totalFeedback, isFiveScale);
 
   const charts: ChartType[] = [
     {
@@ -206,42 +219,48 @@ const MetricsCharts = ({ title, data, startDate, endDate, unit, groupByPeriod, d
       </div>
       {data.qualityData != null && (
         <div style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
-          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityThemesSentence', {
-                  value: data.qualityData.totalChats > 0
-                    ? ((data.qualityData.chatsWithThemes / data.qualityData.totalChats) * 100).toFixed(1)
-                    : '0',
-                })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
-          <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityResponseQualityTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityResponseQualitySentence', {
-                  value: data.qualityData.totalBuerokrattChats > 0
-                    ? ((data.qualityData.buerokrattChatsWithQuality / data.qualityData.totalBuerokrattChats) * 100).toFixed(1)
-                    : '0',
-                })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityFollowUpTooltip')}</span>}>
-              <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-                {t('chats.qualityFollowUpSentence', { value: data.qualityData.chatsWithFollowUp })} <MdOutlineInfo />
-              </span>
-            </Tooltip>
-          </div>
+          {data.qualityData.totalChats != null && data.qualityData.chatsWithThemes != null && (
+            <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityThemesTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityThemesSentence', {
+                    value: data.qualityData.totalChats > 0
+                      ? ((data.qualityData.chatsWithThemes / data.qualityData.totalChats) * 100).toFixed(1)
+                      : '0',
+                  })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
+          {data.qualityData.totalBuerokrattChats != null && data.qualityData.buerokrattChatsWithQuality != null && (
+            <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityResponseQualityTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityResponseQualitySentence', {
+                    value: data.qualityData.totalBuerokrattChats > 0
+                      ? ((data.qualityData.buerokrattChatsWithQuality / data.qualityData.totalBuerokrattChats) * 100).toFixed(1)
+                      : '0',
+                  })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
+          {data.qualityData.chatsWithFollowUp != null && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Tooltip content={<span style={{ maxWidth: 320, display: 'inline-block' }}>{t('chats.qualityFollowUpTooltip')}</span>}>
+                <span style={{ cursor: 'help', display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+                  {t('chats.qualityFollowUpSentence', { value: data.qualityData.chatsWithFollowUp })} <MdOutlineInfo />
+                </span>
+              </Tooltip>
+            </div>
+          )}
         </div>
       )}
       {isRatingDistribution && (data.distributionData?.totalChats != null || data.distributionData?.totalFeedback != null) && (
         <div className="feedback_summary" style={{ marginTop: 16, padding: '12px 0', borderTop: '1px solid #eee' }}>
           <div style={{ marginBottom: 4 }}>
             <span>
-              {feedbackScoreLabel}: {formatPeriodScore(data.feedBackData?.periodNps ?? data.periodNps)}
+              {feedbackScoreLabel}: {formatPeriodScore(periodScore)}
             </span>
           </div>
           <div style={{ marginBottom: 4 }}>

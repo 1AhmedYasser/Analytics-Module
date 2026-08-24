@@ -1,0 +1,83 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/tools/spacing';
+@import 'src/styles/settings/variables/other';
+@import 'src/styles/settings/variables/typography';
+
+.overview-date-control {
+  &__units {
+    display: inline-flex;
+    border: 1px solid get-color(black-coral-6);
+    border-radius: $veera-radius-m;
+    overflow: hidden;
+  }
+
+  &__unit {
+    appearance: none;
+    background: get-color(white);
+    border: none;
+    border-right: 1px solid get-color(black-coral-6);
+    cursor: pointer;
+    font: inherit;
+    font-size: $veera-font-size-80;
+    line-height: 20px;
+    padding: 4px 16px;
+    color: get-color(black-coral-15);
+    white-space: nowrap;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:hover:not(&--active) {
+      background-color: get-color(black-coral-0);
+    }
+
+    &--active {
+      background-color: get-color(black-coral-1);
+      font-weight: $veera-font-weight-delta;
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: get-color(white);
+    border: 1px solid get-color(black-coral-6);
+    border-radius: $veera-radius-m;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    color: get-color(black-coral-10);
+
+    &:hover {
+      background-color: get-color(black-coral-0);
+    }
+  }
+
+  &__dates {
+    font-size: $veera-font-size-80;
+
+    .datepicker__wrapper {
+      width: 112px;
+
+      input {
+        height: 32px;
+        font-size: $veera-font-size-80;
+        line-height: 20px;
+        padding: 4px 28px 4px 8px;
+      }
+
+      .icon {
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .icon svg {
+      fill: get-color(sapphire-blue-10) !important;
+    }
+  }
+}

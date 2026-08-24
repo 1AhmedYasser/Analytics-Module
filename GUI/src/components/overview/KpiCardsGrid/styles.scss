@@ -1,0 +1,20 @@
+@import 'src/styles/tools/spacing';
+
+.kpi-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: get-spacing(haapsalu);
+
+  &__row {
+    display: grid;
+    gap: get-spacing(haapsalu);
+
+    &--primary {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    &--secondary {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+  }
+}

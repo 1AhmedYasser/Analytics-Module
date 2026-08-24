@@ -1,0 +1,16 @@
+@import 'src/styles/tools/color';
+@import 'src/styles/settings/variables/other';
+
+.progress-bar {
+  flex: 1 1 auto;
+  min-width: 60px;
+  height: 6px;
+  border-radius: $veera-radius-pill;
+  background-color: get-color(black-coral-1);
+  overflow: hidden;
+
+  &__fill {
+    height: 100%;
+    border-radius: $veera-radius-pill;
+  }
+}
