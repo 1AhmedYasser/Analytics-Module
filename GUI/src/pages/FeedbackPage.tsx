@@ -37,6 +37,8 @@ import { mapDistributionChartData } from '../util/feedback-distribution-utils';
 
 const FEEDBACK_Y_AXIS_MAX = 20;
 
+const FEEDBACK_Y_AXIS_MAX = 20;
+
 const statusOptions = [
     'CLIENT_LEFT_WITH_ACCEPTED',
     'CLIENT_LEFT_WITH_NO_RESOLUTION',
