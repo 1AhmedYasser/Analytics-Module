@@ -14,10 +14,13 @@ import { ChatsStatusesByEventResponse, ChatsStatusesRequestData, StatusEventRow 
 import '../overviewSecondaryCard.scss';
 
 const EVENT_LABEL_KEYS: Record<string, string> = {
-  ACCEPTED: 'chart.accepted',
-  RESPONSE_SENT_TO_CLIENT_EMAIL: 'chart.responseSentToClientEmail',
   CLIENT_LEFT_WITH_ACCEPTED: 'chart.clientLeftWithAccepted',
   CLIENT_LEFT_WITH_NO_RESOLUTION: 'chart.clientLeftWithNoResolution',
+  CLIENT_LEFT_FOR_UNKNOWN_REASONS: 'chart.clientLeftForUnknownReasons',
+  ACCEPTED: 'chart.accepted',
+  HATE_SPEECH: 'chart.hateSpeech',
+  OTHER: 'chart.other',
+  RESPONSE_SENT_TO_CLIENT_EMAIL: 'chart.responseSentToClientEmail',
 };
 
 const EVENT_ORDER = Object.keys(EVENT_LABEL_KEYS);
