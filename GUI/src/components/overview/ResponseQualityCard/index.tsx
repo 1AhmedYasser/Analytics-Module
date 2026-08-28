@@ -33,6 +33,21 @@ type Props = {
 
 const colorForEvent = (event: string) => (event === 'CLIENT_LEFT_WITH_NO_RESOLUTION' ? OVERVIEW_RED : OVERVIEW_BLUE);
 
+const distributePercentages = (counts: number[], total: number): number[] => {
+  if (total <= 0) return counts.map(() => 0);
+  const scaledTenths = counts.map((count) => (count / total) * 1000);
+  const flooredTenths = scaledTenths.map(Math.floor);
+  const remainder = 1000 - flooredTenths.reduce((sum, value) => sum + value, 0);
+  const orderByFraction = scaledTenths
+    .map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+    .sort((a, b) => b.fraction - a.fraction);
+  const resultTenths = [...flooredTenths];
+  for (let i = 0; i < remainder; i += 1) {
+    resultTenths[orderByFraction[i].index] += 1;
+  }
+  return resultTenths.map((value) => value / 10);
+};
+
 const ResponseQualityCard = ({ range }: Props) => {
   const { t } = useTranslation();
   const [rows, setRows] = useState<Row[]>([]);
@@ -68,20 +83,24 @@ const ResponseQualityCard = ({ range }: Props) => {
   }, [range.start.getTime(), range.end.getTime()]);
 
   const total = rows.reduce((sum, row) => sum + row.count, 0);
+  const percentages = distributePercentages(
+    rows.map((row) => row.count),
+    total
+  );
 
   const body =
     rows.length === 0 ? (
       <p className="overview-secondary-card__empty">{t('overview.noData')}</p>
     ) : (
       <Track direction="vertical" align="stretch" gap={8}>
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <Track key={row.event} gap={8} className="overview-secondary-card__row">
             <span className="overview-secondary-card__row-label overview-secondary-card__row-label--wide">
               {t(EVENT_LABEL_KEYS[row.event])}
             </span>
             <ProgressBar value={row.count} max={total} color={colorForEvent(row.event)} />
             <span className="overview-secondary-card__row-count">{row.count}</span>
-            <span className="overview-secondary-card__row-percent">{total > 0 ? Math.round((row.count / total) * 100) : 0}%</span>
+            <span className="overview-secondary-card__row-percent">{percentages[index].toFixed(1)}%</span>
           </Track>
         ))}
       </Track>
