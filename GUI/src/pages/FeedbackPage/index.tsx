@@ -211,7 +211,8 @@ const FeedbackPage: React.FC = () => {
         setShowSelectAll(false);
         let chartData = {};
         const events = (config.options || []).filter((e: string) => e !== 'total');
-        const eventsForApi = events.length > 0 ? events : statusOptions;
+        const includeTotal = (config.options || []).includes('total');
+        const eventsForApi = includeTotal || events.length === 0 ? statusOptions : events;
         try {
             const result: any = await request({
                 url: getChatsStatuses(),
@@ -246,12 +247,18 @@ const FeedbackPage: React.FC = () => {
                 }, []);
 
             const totalLabel = t('chats.totalCount');
-            if ((config.options || []).includes('total')) {
+            if (includeTotal) {
+                const selectedLabels = new Set(
+                    events.map((id: string) => t(`feedback.plain_status_options.${id.toLowerCase()}`))
+                );
                 response.forEach((row: any) => {
                     row[totalLabel] = Object.keys(row).reduce(
                         (sum, k) => sum + (k === chartDataKey ? 0 : (row[k] || 0)),
                         0
                     );
+                    Object.keys(row).forEach((k) => {
+                        if (k !== chartDataKey && k !== totalLabel && !selectedLabels.has(k)) delete row[k];
+                    });
                 });
             }
 
