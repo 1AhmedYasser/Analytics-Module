@@ -152,6 +152,7 @@
       "avg_waiting_time_week": "Average waiting time: week / previous",
       "total_chats": "Total number of chats",
       "avg_waiting_time": "Average waiting time",
+      "avg_waiting_time_tooltip": "Average time it takes for an advisor to respond to a user after the chat is forwarded to them. If advisor availability is not selected, “N/A” is shown.",
       "avg_rating": "Average feedback rating",
       "nps": "Net Promoter Score (NPS)",
       "burokratt_rate": "Bürokratt answered",

@@ -13,11 +13,13 @@ type Props = {
   readonly format: KpiFormat;
   readonly periodLabelKey: string;
   readonly highlighted?: boolean;
+  readonly notAvailable?: boolean;
 };
 
-const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }: Props) => {
+const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted, notAvailable }: Props) => {
   const { t } = useTranslation();
-  const hasPrevious = previousValue !== 0 || value !== 0;
+  const hasPrevious = !notAvailable && (previousValue !== 0 || value !== 0);
+  const displayValue = (metricValue: number) => (notAvailable ? 'N/A' : formatKpiValue(metricValue, format));
 
   const getPercentChange = (): number => {
     if (previousValue !== 0) {
@@ -31,7 +33,7 @@ const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }:
 
   return (
     <>
-      <h2 className="kpi-value__value">{formatKpiValue(value, format)}</h2>
+      <h2 className="kpi-value__value">{displayValue(value)}</h2>
       <Track gap={4} className="kpi-value__footer">
         {hasPrevious && (
           <Track gap={2} className={clsx('kpi-value__trend', trendClass)}>
@@ -45,7 +47,7 @@ const KpiValue = ({ value, previousValue, format, periodLabelKey, highlighted }:
         >
           <span className="kpi-value__dot">·</span>
           <span className="kpi-value__period">{t(periodLabelKey)}</span>
-          <span className="kpi-value__previous">{formatKpiValue(previousValue, format)}</span>
+          <span className="kpi-value__previous">{displayValue(previousValue)}</span>
         </Track>
       </Track>
     </>

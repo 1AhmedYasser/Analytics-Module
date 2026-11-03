@@ -1,47 +1,49 @@
-WITH botname AS (
+WITH csa_config AS (
     SELECT "value"
     FROM "configuration"
-    WHERE "key" = 'bot_institution_id'
-    LIMIT 1
-), customer_support_changes AS (
-    SELECT base_id,
-        customer_support_id,
-        updated,
-        lag(customer_support_id) over (
-            PARTITION by base_id
-            ORDER BY updated
-        ) AS prev_support_id,
-        lag(updated) over (
-            PARTITION by base_id
-            ORDER BY updated
-        ) AS prev_updated
-    FROM chat
-    WHERE (
-        array_length(ARRAY[:urls]::text[], 1) IS NULL
-        OR (array_length(ARRAY[:urls]::text[], 1) = 1 AND (ARRAY[:urls]::text[])[1] = 'none')
-        OR chat.end_user_url LIKE ANY(ARRAY[:urls]::text[])
-    )
-    AND (
-        :showTest = TRUE
-        OR chat.test = FALSE
-    )
-    AND chat.status = 'ENDED'
-    AND chat.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+    WHERE "key" = 'organizationUseCSA'
+      AND "domain" IS NULL
+      AND id IN (SELECT max(id) FROM configuration WHERE "key" = 'organizationUseCSA' AND "domain" IS NULL)
+      AND NOT deleted
+),
+ended_chats AS (
+    SELECT DISTINCT ON (c.base_id)
+        c.base_id,
+        c.test,
+        c.end_user_url
+    FROM chat c
+    WHERE c.status = 'ENDED'
+      AND c.ended::timestamptz BETWEEN :start::timestamptz AND :end::timestamptz
+    ORDER BY c.base_id, c.updated DESC
+),
+filtered_chats AS (
+    SELECT base_id
+    FROM ended_chats ec
+    WHERE (:showTest = TRUE OR ec.test = FALSE)
+      AND (
+        array_length(ARRAY[:urls]::TEXT[], 1) IS NULL
+        OR (array_length(ARRAY[:urls]::TEXT[], 1) = 1 AND (ARRAY[:urls]::TEXT[])[1] = 'none')
+        OR ec.end_user_url LIKE ANY(ARRAY[:urls]::TEXT[])
+      )
+),
+forwarded_chats AS (
+    SELECT c.base_id,
+        MIN(c.updated) AS forwarded_at
+    FROM chat c
+    JOIN filtered_chats fc ON fc.base_id = c.base_id
+    WHERE c.customer_support_id = ''
+    GROUP BY c.base_id
+),
+waiting_times AS (
+    SELECT fwd.base_id,
+        MIN(m.created) - fwd.forwarded_at AS waiting_time
+    FROM forwarded_chats fwd
+    JOIN message m ON m.chat_base_id = fwd.base_id
+    WHERE m.author_role = 'backoffice-user'
+      AND m.created >= fwd.forwarded_at
+    GROUP BY fwd.base_id, fwd.forwarded_at
 )
 SELECT
-    COALESCE(
-        AVG(
-            extract(
-                epoch
-                FROM (updated - prev_updated)
-            )
-        ) FILTER (
-            WHERE prev_support_id = ''
-            AND customer_support_id NOT IN (
-                (SELECT "value" FROM botname),
-                ''
-            )
-        ),
-        0
-    ) AS metric_value
-FROM customer_support_changes;
+    COALESCE((SELECT "value" = 'true' FROM csa_config), FALSE) AS csa_enabled,
+    COALESCE(ROUND(AVG(EXTRACT(epoch FROM waiting_time))), 0) AS metric_value
+FROM waiting_times;

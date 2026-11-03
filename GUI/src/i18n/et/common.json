@@ -152,6 +152,7 @@
       "avg_waiting_time_week": "Keskmine ootaeg: nädal / eelmine",
       "total_chats": "Vestluste koguarv",
       "avg_waiting_time": "Keskmine ooteaeg",
+      "avg_waiting_time_tooltip": "Keskmine aeg, mille jooksul nõustaja vastab kasutajale pärast vestluse suunamist nõustajale. Kui nõustaja kättesaadavus pole valitud, näidatakse „N/A”.",
       "avg_rating": "Keskmine hinnang",
       "nps": "Soovitusindeks (NPS)",
       "burokratt_rate": "Vastas Bürokratt",

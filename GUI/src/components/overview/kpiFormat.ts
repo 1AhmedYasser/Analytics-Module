@@ -7,7 +7,7 @@ export const formatKpiValue = (value: number, format: KpiFormat): string => {
     case 'percent':
       return `${value.toFixed(1)}%`;
     case 'seconds':
-      return value < 60 ? `${Math.round(value)} s` : `${Math.round(value / 60)} min`;
+      return `${Math.round(value)} s`;
     case 'rating':
       return floorToOneDecimal(value);
     default:

@@ -17,4 +17,21 @@
     font-weight: 400;
     text-transform: uppercase;
   }
+
+  &__label {
+    line-height: 16px;
+  }
+
+  &__info {
+    display: flex;
+    color: get-color(sapphire-blue-10);
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  &__tooltip {
+    display: inline-block;
+    max-width: 320px;
+    text-transform: none;
+  }
 }

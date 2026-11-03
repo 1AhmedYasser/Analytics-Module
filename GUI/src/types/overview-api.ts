@@ -60,8 +60,12 @@ export type MetricValueRow = {
   readonly metricValue: number;
 };
 
+export type AvgWaitingTimeRow = MetricValueRow & {
+  readonly csaEnabled?: boolean;
+};
+
 export type AvgWaitingTimeOverviewResponse = {
-  readonly response: readonly [unknown, unknown, readonly MetricValueRow[]];
+  readonly response: readonly [unknown, unknown, readonly AvgWaitingTimeRow[]];
 };
 
 export type AvgRatingOverviewResponse = {

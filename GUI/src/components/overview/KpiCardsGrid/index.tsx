@@ -20,9 +20,10 @@ const cards: {
   readonly titleKey: string;
   readonly format: KpiFormat;
   readonly key: 'totalChats' | 'avgWaitingTime' | 'avgRating' | 'burokrattRate' | 'csaRate' | 'redirectedRate' | 'leftWithoutAnswerRate';
+  readonly tooltipKey?: string;
 }[] = [
   { metric: 'total_chats', titleKey: 'overview.metric.total_chats', format: 'number', key: 'totalChats' },
-  { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime' },
+  { metric: 'avg_waiting_time', titleKey: 'overview.metric.avg_waiting_time', format: 'seconds', key: 'avgWaitingTime', tooltipKey: 'overview.metric.avg_waiting_time_tooltip' },
   { metric: 'avg_rating', titleKey: 'overview.metric.avg_rating', format: 'rating', key: 'avgRating' },
   { metric: 'burokratt_rate', titleKey: 'overview.metric.burokratt_rate', format: 'percent', key: 'burokrattRate' },
   { metric: 'csa_rate', titleKey: 'overview.metric.csa_rate', format: 'percent', key: 'csaRate' },
@@ -51,6 +52,8 @@ const KpiCardsGrid = ({ unit, range, previousRange, isActive }: Props) => {
       format={isFeedbackCard(card) ? feedbackFormat : card.format}
       periodLabelKey={periodLabelKey(unit)}
       highlighted={highlighted}
+      tooltipKey={card.tooltipKey}
+      notAvailable={card.metric === 'avg_waiting_time' && !current.isCsaEnabled}
     />
   );
 

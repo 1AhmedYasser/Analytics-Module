@@ -21,6 +21,7 @@ import {
 export type OverviewKpiValues = {
   readonly totalChats: number;
   readonly avgWaitingTime: number;
+  readonly isCsaEnabled: boolean;
   readonly avgRating: number;
   readonly isFiveScale: boolean;
   readonly burokrattRate: number;
@@ -32,6 +33,7 @@ export type OverviewKpiValues = {
 const emptyKpis: OverviewKpiValues = {
   totalChats: 0,
   avgWaitingTime: 0,
+  isCsaEnabled: true,
   avgRating: 0,
   isFiveScale: false,
   burokrattRate: 0,
@@ -117,10 +119,12 @@ const fetchKpisForRange = async (range: DateRange): Promise<OverviewKpiValues> =
   const totalChats = byk + csa;
   const leftWithoutAnswer = sumCounts(statusRes.response?.[0]);
   const { multiCsaChats = 0, totalCsaChats = 0 } = redirectedRes.response?.[0] ?? {};
+  const waitingTime = waitingTimeRes.response?.[2]?.[0];
 
   return {
     totalChats,
-    avgWaitingTime: Number(waitingTimeRes.response?.[2]?.[0]?.metricValue ?? 0),
+    avgWaitingTime: Number(waitingTime?.metricValue ?? 0),
+    isCsaEnabled: waitingTime?.csaEnabled ?? false,
     avgRating: getFeedbackScore(feedbackDistribution),
     isFiveScale: feedbackDistribution.isFiveScale,
     burokrattRate: totalChats > 0 ? (byk / totalChats) * 100 : 0,
