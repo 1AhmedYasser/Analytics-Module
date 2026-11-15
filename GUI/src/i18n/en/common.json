@@ -154,7 +154,7 @@
       "avg_waiting_time": "Average waiting time",
       "avg_waiting_time_tooltip": "Average time it takes for an advisor to respond to a user after the chat is forwarded to them. If advisor availability is not selected, “N/A” is shown.",
       "avg_rating": "Average feedback rating",
-      "nps": "Net Promoter Score (NPS)",
+      "nps": "Net promoter score (NPS)",
       "burokratt_rate": "Bürokratt answered",
       "csa_rate": "CSA answered",
       "redirected_rate": "Redirected",
