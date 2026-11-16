@@ -15,6 +15,12 @@ export const OVERVIEW_SECTION_METRICS = [
 
 export type OverviewSectionMetric = (typeof OVERVIEW_SECTION_METRICS)[number];
 
+export const getFeedbackMetricTitleKey = (isFiveScale: boolean): string =>
+  isFiveScale ? 'feedback.positiveFeedbackScore' : 'overview.metric.nps';
+
+export const getOverviewMetricLabelKey = (metric: string, isFiveScale: boolean): string =>
+  metric === 'avg_rating' ? getFeedbackMetricTitleKey(isFiveScale) : `overview.metric.${metric}`;
+
 export interface OverviewMetricPreference {
   metric: string
   active: boolean

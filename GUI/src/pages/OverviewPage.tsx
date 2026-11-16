@@ -33,6 +33,7 @@ const OverviewPage: React.FC = () => {
   const [anchorDate, setAnchorDate] = useState(new Date());
   const [periodRange, setPeriodRange] = useState<DateRange>(() => getRange('month', new Date()));
   const [hydrated, setHydrated] = useState(false);
+  const [isFiveScale, setIsFiveScale] = useState(false);
   const userDomains = useStore((state) => state.userDomains);
 
   const range = useMemo(
@@ -142,6 +143,7 @@ const OverviewPage: React.FC = () => {
           {isEditing && (
             <OverviewEditModal
               preferences={metricPreferences}
+              isFiveScale={isFiveScale}
               onClose={() => setIsEditing(false)}
               onConfirm={(preferences) => {
                 saveMetricPreferences(preferences).catch(console.error);
@@ -151,7 +153,7 @@ const OverviewPage: React.FC = () => {
           )}
 
           <div className="overview-page__sections" key={userDomains.join(',')}>
-            <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} />
+            <KpiCardsGrid unit={unit} range={range} previousRange={previousRange} isActive={isActive} onFeedbackScaleChange={setIsFiveScale} />
 
             {isActive('chart') && (
               <Card>

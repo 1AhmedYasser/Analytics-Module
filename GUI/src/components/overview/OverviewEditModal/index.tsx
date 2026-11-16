@@ -3,16 +3,17 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../Button';
 import Dialog from '../../Dialog';
 import { FormCheckbox } from '../../FormElements';
-import { OVERVIEW_SECTION_METRICS, OverviewMetricPreference } from '../../../types/overview-metrics';
+import { getOverviewMetricLabelKey, OVERVIEW_SECTION_METRICS, OverviewMetricPreference } from '../../../types/overview-metrics';
 import './styles.scss';
 
 type Props = {
   readonly preferences: readonly OverviewMetricPreference[];
+  readonly isFiveScale: boolean;
   readonly onClose: () => void;
   readonly onConfirm: (preferences: OverviewMetricPreference[]) => void;
 };
 
-const OverviewEditModal = ({ preferences, onClose, onConfirm }: Props) => {
+const OverviewEditModal = ({ preferences, isFiveScale, onClose, onConfirm }: Props) => {
   const { t } = useTranslation();
   const [localPreferences, setLocalPreferences] = useState(preferences);
 
@@ -44,7 +45,7 @@ const OverviewEditModal = ({ preferences, onClose, onConfirm }: Props) => {
         {rows.map((row) => (
           <FormCheckbox
             key={row.metric}
-            item={{ label: t(`overview.metric.${row.metric}`), value: row.metric }}
+            item={{ label: t(getOverviewMetricLabelKey(row.metric, isFiveScale)), value: row.metric }}
             checked={row.active}
             onChange={() => toggle(row.metric)}
           />
