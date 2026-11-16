@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+import { handleUnauthorizedResponse } from '../../util/unauthorized-handler';
 
 const testCookie = 'bearer ' + (localStorage.getItem('token') ?? 'test');
 
@@ -107,24 +108,6 @@ const AxiosInterceptor = ({ children }) => {
 const handleRequestError = (error: AxiosError) => {
   import.meta.env.DEBUG_ENABLED && console.debug(error);
   return Promise.reject(new Error(error.message));
-}
-
-const UNAUTHORIZED_RETRY_DELAY_MS = 1500;
-
-type RetriableRequestConfig = InternalAxiosRequestConfig & { _unauthorizedRetried?: boolean };
-
-const handleUnauthorizedResponse = (instance: AxiosInstance) => async (error: AxiosError) => {
-  if (error.response?.status !== 401) return Promise.reject(error);
-
-  const config = error.config as RetriableRequestConfig | undefined;
-  if (config && !config._unauthorizedRetried) {
-    config._unauthorizedRetried = true;
-    await new Promise((resolve) => setTimeout(resolve, UNAUTHORIZED_RETRY_DELAY_MS));
-    return instance(config);
-  }
-
-  window.location.href = import.meta.env.REACT_APP_CUSTOMER_SERVICE_LOGIN;
-  return Promise.reject(error);
 }
 
 api.interceptors.request.use(

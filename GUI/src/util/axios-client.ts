@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import { handleUnauthorizedResponse } from './unauthorized-handler';
 
 export enum Methods {
   get = 'GET',
@@ -15,6 +16,8 @@ const axiosInstance = axios.create({
   baseURL,
   headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache, no-store, must-revalidate' },
 });
+
+axiosInstance.interceptors.response.use((axiosResponse) => axiosResponse, handleUnauthorizedResponse(axiosInstance));
 
 axiosInstance.interceptors.response.use(
   (axiosResponse) => {
